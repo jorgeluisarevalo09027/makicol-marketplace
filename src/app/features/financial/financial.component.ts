@@ -21,23 +21,22 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
           icon="💰"
           iconBg="rgba(16,185,129,0.15)"
           badge="Módulo 01 — Financiero"
-          title="Análisis de Costos Azure"
-          subtitle="Desglose detallado de la infraestructura cloud con simulador interactivo de escalabilidad. Todos los costos en USD/mes."/>
+          title="Modelo Financiero del Marketplace"
+          subtitle="Infraestructura Azure + modelo de patrocinadores + ingresos por comisión. El marketplace es sostenible desde el primer año. Costos en USD/mes."/>
 
         <!-- Info bar -->
         <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-xl bg-emerald-500/8 border border-emerald-500/20">
           <span class="text-emerald-400 text-sm">📌</span>
           <p class="text-slate-300 text-sm">
-            <span class="text-emerald-400 font-semibold">Nota:</span>
-            Los costos son estimados según el calculador oficial de Azure (julio 2025) para la región
-            <span class="text-white font-medium">East US</span>.
-            Pueden variar según consumo real y descuentos de reserva.
+            <span class="text-emerald-400 font-semibold">Modelo de patrocinio:</span>
+            La infraestructura inicial es cubierta por patrocinadores institucionales (Unimagdalena, Ministerio de Cultura, Banco de la República).
+            Los ingresos recurrentes provienen de <span class="text-white font-medium">comisiones del 5-8% por venta</span> realizada en la plataforma.
           </p>
         </div>
 
         <!-- Users indicator shared between both panels -->
         <div class="flex items-center justify-center gap-4 mb-8">
-          <span class="text-slate-400 text-sm">Usuarios simulados:</span>
+          <span class="text-slate-400 text-sm">Productores activos:</span>
           <span class="text-sky-400 font-bold text-xl font-mono">{{ sharedUsers() | number }}</span>
           <div class="flex gap-2">
             @for (preset of userPresets; track preset.value) {
@@ -77,30 +76,30 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
   `
 })
 export class FinancialComponent {
-  sharedUsers = signal(300);
+  sharedUsers = signal(200);
 
   userPresets = [
-    { label: '300', value: 300 },
-    { label: '1,000', value: 1000 },
-    { label: '2,000', value: 2000 },
-    { label: '5,000', value: 5000 },
+    { label: 'MVP · 50', value: 50 },
+    { label: 'Fase 1 · 200', value: 200 },
+    { label: 'Fase 2 · 500', value: 500 },
+    { label: 'Fase 3 · 1,000', value: 1000 },
   ];
 
   insights = [
     {
-      icon: '💡',
-      title: 'Costo por usuario',
-      text: 'A 300 usuarios, el costo por usuario activo es de ~$0.43/mes. A 2,000 usuarios escala a ~$0.22/mes gracias a las economías de escala.'
+      icon: '🤝',
+      title: 'Patrocinadores clave',
+      text: 'Unimagdalena, Ministerio de Cultura y Banco de la República cubren el costo inicial (~$1,800 USD año 1). El marketplace se autofinancia desde el mes 8 con comisiones.'
     },
     {
-      icon: '📉',
-      title: 'Reservas de 1 año',
-      text: 'Azure Reserved Instances para App Service y SQL pueden reducir los costos de cómputo hasta un 40% con un compromiso de 1 año.'
+      icon: '�',
+      title: 'Ingresos por comisión',
+      text: 'Con 200 productores activos y un promedio de $50 USD en ventas mensuales por productor, la comisión del 6% genera ~$600 USD/mes, superando el costo operativo.'
     },
     {
-      icon: '🚀',
-      title: 'Costo vs. alternativas',
-      text: 'Una solución SaaS similar (Teachable, Thinkific) costaría entre $200-$500/mes con menos control. Azure ofrece mayor flexibilidad a menor costo.'
+      icon: '🎥',
+      title: 'Videos cortos (Reels)',
+      text: 'Azure Media Services permite publicar videos de 30s por $0.02/GB procesado. Con 200 reels de 10MB cada uno, el costo adicional es mínimo (~$4/mes).'
     },
   ];
 }

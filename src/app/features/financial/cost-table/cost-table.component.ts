@@ -17,8 +17,8 @@ interface AzureService {
     <div class="glass-card rounded-2xl overflow-hidden">
       <div class="px-6 py-5 border-b border-slate-700/50 flex items-center justify-between">
         <div>
-          <h3 class="text-white font-bold text-lg">Desglose de Infraestructura Azure</h3>
-          <p class="text-slate-400 text-sm mt-0.5">Costos mensuales estimados por servicio</p>
+          <h3 class="text-white font-bold text-lg">Infraestructura Azure — Marketplace</h3>
+          <p class="text-slate-400 text-sm mt-0.5">Costos mensuales estimados por servicio (USD)</p>
         </div>
         <div class="flex gap-2">
           <span class="px-2.5 py-1 rounded-lg bg-slate-700/50 text-slate-400 text-xs">Base</span>
@@ -69,12 +69,12 @@ interface AzureService {
           <div class="flex items-center gap-6">
             <div class="text-center">
               <div class="text-slate-400 text-xl font-bold font-mono">\${{ baseTotal() }}</div>
-              <div class="text-slate-500 text-xs">300 usuarios</div>
+              <div class="text-slate-500 text-xs">50 productores</div>
             </div>
             <div class="w-px h-8 bg-slate-700"></div>
             <div class="text-center">
               <div class="text-sky-400 text-2xl font-bold font-mono">\${{ scaledTotal() }}</div>
-              <div class="text-sky-600 text-xs">2,000 usuarios</div>
+              <div class="text-sky-600 text-xs">1,000 productores</div>
             </div>
           </div>
         </div>
@@ -88,38 +88,47 @@ export class CostTableComponent {
   services = computed<AzureService[]>(() => [
     {
       name: 'Azure App Service',
-      tier: this.users() <= 500 ? 'B2 Basic' : this.users() <= 1500 ? 'P1v3' : 'P2v3',
+      tier: this.users() <= 100 ? 'B2 Basic' : this.users() <= 500 ? 'P1v3' : 'P2v3',
       icon: '⚙️',
-      baseCost: 60,
-      scaledCost: this.users() <= 500 ? 60 : this.users() <= 1500 ? 150 : 280,
-      description: '.NET 9 Web API + Angular SSR',
+      baseCost: 55,
+      scaledCost: this.users() <= 100 ? 55 : this.users() <= 500 ? 140 : 260,
+      description: 'API marketplace + Angular SSR PWA',
       category: 'compute'
     },
     {
       name: 'Azure SQL Database',
-      tier: this.users() <= 500 ? 'S1 Standard' : this.users() <= 1500 ? 'S3 Standard' : 'GP Gen5',
+      tier: this.users() <= 100 ? 'S1 Standard' : this.users() <= 500 ? 'S3 Standard' : 'GP Gen5',
       icon: '🗄️',
-      baseCost: 30,
-      scaledCost: this.users() <= 500 ? 30 : this.users() <= 1500 ? 75 : 185,
-      description: 'Base de datos relacional managed',
+      baseCost: 28,
+      scaledCost: this.users() <= 100 ? 28 : this.users() <= 500 ? 70 : 180,
+      description: 'Catálogo, pedidos, productores, pagos',
       category: 'data'
     },
     {
       name: 'Azure Blob Storage',
       tier: 'LRS Standard',
       icon: '📦',
-      baseCost: 5,
-      scaledCost: Math.round(this.users() * 0.025),
-      description: 'PDFs, thumbnails y assets estáticos',
+      baseCost: 6,
+      scaledCost: Math.max(6, Math.round(this.users() * 0.04)),
+      description: 'Fotos de productos, libros, artesanías',
+      category: 'data'
+    },
+    {
+      name: 'Azure Media Services',
+      tier: 'Standard Encoding',
+      icon: '🎥',
+      baseCost: 8,
+      scaledCost: Math.max(8, Math.round(this.users() * 0.035)),
+      description: 'Videos cortos 30s tipo reels/historias',
       category: 'data'
     },
     {
       name: 'Azure CDN (Akamai)',
       tier: 'Standard',
       icon: '🌐',
-      baseCost: 15,
-      scaledCost: Math.round(this.users() * 0.055),
-      description: 'Distribución global de contenido',
+      baseCost: 12,
+      scaledCost: Math.max(12, Math.round(this.users() * 0.045)),
+      description: 'Entrega rápida de imágenes y videos',
       category: 'delivery'
     },
     {
@@ -128,7 +137,7 @@ export class CostTableComponent {
       icon: '🛡️',
       baseCost: 22,
       scaledCost: 22,
-      description: 'WAF + load balancing + SSL',
+      description: 'WAF + SSL + protección pagos online',
       category: 'security'
     },
   ]);

@@ -19,8 +19,8 @@ import { FeatureMatrixComponent } from './feature-matrix/feature-matrix.componen
           icon="⚡"
           iconBg="rgba(99,102,241,0.15)"
           badge="Módulo 02 — Técnico"
-          title="Análisis Comparativo de Plataforma"
-          subtitle="Investigación técnica sobre el rendimiento de lectura de PDFs: Progressive Web App vs. Aplicación Nativa Android con Capacitor."/>
+          title="PWA Marketplace vs. App Nativa"
+          subtitle="Análisis técnico de la plataforma óptima para el marketplace: acceso de productores artesanales, pagos online y transmisión de videos cortos."/>
 
         <!-- Conclusion banner -->
         <div class="mb-8 p-5 rounded-xl bg-indigo-500/8 border border-indigo-500/25">
@@ -29,11 +29,9 @@ import { FeatureMatrixComponent } from './feature-matrix/feature-matrix.componen
             <div>
               <h4 class="text-white font-semibold text-sm mb-1">Conclusión de la Investigación</h4>
               <p class="text-slate-400 text-sm leading-relaxed">
-                Para la <span class="text-white font-medium">Fase 1 (MVP)</span>, la PWA es la opción óptima:
-                costo operativo $0, despliegue inmediato y compatibilidad universal.
-                La App Nativa con Capacitor se recomienda solo si más del
-                <span class="text-indigo-400 font-semibold">60% de usuarios trabajan con PDFs mayores a 30MB</span>
-                o requieren funcionalidad offline crítica.
+                Para el <span class="text-white font-medium">Marketplace Caribe Artesanal</span>, la PWA es la opción estratégica:
+                accesible desde cualquier dispositivo sin instalación, ideal para productores artesanales con acceso limitado a datos.
+                La App Nativa se recomienda en <span class="text-indigo-400 font-semibold">Fase 3</span> si la base de compradores supera 5,000 usuarios activos mensuales y se requieren notificaciones push avanzadas.
               </p>
             </div>
           </div>

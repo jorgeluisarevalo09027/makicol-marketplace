@@ -19,8 +19,8 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
           icon="🏗️"
           iconBg="rgba(245,158,11,0.15)"
           badge="Módulo 03 — Arquitectura"
-          title="Arquitectura Cloud y Escalabilidad"
-          subtitle="Topología completa de la plataforma en Azure con plan de escalabilidad evolutivo en 3 fases independientes."/>
+          title="Arquitectura Cloud del Marketplace"
+          subtitle="Topología Azure para el Marketplace Caribe Artesanal: capa de pagos (MercadoPago/PSE), media para reels y CDN para el catálogo de artesanos."/>
 
         <!-- Architecture principle banner -->
         <div class="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -56,16 +56,16 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
               </svg>
             </div>
             <div>
-              <span class="text-white font-bold text-sm">AzurePlatform</span>
+              <span class="text-white font-bold text-sm">Marketplace Caribe Artesanal</span>
               <span class="text-slate-500 text-xs ml-2">— Propuesta Ejecutiva v1.0</span>
             </div>
           </div>
           <div class="flex items-center gap-6 text-slate-500 text-xs">
             <span>Angular 21 + Azure Cloud</span>
             <span class="w-1 h-1 rounded-full bg-slate-700"></span>
-            <span>Dashboard de Investigación Técnica</span>
+            <span>FilSMar · Unimagdalena · Santa Marta</span>
             <span class="w-1 h-1 rounded-full bg-slate-700"></span>
-            <span>2025</span>
+            <span>2026</span>
           </div>
         </div>
       </div>
@@ -75,19 +75,19 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
 export class ArchitectureComponent {
   principles = [
     {
-      icon: '🧱',
-      title: 'Núcleo Inmutable',
-      text: 'La capa API y datos permanece sin cambios al añadir módulos. Cada fase es un añadido, no una reescritura.'
+      icon: '�',
+      title: 'Acceso Abierto a Productores',
+      text: 'Cualquier artesano o editorial de Santa Marta puede registrarse y vender desde el día 1 sin instalar nada, solo con un navegador.'
     },
     {
-      icon: '📐',
-      title: 'Separación de Responsabilidades',
-      text: 'Cada capa (cliente, gateway, API, datos, entrega) tiene una responsabilidad única y puede escalarse independientemente.'
+      icon: '�',
+      title: 'Pagos Seguros Colombianos',
+      text: 'MercadoPago Colombia integrado desde Fase 1: PSE, Nequi, Daviplata y tarjeta. La capa de pagos es independiente de la infraestructura.'
     },
     {
       icon: '💸',
-      title: 'Costo Progresivo',
-      text: 'El costo escala proporcionalmente al valor entregado. La Fase 1 es viable desde el día 1 con mínima inversión.'
+      title: 'Autosostenible con Patrocinadores',
+      text: 'Año 1 cubierto por Unimagdalena y aliados. Desde el mes 8, las comisiones de venta superan el costo operativo de Azure.'
     },
   ];
 }
