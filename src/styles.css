@@ -25,15 +25,14 @@
 }
 
 :root {
-  --artesanal-teal:    #2ab8b0;
-  --artesanal-gold:    #c8921a;
-  --artesanal-borgona: #7d1c3a;
-  --artesanal-orange:  #d06810;
-  --artesanal-red:     #c0392b;
-  --artesanal-green:   #2d5a1b;
-  --artesanal-purple:  #6b2d8b;
-  --artesanal-bg:      #edd9a3;
-  --unimag-blue:       #004a87;
+  --artesanal-bg:      #EDD9A3;
+  --artesanal-primary: #7D1C3A;
+  --artesanal-gold:    #C8921A;
+  --artesanal-teal:    #2AB8B0;
+  --artesanal-orange:  #D06810;
+  --artesanal-text:    #3D1A10;
+  --unimag-blue:       #004A87;
+  --unimag-blue-dark:  #003366;
 }
 
 @layer base {
@@ -44,16 +43,16 @@
   }
 
   body {
-    background-color: #f5ecda;
-    color: #2a1508;
+    background-color: var(--artesanal-bg);
+    color: var(--artesanal-text);
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
   }
 
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #e8d4b2; }
-  ::-webkit-scrollbar-thumb { background: var(--artesanal-teal); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #1e9e97; }
+  ::-webkit-scrollbar-track { background: #d4b87a; }
+  ::-webkit-scrollbar-thumb { background: var(--artesanal-primary); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #9e2447; }
 }
 
 @keyframes fadeIn {
@@ -72,14 +71,21 @@
 }
 
 @layer utilities {
-  /* Light card — for warm cream content sections */
+  /* Tarjeta artesanal — igual que lp-evento-card de la feria */
   .glass-card {
-    background: rgba(255, 251, 242, 0.92);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(200, 146, 26, 0.28);
-    box-shadow: 0 4px 24px rgba(125, 28, 58, 0.08), 0 1px 4px rgba(0,0,0,0.06);
+    background: #ffffff;
+    border-left: 4px solid var(--artesanal-gold);
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    box-shadow: 0 2px 12px rgba(125, 28, 58, 0.09), 0 1px 4px rgba(0,0,0,0.05);
   }
+
+  /* Backgrounds de sección — igual que lp-sobre, lp-agenda, lp-galeria, lp-footer */
+  .section-white   { background-color: #ffffff; }
+  .section-beige   { background-color: var(--artesanal-bg); }
+  .section-borgona { background-color: var(--artesanal-primary); }
+  .section-navy    { background-color: var(--unimag-blue-dark); }
 
   /* Dark card — for hero section (dark background) */
   .glass-card-dark {
@@ -91,30 +97,32 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #c8921a 0%, #2ab8b0 100%);
+    background: linear-gradient(135deg, var(--artesanal-gold) 0%, var(--artesanal-teal) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-family: 'Playfair Display', 'Georgia', serif;
   }
 
-  .glow-teal {
-    box-shadow: 0 0 24px rgba(42, 184, 176, 0.30);
+  /* Fuente caligráfica — igual que .lp-hero-lema de la feria */
+  .lema-script {
+    font-family: 'Pinyon Script', cursive;
+    color: var(--artesanal-primary);
   }
 
   .glow-gold {
     box-shadow: 0 0 24px rgba(200, 146, 26, 0.30);
   }
 
+  /* Separador dorado — igual que .lp-deco de la feria */
   .section-divider {
-    background: linear-gradient(90deg, transparent, var(--artesanal-gold), var(--artesanal-teal), transparent);
-    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--artesanal-gold) 30%, var(--artesanal-gold) 70%, transparent);
+    height: 2px;
     border: none;
-    opacity: 0.6;
-  }
-
-  .artesanal-border {
-    border-color: rgba(42, 184, 176, 0.25);
+    opacity: 0.55;
+    max-width: 600px;
+    margin: 0 auto;
+    display: block;
   }
 
   .range-thumb::-webkit-slider-thumb {
@@ -122,13 +130,13 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: var(--artesanal-teal);
+    background: var(--artesanal-gold);
     cursor: pointer;
-    border: 2px solid #2dd4cc;
+    border: 2px solid var(--artesanal-primary);
   }
 
   .range-thumb::-webkit-slider-runnable-track {
-    background: #1a2e2b;
+    background: #d4b87a;
     border-radius: 4px;
     height: 6px;
   }
@@ -138,7 +146,7 @@
     appearance: none;
     height: 6px;
     border-radius: 4px;
-    background: #1a2e2b;
+    background: #d4b87a;
     outline: none;
     cursor: pointer;
   }
@@ -155,37 +163,23 @@
     animation: floatDeco 6s ease-in-out infinite;
   }
 
-  /* Secciones de contenido — fondo crema claro: texto oscuro artesanal */
-  section:not(#hero) .text-white,
-  footer .text-white { color: #241408; }
+  /* ===== TEXTO EN SECCIONES CLARAS (blanco y beige) ===== */
+  /* Excluye hero (oscuro) y arquitectura (borgoña — sus glass-cards son blancas) */
+  section:not(#hero):not(#arquitectura) .text-white   { color: var(--artesanal-text); }
+  section:not(#hero):not(#arquitectura) .text-slate-300 { color: #5a3820; }
+  section:not(#hero):not(#arquitectura) .text-slate-400 { color: #7a5030; }
+  section:not(#hero):not(#arquitectura) .text-slate-500 { color: #8a6040; }
 
-  section:not(#hero) .text-slate-300,
-  footer .text-slate-300 { color: #5a3820; }
+  /* Arquitectura (fondo borgoña): texto claro en la sección, oscuro DENTRO de las tarjetas */
+  #arquitectura .glass-card .text-white   { color: var(--artesanal-text); }
+  #arquitectura .glass-card .text-slate-300 { color: #5a3820; }
+  #arquitectura .glass-card .text-slate-400 { color: #7a5030; }
+  #arquitectura .glass-card .text-slate-500 { color: #8a6040; }
 
-  section:not(#hero) .text-slate-400,
-  footer .text-slate-400 { color: #7a5030; }
-
-  section:not(#hero) .text-slate-500,
-  footer .text-slate-500 { color: #8a6040; }
-
-  section:not(#hero) .border-slate-700\/50,
-  section:not(#hero) .border-slate-800\/50 { border-color: rgba(200,146,26,0.20); }
-
-  .range-thumb::-webkit-slider-runnable-track,
-  .range-thumb { background: #e8d4b2; }
-
+  /* ===== NAVBAR SCROLLED — borgoña wine (igual que nav de la feria) ===== */
   .nav-scrolled {
-    background-color: rgba(245, 236, 218, 0.97);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(200, 146, 26, 0.22);
-    box-shadow: 0 4px 24px rgba(125, 28, 58, 0.10);
+    background-color: var(--artesanal-primary);
+    border-bottom: 1px solid rgba(200, 146, 26, 0.35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   }
-
-  /* Navbar scrolled state: dark text on cream background */
-  .nav-scrolled .text-slate-400  { color: #5a3820; }
-  .nav-scrolled .text-slate-500  { color: #7a5030; }
-  .nav-scrolled .text-slate-300  { color: #3a2210; }
-  .nav-scrolled .text-white      { color: #1c1008; }
-  .nav-scrolled button:hover     { background-color: rgba(200,146,26,0.12) !important; color: #241408 !important; }
 }

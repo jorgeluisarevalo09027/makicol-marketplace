@@ -18,8 +18,8 @@ import { isPlatformBrowser } from '@angular/common';
             </div>
             <div class="leading-none">
               <span class="text-white font-bold text-sm tracking-tight">Caribe</span>
-              <span class="font-bold text-sm" style="color: #2ab8b0;">Artesanal</span>
-              <p class="text-slate-500 text-[10px] font-medium tracking-widest uppercase">Marketplace · Propuesta</p>
+              <span class="font-bold text-sm" style="color: #C8921A;">Artesanal</span>
+              <p class="text-slate-400 text-[10px] font-medium tracking-widest uppercase">Marketplace · Propuesta</p>
             </div>
           </div>
 
@@ -38,7 +38,7 @@ import { isPlatformBrowser } from '@angular/common';
           <!-- Badge -->
           <div class="hidden md:flex items-center gap-2">
             <span class="px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-                  style="background: rgba(200,146,26,0.12); border: 1px solid rgba(200,146,26,0.35); color: #d4a429;">
+                  style="background: rgba(255,255,255,0.15); border: 1px solid rgba(200,146,26,0.60); color: #C8921A;">
               FilSMar · 2026
             </span>
           </div>

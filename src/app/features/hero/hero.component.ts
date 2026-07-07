@@ -65,6 +65,12 @@ import { isPlatformBrowser } from '@angular/common';
           <span class="text-slate-300 text-3xl sm:text-4xl lg:text-5xl font-bold">FilSMar · Unimagdalena</span>
         </h1>
 
+        <!-- Lema caligráfico — igual que .lp-hero-lema de la feria (color beige sobre fondo oscuro) -->
+        <p class="lema-script text-3xl sm:text-4xl lg:text-5xl mb-6 animate-fade-in"
+           style="animation-delay: 0.15s; line-height:1.2; color:#EDD9A3;">
+          Hilar el alma, Tallar la memoria
+        </p>
+
         <!-- Subtitle -->
         <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto mb-10 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
           Propuesta técnica y financiera para una plataforma de comercio electrónico que conecta

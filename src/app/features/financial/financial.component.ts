@@ -9,7 +9,7 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
   standalone: true,
   imports: [DecimalPipe, SectionHeaderComponent, CostTableComponent, CostSimulatorComponent],
   template: `
-    <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16">
+    <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16 section-white">
 
       <!-- Section background accent — warm artisanal gold glow -->
       <div class="absolute inset-0"
@@ -19,14 +19,14 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
       <div class="relative max-w-7xl mx-auto">
         <app-section-header
           icon="💰"
-          iconBg="rgba(16,185,129,0.15)"
+          iconBg="rgba(200,146,26,0.15)"
           badge="Módulo 01 — Financiero"
           title="Modelo Financiero del Marketplace"
           subtitle="Infraestructura Azure + modelo de patrocinadores + ingresos por comisión. El marketplace es sostenible desde el primer año. Costos en USD/mes."/>
 
         <!-- Info bar -->
-        <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-xl" style="background:rgba(200,146,26,0.08); border:1px solid rgba(200,146,26,0.25);">
-          <span class="text-amber-600 text-sm">📌</span>
+        <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-lg glass-card">
+          <span class="text-2xl">📌</span>
           <p class="text-slate-300 text-sm">
             <span class="text-emerald-400 font-semibold">Modelo de patrocinio:</span>
             La infraestructura inicial es cubierta por patrocinadores institucionales (Unimagdalena, Ministerio de Cultura, Banco de la República).
