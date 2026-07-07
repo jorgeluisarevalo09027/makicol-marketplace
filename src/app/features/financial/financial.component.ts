@@ -11,9 +11,9 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
   template: `
     <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16">
 
-      <!-- Section background accent -->
-      <div class="absolute inset-0 opacity-20"
-           style="background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.12) 0%, transparent 60%);">
+      <!-- Section background accent — warm artisanal gold glow -->
+      <div class="absolute inset-0"
+           style="background: radial-gradient(ellipse at 50% 0%, rgba(200,146,26,0.10) 0%, transparent 65%), radial-gradient(ellipse at 10% 90%, rgba(125,28,58,0.06) 0%, transparent 50%);">
       </div>
 
       <div class="relative max-w-7xl mx-auto">
@@ -25,8 +25,8 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
           subtitle="Infraestructura Azure + modelo de patrocinadores + ingresos por comisión. El marketplace es sostenible desde el primer año. Costos en USD/mes."/>
 
         <!-- Info bar -->
-        <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-xl bg-emerald-500/8 border border-emerald-500/20">
-          <span class="text-emerald-400 text-sm">📌</span>
+        <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-xl" style="background:rgba(200,146,26,0.08); border:1px solid rgba(200,146,26,0.25);">
+          <span class="text-amber-600 text-sm">📌</span>
           <p class="text-slate-300 text-sm">
             <span class="text-emerald-400 font-semibold">Modelo de patrocinio:</span>
             La infraestructura inicial es cubierta por patrocinadores institucionales (Unimagdalena, Ministerio de Cultura, Banco de la República).

@@ -1,5 +1,41 @@
 @import "tailwindcss";
 
+/* ================================================
+   PALETA CARIBE ARTESANAL — FilSMar / Unimagdalena
+   Extraída del afiche oficial 6ª Edición 2026
+   ================================================ */
+@theme {
+  /* Artesanal Teal reemplaza sky-blue frío en toda la app */
+  --color-sky-50:  #edfdfb;
+  --color-sky-100: #ccfbf7;
+  --color-sky-200: #9af5ef;
+  --color-sky-300: #5eeae2;
+  --color-sky-400: #2dd4cc;
+  --color-sky-500: #2ab8b0;
+  --color-sky-600: #1e9e97;
+  --color-sky-700: #177a74;
+  --color-sky-800: #145f5b;
+  --color-sky-900: #144e4a;
+  --color-sky-950: #082f2d;
+
+  /* Dorado artesanal refuerza amber */
+  --color-amber-400: #d4a429;
+  --color-amber-500: #c8921a;
+  --color-amber-600: #b07a14;
+}
+
+:root {
+  --artesanal-teal:    #2ab8b0;
+  --artesanal-gold:    #c8921a;
+  --artesanal-borgona: #7d1c3a;
+  --artesanal-orange:  #d06810;
+  --artesanal-red:     #c0392b;
+  --artesanal-green:   #2d5a1b;
+  --artesanal-purple:  #6b2d8b;
+  --artesanal-bg:      #edd9a3;
+  --unimag-blue:       #004a87;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -8,16 +44,16 @@
   }
 
   body {
-    background-color: #0f172a;
-    color: #f1f5f9;
+    background-color: #f5ecda;
+    color: #2a1508;
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
   }
 
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #1e293b; }
-  ::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+  ::-webkit-scrollbar-track { background: #e8d4b2; }
+  ::-webkit-scrollbar-thumb { background: var(--artesanal-teal); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #1e9e97; }
 }
 
 @keyframes fadeIn {
@@ -30,29 +66,55 @@
   50% { opacity: 0.6; }
 }
 
+@keyframes floatDeco {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-8px) rotate(1deg); }
+}
+
 @layer utilities {
+  /* Light card — for warm cream content sections */
   .glass-card {
-    background: rgba(30, 41, 59, 0.7);
+    background: rgba(255, 251, 242, 0.92);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(51, 65, 85, 0.6);
+    border: 1px solid rgba(200, 146, 26, 0.28);
+    box-shadow: 0 4px 24px rgba(125, 28, 58, 0.08), 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  /* Dark card — for hero section (dark background) */
+  .glass-card-dark {
+    background: rgba(20, 14, 5, 0.72);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(200, 146, 26, 0.30);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.40);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    background: linear-gradient(135deg, #c8921a 0%, #2ab8b0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-family: 'Playfair Display', 'Georgia', serif;
   }
 
-  .glow-sky {
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.25);
+  .glow-teal {
+    box-shadow: 0 0 24px rgba(42, 184, 176, 0.30);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 24px rgba(200, 146, 26, 0.30);
   }
 
   .section-divider {
-    background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+    background: linear-gradient(90deg, transparent, var(--artesanal-gold), var(--artesanal-teal), transparent);
     height: 1px;
     border: none;
+    opacity: 0.6;
+  }
+
+  .artesanal-border {
+    border-color: rgba(42, 184, 176, 0.25);
   }
 
   .range-thumb::-webkit-slider-thumb {
@@ -60,13 +122,13 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #0ea5e9;
+    background: var(--artesanal-teal);
     cursor: pointer;
-    border: 2px solid #38bdf8;
+    border: 2px solid #2dd4cc;
   }
 
   .range-thumb::-webkit-slider-runnable-track {
-    background: #334155;
+    background: #1a2e2b;
     border-radius: 4px;
     height: 6px;
   }
@@ -76,7 +138,7 @@
     appearance: none;
     height: 6px;
     border-radius: 4px;
-    background: #334155;
+    background: #1a2e2b;
     outline: none;
     cursor: pointer;
   }
@@ -88,4 +150,42 @@
   .animate-pulse-slow {
     animation: pulseSlow 3s ease-in-out infinite;
   }
+
+  .animate-float-deco {
+    animation: floatDeco 6s ease-in-out infinite;
+  }
+
+  /* Secciones de contenido — fondo crema claro: texto oscuro artesanal */
+  section:not(#hero) .text-white,
+  footer .text-white { color: #241408; }
+
+  section:not(#hero) .text-slate-300,
+  footer .text-slate-300 { color: #5a3820; }
+
+  section:not(#hero) .text-slate-400,
+  footer .text-slate-400 { color: #7a5030; }
+
+  section:not(#hero) .text-slate-500,
+  footer .text-slate-500 { color: #8a6040; }
+
+  section:not(#hero) .border-slate-700\/50,
+  section:not(#hero) .border-slate-800\/50 { border-color: rgba(200,146,26,0.20); }
+
+  .range-thumb::-webkit-slider-runnable-track,
+  .range-thumb { background: #e8d4b2; }
+
+  .nav-scrolled {
+    background-color: rgba(245, 236, 218, 0.97);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200, 146, 26, 0.22);
+    box-shadow: 0 4px 24px rgba(125, 28, 58, 0.10);
+  }
+
+  /* Navbar scrolled state: dark text on cream background */
+  .nav-scrolled .text-slate-400  { color: #5a3820; }
+  .nav-scrolled .text-slate-500  { color: #7a5030; }
+  .nav-scrolled .text-slate-300  { color: #3a2210; }
+  .nav-scrolled .text-white      { color: #1c1008; }
+  .nav-scrolled button:hover     { background-color: rgba(200,146,26,0.12) !important; color: #241408 !important; }
 }

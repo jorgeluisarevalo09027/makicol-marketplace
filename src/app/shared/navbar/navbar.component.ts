@@ -12,15 +12,14 @@ import { isPlatformBrowser } from '@angular/common';
 
           <!-- Logo -->
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg">
-              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-              </svg>
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg text-xl flex-shrink-0"
+                 style="background: linear-gradient(135deg, #c8921a 0%, #2ab8b0 100%);">
+              🧵
             </div>
             <div class="leading-none">
-              <span class="text-white font-bold text-base tracking-tight">Azure</span>
-              <span class="text-sky-400 font-bold text-base">Platform</span>
-              <p class="text-slate-500 text-[10px] font-medium tracking-widest uppercase">Propuesta Ejecutiva</p>
+              <span class="text-white font-bold text-sm tracking-tight">Caribe</span>
+              <span class="font-bold text-sm" style="color: #2ab8b0;">Artesanal</span>
+              <p class="text-slate-500 text-[10px] font-medium tracking-widest uppercase">Marketplace · Propuesta</p>
             </div>
           </div>
 
@@ -38,8 +37,9 @@ import { isPlatformBrowser } from '@angular/common';
 
           <!-- Badge -->
           <div class="hidden md:flex items-center gap-2">
-            <span class="px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold tracking-wide">
-              v1.0 — 2025
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+                  style="background: rgba(200,146,26,0.12); border: 1px solid rgba(200,146,26,0.35); color: #d4a429;">
+              FilSMar · 2026
             </span>
           </div>
 
@@ -86,9 +86,7 @@ export class NavbarComponent {
   ];
 
   navClasses = computed(() =>
-    this.scrolled()
-      ? 'bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50 shadow-2xl shadow-black/40'
-      : 'bg-transparent'
+    this.scrolled() ? 'nav-scrolled' : 'bg-transparent'
   );
 
   @HostListener('window:scroll')

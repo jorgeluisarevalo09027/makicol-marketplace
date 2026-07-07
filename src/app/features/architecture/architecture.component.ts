@@ -10,8 +10,8 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
   template: `
     <section id="arquitectura" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16">
 
-      <div class="absolute inset-0 opacity-20"
-           style="background: radial-gradient(ellipse at 20% 80%, rgba(245,158,11,0.1) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.08) 0%, transparent 50%);">
+      <div class="absolute inset-0"
+           style="background: radial-gradient(ellipse at 20% 80%, rgba(125,28,58,0.08) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(42,184,176,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 40%, rgba(200,146,26,0.07) 0%, transparent 45%);">
       </div>
 
       <div class="relative max-w-7xl mx-auto">

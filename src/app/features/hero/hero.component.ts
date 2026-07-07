@@ -7,23 +7,46 @@ import { isPlatformBrowser } from '@angular/common';
   template: `
     <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden scroll-mt-16">
 
-      <!-- Background layers -->
-      <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-      <div class="absolute inset-0 opacity-30"
-           style="background-image: radial-gradient(circle at 20% 50%, rgba(14,165,233,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(99,102,241,0.15) 0%, transparent 50%), radial-gradient(circle at 60% 80%, rgba(34,197,94,0.08) 0%, transparent 40%);">
+      <!-- Background layers — warm artisanal dark -->
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #0d1a17 0%, #111e1b 50%, #0d1a17 100%);"></div>
+
+      <!-- Arena texture overlay — sutil calidez artesanal -->
+      <div class="absolute inset-0 opacity-[0.03]"
+           style="background-image: url('/assets/fondo-arena.png'); background-size: 220px 220px;">
       </div>
 
-      <!-- Grid pattern -->
-      <div class="absolute inset-0 opacity-[0.04]"
-           style="background-image: linear-gradient(rgba(148,163,184,1) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,1) 1px, transparent 1px); background-size: 50px 50px;">
+      <!-- Artisanal warm glow overlay -->
+      <div class="absolute inset-0 opacity-40"
+           style="background-image: radial-gradient(circle at 18% 50%, rgba(42,184,176,0.18) 0%, transparent 50%), radial-gradient(circle at 82% 18%, rgba(200,146,26,0.14) 0%, transparent 50%), radial-gradient(circle at 55% 85%, rgba(125,28,58,0.10) 0%, transparent 40%);">
       </div>
 
-      <!-- Floating orbs -->
-      <div class="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10 animate-pulse-slow"
-           style="background: radial-gradient(circle, #0ea5e9, transparent); filter: blur(60px);">
+      <!-- Artisanal geometric grid — warm tone -->
+      <div class="absolute inset-0 opacity-[0.035]"
+           style="background-image: linear-gradient(rgba(200,146,26,1) 1px, transparent 1px), linear-gradient(90deg, rgba(42,184,176,1) 1px, transparent 1px); background-size: 48px 48px;">
       </div>
-      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-8 animate-pulse-slow"
-           style="background: radial-gradient(circle, #6366f1, transparent); filter: blur(60px); animation-delay: 1.5s;">
+
+      <!-- Floating orbs — artesanal palette -->
+      <div class="absolute top-1/4 left-1/6 w-96 h-96 rounded-full opacity-12 animate-pulse-slow"
+           style="background: radial-gradient(circle, #2ab8b0, transparent); filter: blur(70px);">
+      </div>
+      <div class="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full opacity-10 animate-pulse-slow"
+           style="background: radial-gradient(circle, #c8921a, transparent); filter: blur(65px); animation-delay: 1.5s;">
+      </div>
+      <div class="absolute top-1/2 right-1/3 w-64 h-64 rounded-full opacity-6 animate-pulse-slow"
+           style="background: radial-gradient(circle, #7d1c3a, transparent); filter: blur(80px); animation-delay: 3s;">
+      </div>
+
+      <!-- Wayúu corner decoration — patrón geométrico artesanal (top-left) -->
+      <img src="/assets/decoracion-esquina.png"
+           alt=""
+           aria-hidden="true"
+           class="absolute top-0 left-0 w-52 sm:w-72 pointer-events-none select-none animate-float-deco"
+           style="opacity: 0.22; filter: saturate(1.6) brightness(0.85); transform-origin: top left;">
+
+      <!-- Artisan products image — right side, desktop only -->
+      <div class="absolute right-0 bottom-0 hidden xl:block pointer-events-none select-none"
+           style="width: 380px; opacity: 0.14; filter: saturate(1.4) brightness(1.1) drop-shadow(0 20px 40px rgba(0,0,0,0.8));">
+        <img src="/assets/artesanias.png" alt="" aria-hidden="true" class="w-full">
       </div>
 
       <!-- Main content -->
@@ -54,8 +77,8 @@ import { isPlatformBrowser } from '@angular/common';
           @for (metric of metrics; track metric.label) {
             <div class="glass-card rounded-2xl p-5 hover:border-sky-500/40 transition-all duration-300 hover:-translate-y-1">
               <div class="text-3xl mb-2">{{ metric.icon }}</div>
-              <div class="text-2xl font-bold text-white mb-1">{{ metric.value }}</div>
-              <div class="text-slate-400 text-xs font-medium uppercase tracking-wide">{{ metric.label }}</div>
+              <div class="text-2xl font-bold mb-1" style="color:#241408">{{ metric.value }}</div>
+              <div class="text-xs font-medium uppercase tracking-wide" style="color:#7a5030">{{ metric.label }}</div>
             </div>
           }
         </div>
@@ -71,7 +94,8 @@ import { isPlatformBrowser } from '@angular/common';
             Ver Análisis Completo
           </button>
           <button
-            class="px-8 py-4 rounded-xl border border-slate-600 hover:border-slate-500 text-slate-300 hover:text-white font-semibold text-base transition-all duration-200 hover:bg-slate-800/50"
+            class="px-8 py-4 rounded-xl font-semibold text-base transition-all duration-200"
+            style="background:rgba(255,251,242,0.18); border:1px solid rgba(200,146,26,0.50); color:#f5ecda;"
             (click)="scrollTo('arquitectura')">
             Ver Arquitectura
           </button>
