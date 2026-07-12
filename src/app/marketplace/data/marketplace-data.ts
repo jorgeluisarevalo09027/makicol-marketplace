@@ -92,7 +92,7 @@ export const PRODUCTOS: Producto[] = [
   {
     id: 8, nombre: 'Tapiz Caribe Multicolor', artesano: 'Rosa Noriega',
     region: 'Valledupar, Cesar', precio: 165000, categoria: 'Tejidos',
-    rating: 4.7, resenas: 92, imagen: '/assets/foto1.webp', vendidos: 78,
+    rating: 4.7, resenas: 92, imagen: '/assets/foto8.webp', vendidos: 78,
     descripcion: 'Tapiz tejido en telar con motivos del folclor vallenato y la cultura del Cesar. 80×120 cm.',
   },
 ];
