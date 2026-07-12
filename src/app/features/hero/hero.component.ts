@@ -1,9 +1,11 @@
 import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
+  imports: [RouterLink],
   template: `
     <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden scroll-mt-16">
 
@@ -105,6 +107,22 @@ import { isPlatformBrowser } from '@angular/common';
             (click)="scrollTo('arquitectura')">
             Ver Arquitectura
           </button>
+        </div>
+
+        <!-- Botón puente al Marketplace prototipo -->
+        <div class="animate-fade-in" style="animation-delay:0.5s;">
+          <a routerLink="/marketplace/catalogo"
+             class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5"
+             style="background:linear-gradient(135deg,#C8921A,#D06810); color:#fff; box-shadow:0 4px 24px rgba(200,146,26,0.40); text-decoration:none;">
+            <span style="font-size:1.2rem;">🛒</span>
+            Ver Prototipo del Marketplace
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+          </a>
+          <p style="color:rgba(255,255,255,0.45); font-size:0.75rem; margin-top:8px; text-align:center;">
+            Catálogo · Pagos · Pedidos · Registro · Búsqueda
+          </p>
         </div>
 
         <!-- Module navigation pills -->
