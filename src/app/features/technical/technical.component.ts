@@ -11,25 +11,25 @@ import { FeatureMatrixComponent } from './feature-matrix/feature-matrix.componen
     <section id="tecnico" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16">
 
       <div class="absolute inset-0"
-           style="background: radial-gradient(ellipse at 85% 40%, rgba(42,184,176,0.10) 0%, transparent 60%), radial-gradient(ellipse at 15% 60%, rgba(200,146,26,0.07) 0%, transparent 55%);">
+           style="background: radial-gradient(ellipse at 85% 40%, rgba(46,204,113,0.10) 0%, transparent 60%), radial-gradient(ellipse at 15% 60%, rgba(218,175,55,0.07) 0%, transparent 55%);">
       </div>
 
       <div class="relative max-w-7xl mx-auto">
         <app-section-header
           icon="⚡"
-          iconBg="rgba(42,184,176,0.15)"
+          iconBg="rgba(46,204,113,0.15)"
           badge="Módulo 02 — Técnico"
           title="PWA Marketplace vs. App Nativa"
           subtitle="Análisis técnico de la plataforma óptima para el marketplace: acceso de productores artesanales, pagos online y transmisión de videos cortos."/>
 
         <!-- Conclusion banner -->
-        <div class="mb-8 p-5 rounded-xl" style="background:rgba(42,184,176,0.08); border:1px solid rgba(42,184,176,0.25);">
+        <div class="mb-8 p-5 rounded-xl" style="background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.25);">
           <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl" style="background:rgba(42,184,176,0.18);">🔬</div>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl" style="background:rgba(46,204,113,0.18);">🔬</div>
             <div>
               <h4 class="text-white font-semibold text-sm mb-1">Conclusión de la Investigación</h4>
               <p class="text-slate-400 text-sm leading-relaxed">
-                Para el <span class="text-white font-medium">Marketplace Caribe Artesanal</span>, la PWA es la opción estratégica:
+                Para <span class="text-white font-medium">Makicol Marketplace</span>, la PWA es la opción estratégica:
                 accesible desde cualquier dispositivo sin instalación, ideal para productores artesanales con acceso limitado a datos.
                 La App Nativa se recomienda en <span class="text-indigo-400 font-semibold">Fase 3</span> si la base de compradores supera 5,000 usuarios activos mensuales y se requieren notificaciones push avanzadas.
               </p>

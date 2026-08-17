@@ -15,21 +15,21 @@ import { Component, input } from '@angular/core';
       <!-- Badge del módulo -->
       <div class="mb-4">
         <span class="text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full"
-              [style.background]="onDark() ? 'rgba(255,255,255,0.15)' : 'rgba(125,28,58,0.10)'"
-              [style.color]="onDark() ? 'rgba(255,255,255,0.9)' : '#7D1C3A'">
+              [style.background]="onDark() ? 'rgba(255,255,255,0.15)' : 'rgba(41,84,64,0.10)'"
+              [style.color]="onDark() ? 'rgba(255,255,255,0.9)' : '#295440'">
           {{ badge() }}
         </span>
       </div>
 
       <!-- Título flanqueado por líneas doradas — igual que .lp-section-header de la feria -->
       <div class="flex items-center justify-center gap-4 mb-5">
-        <div class="flex-1 h-0.5" style="max-width:140px; background: linear-gradient(to right, transparent, #C8921A);"></div>
+        <div class="flex-1 h-0.5" style="max-width:140px; background: linear-gradient(to right, transparent, #FFCD00);"></div>
         <h2 class="text-3xl sm:text-4xl font-bold leading-tight px-2"
-            style="font-family: 'Playfair Display', Georgia, serif; white-space: nowrap;"
-            [style.color]="onDark() ? '#ffffff' : '#7D1C3A'">
+            style="font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap;"
+            [style.color]="onDark() ? '#ffffff' : '#295440'">
           {{ title() }}
         </h2>
-        <div class="flex-1 h-0.5" style="max-width:140px; background: linear-gradient(to left, transparent, #C8921A);"></div>
+        <div class="flex-1 h-0.5" style="max-width:140px; background: linear-gradient(to left, transparent, #FFCD00);"></div>
       </div>
 
       <!-- Subtítulo -->
@@ -42,7 +42,7 @@ import { Component, input } from '@angular/core';
 })
 export class SectionHeaderComponent {
   icon     = input('🔧');
-  iconBg   = input('rgba(125, 28, 58, 0.12)');
+  iconBg   = input('rgba(41,84,64, 0.12)');
   badge    = input('Módulo');
   title    = input('Título del Módulo');
   subtitle = input('Descripción del módulo.');

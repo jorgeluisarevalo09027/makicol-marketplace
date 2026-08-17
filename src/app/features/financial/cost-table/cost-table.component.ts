@@ -71,7 +71,7 @@ interface AzureService {
               <div class="text-slate-400 text-xl font-bold font-mono">\${{ baseTotal() }}</div>
               <div class="text-slate-500 text-xs">50 productores</div>
             </div>
-            <div class="w-px h-8 bg-slate-700"></div>
+            <div class="w-px h-8 bg-slate-200"></div>
             <div class="text-center">
               <div class="text-sky-400 text-2xl font-bold font-mono">\${{ scaledTotal() }}</div>
               <div class="text-sky-600 text-xs">1,000 productores</div>
@@ -152,6 +152,6 @@ export class CostTableComponent {
       delivery: 'bg-amber-500/15 text-amber-400 border border-amber-500/25',
       security: 'bg-rose-500/15 text-rose-400 border border-rose-500/25',
     };
-    return map[category] ?? 'bg-slate-700 text-slate-300';
+    return map[category] ?? 'bg-slate-100 text-slate-600 border border-slate-200';
   }
 }

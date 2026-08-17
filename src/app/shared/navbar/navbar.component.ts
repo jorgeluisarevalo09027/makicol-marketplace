@@ -12,14 +12,12 @@ import { isPlatformBrowser } from '@angular/common';
 
           <!-- Logo -->
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg text-xl flex-shrink-0"
-                 style="background: linear-gradient(135deg, #c8921a 0%, #2ab8b0 100%);">
-              🧵
-            </div>
+            <img src="/assets/makicol-icono-base.svg" alt="Makicol"
+                 class="w-9 h-9 flex-shrink-0" style="object-fit:contain;">
             <div class="leading-none">
-              <span class="text-white font-bold text-sm tracking-tight">Caribe</span>
-              <span class="font-bold text-sm" style="color: #C8921A;">Artesanal</span>
-              <p class="text-slate-400 text-[10px] font-medium tracking-widest uppercase">Marketplace · Propuesta</p>
+              <span class="font-bold text-sm tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif; color:#fff;">Makicol</span>
+              <span class="font-normal text-sm" style="font-family:'Plus Jakarta Sans',sans-serif; color: #FFCD00;"> Marketplace</span>
+              <p class="text-slate-400 text-[10px] font-medium tracking-widest uppercase">Propuesta Ejecutiva</p>
             </div>
           </div>
 
@@ -38,8 +36,8 @@ import { isPlatformBrowser } from '@angular/common';
           <!-- Badge -->
           <div class="hidden md:flex items-center gap-2">
             <span class="px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-                  style="background: rgba(255,255,255,0.15); border: 1px solid rgba(200,146,26,0.60); color: #C8921A;">
-              FilSMar · 2026
+                  style="background: rgba(255,255,255,0.15); border: 1px solid rgba(218,175,55,0.60); color: #FFCD00;">
+              Makicol · 2026
             </span>
           </div>
 

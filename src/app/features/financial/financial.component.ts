@@ -9,17 +9,17 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
   standalone: true,
   imports: [DecimalPipe, SectionHeaderComponent, CostTableComponent, CostSimulatorComponent],
   template: `
-    <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16 section-white">
+    <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16 section-primary-tint">
 
       <!-- Section background accent — warm artisanal gold glow -->
       <div class="absolute inset-0"
-           style="background: radial-gradient(ellipse at 50% 0%, rgba(200,146,26,0.10) 0%, transparent 65%), radial-gradient(ellipse at 10% 90%, rgba(125,28,58,0.06) 0%, transparent 50%);">
+           style="background: radial-gradient(ellipse at 50% 0%, rgba(218,175,55,0.10) 0%, transparent 65%), radial-gradient(ellipse at 10% 90%, rgba(41,84,64,0.06) 0%, transparent 50%);">
       </div>
 
       <div class="relative max-w-7xl mx-auto">
         <app-section-header
           icon="💰"
-          iconBg="rgba(200,146,26,0.15)"
+          iconBg="rgba(218,175,55,0.15)"
           badge="Módulo 01 — Financiero"
           title="Modelo Financiero del Marketplace"
           subtitle="Infraestructura Azure + modelo de patrocinadores + ingresos por comisión. El marketplace es sostenible desde el primer año. Costos en USD/mes."/>
@@ -29,7 +29,7 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
           <span class="text-2xl">📌</span>
           <p class="text-slate-300 text-sm">
             <span class="text-emerald-400 font-semibold">Modelo de patrocinio:</span>
-            La infraestructura inicial es cubierta por patrocinadores institucionales (Unimagdalena, Ministerio de Cultura, Banco de la República).
+            La infraestructura inicial es cubierta por patrocinadores institucionales (Ministerio de Cultura, Banco de la República, entidades de fomento al emprendimiento).
             Los ingresos recurrentes provienen de <span class="text-white font-medium">comisiones del 5-8% por venta</span> realizada en la plataforma.
           </p>
         </div>
@@ -43,8 +43,8 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
               <button
                 class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
                 [class]="sharedUsers() === preset.value
-                  ? 'bg-sky-500 text-white shadow-md shadow-sky-500/25'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700'"
+                  ? 'bg-sky-400 text-white shadow-md shadow-sky-400/25'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200'"
                 (click)="sharedUsers.set(preset.value)">
                 {{ preset.label }}
               </button>
@@ -89,7 +89,7 @@ export class FinancialComponent {
     {
       icon: '🤝',
       title: 'Patrocinadores clave',
-      text: 'Unimagdalena, Ministerio de Cultura y Banco de la República cubren el costo inicial (~$1,800 USD año 1). El marketplace se autofinancia desde el mes 8 con comisiones.'
+      text: 'Ministerio de Cultura, Banco de la República y aliados de fomento al emprendimiento cubren el costo inicial (~$1,800 USD año 1). El marketplace se autofinancia desde el mes 8 con comisiones.'
     },
     {
       icon: '�',

@@ -139,7 +139,7 @@ export class ComparisonCardsComponent {
         'Cámara para fotos de productos limitada vs app nativa',
       ],
       bestFor: 'MVP + Fase 1 y 2: catálogo, pagos y videos',
-      techStack: ['Angular 21', 'Service Worker', 'MercadoPago API', 'Azure Media', 'PSE'],
+      techStack: ['Angular 21', 'Service Worker', 'Wompi API', 'Azure Media', 'PSE'],
       metrics: [
         { label: 'Acceso', value: 'Sin instalar', good: true },
         { label: 'Pagos online', value: 'Integrado', good: true },
@@ -168,7 +168,7 @@ export class ComparisonCardsComponent {
         'No viable en Fase 1 (base de usuarios insuficiente)',
       ],
       bestFor: 'Fase 3: cuando la base supere 5,000 compradores activos',
-      techStack: ['Angular 21', 'Capacitor 6', 'Android Native', 'Firebase FCM', 'MercadoPago SDK'],
+      techStack: ['Angular 21', 'Capacitor 6', 'Android Native', 'Firebase FCM', 'Wompi SDK'],
       metrics: [
         { label: 'Notif. push', value: 'Nativo', good: true },
         { label: 'Despliegue', value: '1–3 días', good: false },

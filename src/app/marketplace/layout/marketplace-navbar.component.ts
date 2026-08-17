@@ -18,22 +18,23 @@ import { FormsModule } from '@angular/forms';
       white-space: nowrap;
       text-decoration: none;
       cursor: pointer;
-      border: none;
-      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.80);
+      border: 1.5px solid #C6D7CD;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s, border-color 0.18s;
+      background: #F2F6F4;
+      color: #295440;
     }
     .mkt-cat-pill:hover {
-      background: rgba(255,255,255,0.22);
-      color: #fff;
+      background: #E3EBE7;
+      border-color: #9FBBAC;
     }
     .mkt-cat-pill.active {
-      background: #C8921A;
+      background: #2C7350;
       color: #fff;
-      box-shadow: 0 2px 10px rgba(200,146,26,0.40);
+      border-color: #2C7350;
+      box-shadow: 0 2px 10px rgba(44,115,80,0.30);
     }
     .mkt-nav-action {
-      color: rgba(255,255,255,0.80);
+      color: #295440;
       font-size: 0.78rem;
       text-decoration: none;
       display: flex;
@@ -46,40 +47,36 @@ import { FormsModule } from '@angular/forms';
       gap: 1px;
     }
     .mkt-nav-action:hover, .mkt-nav-action.active-page {
-      background: rgba(255,255,255,0.15);
-      color: #fff;
+      background: rgba(41,84,64,0.08);
     }
   `],
   template: `
-    <header style="background:#7D1C3A; position:sticky; top:0; z-index:50; box-shadow:0 3px 16px rgba(0,0,0,0.30);">
+    <header style="background:#fff; position:sticky; top:0; z-index:50; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+      <div style="height:3px; background:linear-gradient(90deg,#FFCD00,#003893,#C8102E);"></div>
 
       <!-- ── Fila 1: Logo · Búsqueda · Acciones ── -->
       <div style="max-width:1200px; margin:0 auto; padding:0 1rem;">
-        <div style="display:flex; align-items:center; gap:1rem; height:62px;">
+        <div style="display:flex; align-items:center; gap:1rem; height:66px;">
 
-          <!-- Logo -->
-          <a routerLink="/marketplace/catalogo"
-             style="display:flex; align-items:center; gap:9px; text-decoration:none; flex-shrink:0;">
-            <img src="/assets/logo-corazon.png" alt="Caribe Artesanal"
-                 style="height:40px; width:auto; object-fit:contain; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.35));">
-            <div style="line-height:1.1;">
-              <div style="color:#fff; font-weight:800; font-size:0.92rem;
-                          font-family:'Playfair Display',Georgia,serif; letter-spacing:0.3px;">Caribe</div>
-              <div style="color:#C8921A; font-weight:800; font-size:0.92rem;
-                          font-family:'Playfair Display',Georgia,serif; letter-spacing:0.3px;">Artesanal</div>
-            </div>
+          <!-- Logo oficial — imagen real del lockup horizontal, fondo blanco = máxima fidelidad de color.
+               El span sr-only aporta el nombre como texto real (SEO/lectores de pantalla) sin duplicarlo
+               visualmente ni competir con el <h1> propio de cada página (evitamos múltiples h1 por página). -->
+          <a routerLink="/marketplace/catalogo" style="display:flex; align-items:center; text-decoration:none; flex-shrink:0;">
+            <span class="sr-only">Makicol Marketplace</span>
+            <img src="/assets/makicol-logo-header.svg" alt="Makicol Marketplace"
+                 style="height:38px; width:auto; object-fit:contain;">
           </a>
 
           <!-- Barra de búsqueda -->
           <div style="flex:1; max-width:540px; margin:0 auto;">
-            <div style="display:flex; align-items:center; background:#fff; border-radius:8px;
-                        overflow:hidden; border:2px solid #C8921A; box-shadow:0 1px 6px rgba(200,146,26,0.25);">
+            <div style="display:flex; align-items:center; background:#FDFBF3; border-radius:8px;
+                        overflow:hidden; border:2px solid #DAAF37;">
               <input [(ngModel)]="searchQuery"
                      placeholder="Buscar artesanías, libros, tejidos..."
                      style="flex:1; border:none; outline:none; padding:8px 12px;
-                            font-size:0.88rem; color:#3D1A10; background:transparent;">
-              <button style="padding:8px 15px; background:#C8921A; border:none;
-                             cursor:pointer; color:#fff; font-size:1rem; line-height:1;">
+                            font-size:0.88rem; color:#1F2A22; background:transparent;">
+              <button style="padding:8px 15px; background:#FFCD00; border:none;
+                             cursor:pointer; color:#295440; font-size:1rem; line-height:1;">
                 🔍
               </button>
             </div>
@@ -102,17 +99,17 @@ import { FormsModule } from '@angular/forms';
 
             <!-- Carrito con badge -->
             <a routerLink="/marketplace/pago"
-               style="position:relative; color:#fff; text-decoration:none; padding:7px 11px;
-                      border-radius:8px; background:rgba(255,255,255,0.14);
-                      border:1px solid rgba(200,146,26,0.55); margin-left:4px;">
+               style="position:relative; color:#295440; text-decoration:none; padding:7px 11px;
+                      border-radius:8px; background:rgba(41,84,64,0.06);
+                      border:1px solid rgba(41,84,64,0.18); margin-left:4px;">
               <span style="font-size:1.2rem; line-height:1;">🛒</span>
-              <span style="position:absolute; top:-5px; right:-5px; background:#C8921A; color:#fff;
+              <span style="position:absolute; top:-5px; right:-5px; background:#C8102E; color:#fff;
                            font-size:0.62rem; font-weight:800; min-width:18px; height:18px;
                            border-radius:9px; display:flex; align-items:center; justify-content:center;
-                           padding:0 3px; border:2px solid #7D1C3A;">2</span>
+                           padding:0 3px; border:2px solid #fff;">2</span>
             </a>
 
-            <button style="background:#C8921A; color:#fff; border:none; border-radius:8px;
+            <button style="background:#FFCD00; color:#295440; border:none; border-radius:8px;
                            padding:7px 15px; font-size:0.8rem; font-weight:700; cursor:pointer;
                            white-space:nowrap; margin-left:4px; letter-spacing:0.2px;">
               Ingresar
@@ -123,7 +120,7 @@ import { FormsModule } from '@angular/forms';
       </div>
 
       <!-- ── Fila 2: Categorías como pills ── -->
-      <div style="background:rgba(0,0,0,0.22); border-top:1px solid rgba(255,255,255,0.08);">
+      <div style="background:#FDFBF3; border-top:1px solid rgba(41,84,64,0.08);">
         <div style="max-width:1200px; margin:0 auto; padding:8px 1rem;
                     display:flex; align-items:center; gap:6px;
                     overflow-x:auto; scrollbar-width:none;">
@@ -137,7 +134,7 @@ import { FormsModule } from '@angular/forms';
           </a>
 
           <!-- Separador visual -->
-          <span style="width:1px; height:20px; background:rgba(255,255,255,0.20);
+          <span style="width:1px; height:20px; background:rgba(41,84,64,0.15);
                        flex-shrink:0; margin:0 4px;"></span>
 
           <!-- Filtros de categoría — estado manejado por signal (misma ruta /buscar) -->
@@ -150,7 +147,7 @@ import { FormsModule } from '@angular/forms';
           }
 
           <!-- Separador + Vender -->
-          <span style="width:1px; height:20px; background:rgba(255,255,255,0.20);
+          <span style="width:1px; height:20px; background:rgba(41,84,64,0.15);
                        flex-shrink:0; margin:0 4px;"></span>
           <a routerLink="/marketplace/registro"
              class="mkt-cat-pill"

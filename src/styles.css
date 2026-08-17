@@ -1,38 +1,104 @@
 @import "tailwindcss";
 
 /* ================================================
-   PALETA CARIBE ARTESANAL — FilSMar / Unimagdalena
-   Extraída del afiche oficial 6ª Edición 2026
+   TIPOGRAFÍA DE MARCA — MAKICOL MARKETPLACE
+   Plus Jakarta Sans (wordmark / títulos) + Montserrat (UI / cuerpo)
+   Fuentes variables self-hosted, ver public/assets/fonts
+   ================================================ */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/assets/fonts/plus-jakarta-sans/PlusJakartaSans-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/assets/fonts/plus-jakarta-sans/PlusJakartaSans-Italic-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/montserrat/Montserrat-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ================================================
+   PALETA DE MARCA — MAKICOL MARKETPLACE
    ================================================ */
 @theme {
-  /* Artesanal Teal reemplaza sky-blue frío en toda la app */
-  --color-sky-50:  #edfdfb;
-  --color-sky-100: #ccfbf7;
-  --color-sky-200: #9af5ef;
-  --color-sky-300: #5eeae2;
-  --color-sky-400: #2dd4cc;
-  --color-sky-500: #2ab8b0;
-  --color-sky-600: #1e9e97;
-  --color-sky-700: #177a74;
-  --color-sky-800: #145f5b;
-  --color-sky-900: #144e4a;
-  --color-sky-950: #082f2d;
+  /* Amarillo Makicol reemplaza amber */
+  --color-amber-400: #ffd633;
+  --color-amber-500: #FFCD00;
+  --color-amber-600: #e0b400;
 
-  /* Dorado artesanal refuerza amber */
-  --color-amber-400: #d4a429;
-  --color-amber-500: #c8921a;
-  --color-amber-600: #b07a14;
+  /* Verde Makicol reemplaza sky (acentos frescos) */
+  --color-sky-50:  #eafbf0;
+  --color-sky-100: #d1f5dd;
+  --color-sky-200: #a3ebbc;
+  --color-sky-300: #6fdd99;
+  --color-sky-400: #2ECC71;
+  --color-sky-500: #1EA03B;
+  --color-sky-600: #188a32;
+  --color-sky-700: #146e29;
+  --color-sky-800: #115821;
+  --color-sky-900: #0d431a;
+  --color-sky-950: #072a10;
 }
 
 :root {
-  --artesanal-bg:      #EDD9A3;
-  --artesanal-primary: #7D1C3A;
-  --artesanal-gold:    #C8921A;
-  --artesanal-teal:    #2AB8B0;
-  --artesanal-orange:  #D06810;
-  --artesanal-text:    #3D1A10;
-  --unimag-blue:       #004A87;
-  --unimag-blue-dark:  #003366;
+  /* Superficies */
+  --makicol-bg:          #FDFBF3;  /* fondo general de página */
+  --makicol-surface:     #FFFFFF;  /* headers, tarjetas, navbar */
+  --makicol-dark:        #1F2A22;  /* ancla oscura: footer, secciones dark */
+
+  /* PRIMARIO — dos versiones a propósito, NO son intercambiables:
+     - title-text (#295440, más abajo): SOLO texto, iconos y bordes finos. Es el color
+       real del wordmark "Makicol" — perfecto para tipografía, demasiado pesado para fondos.
+     - primary (#2C7350): versión más clara y vívida, pensada para USARSE COMO FONDO
+       (botones, pills activas, paneles, banners, secciones). Mismo tono de verde,
+       menos denso, mejor legibilidad de texto blanco encima. */
+  --makicol-primary-50:   #F2F6F4;  /* fondo de sección alterna, casi imperceptible */
+  --makicol-primary-100:  #E3EBE7;  /* fondo de badges/chips suaves, hover de filas */
+  --makicol-primary-200:  #C6D7CD;  /* bordes suaves, dividers, pill inactiva hover */
+  --makicol-primary-300:  #9FBBAC;  /* decorativos suaves, iconos secundarios */
+  --makicol-primary-400:  #6E9682;  /* texto terciario con tinte de marca */
+  --makicol-primary-500:  #4E8C6C;  /* links, acentos medios */
+  --makicol-primary:      #2C7350;  /* FONDO — botones, pills activas, paneles, secciones */
+  --makicol-primary-900:  #16301F;  /* hover de botones oscuros, máximo contraste */
+  --makicol-primary-soft: rgba(44,115,80,0.08);
+
+  /* SECUNDARIO — color del wordmark "Marketplace" */
+  --makicol-teal-text:   #339496;
+
+  /* ACENTOS — dosis pequeñas, igual que las letras C-O-L del logo. NUNCA como fondo grande. */
+  --makicol-yellow:      #FFCD00;  /* CTA principal */
+  --makicol-blue:        #003893;  /* acento puntual / badges */
+  --makicol-red:         #C8102E;  /* acento puntual / alertas */
+  --makicol-gold:        #DAAF37;  /* bordes y separadores decorativos */
+
+  /* Estados */
+  --makicol-green:       #2ECC71;
+  --makicol-green-dark:  #1EA03B;
+  --makicol-green-pale:  #F5F999;
+
+  /* Texto */
+  --makicol-title-text:  #295440;
+  --makicol-text:        #1F2A22;
+
+  --font-brand: 'Plus Jakarta Sans', sans-serif;
+  --font-body:  'Montserrat', sans-serif;
 }
 
 @layer base {
@@ -42,17 +108,32 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Texto accesible/SEO: visualmente oculto pero legible por buscadores y lectores
+     de pantalla. Se usa junto al logo-imagen para que el nombre "Makicol Marketplace"
+     exista como texto real en el HTML sin duplicarse visualmente sobre el logo. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   body {
-    background-color: var(--artesanal-bg);
-    color: var(--artesanal-text);
-    font-family: 'Inter', sans-serif;
+    background-color: var(--makicol-bg);
+    color: var(--makicol-text);
+    font-family: var(--font-body);
     overflow-x: hidden;
   }
 
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #d4b87a; }
-  ::-webkit-scrollbar-thumb { background: var(--artesanal-primary); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #9e2447; }
+  ::-webkit-scrollbar-track { background: #e8e2c8; }
+  ::-webkit-scrollbar-thumb { background: var(--makicol-primary); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--makicol-dark); }
 }
 
 @keyframes fadeIn {
@@ -71,52 +152,63 @@
 }
 
 @layer utilities {
-  /* Tarjeta artesanal — igual que lp-evento-card de la feria */
+  /* Tarjeta de marca — borde dorado Makicol */
   .glass-card {
     background: #ffffff;
-    border-left: 4px solid var(--artesanal-gold);
+    border-left: 4px solid var(--makicol-gold);
     border-right: none;
     border-top: none;
     border-bottom: none;
-    box-shadow: 0 2px 12px rgba(125, 28, 58, 0.09), 0 1px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 12px rgba(41, 84, 64, 0.08), 0 1px 4px rgba(0,0,0,0.05);
   }
 
-  /* Backgrounds de sección — igual que lp-sobre, lp-agenda, lp-galeria, lp-footer */
-  .section-white   { background-color: #ffffff; }
-  .section-beige   { background-color: var(--artesanal-bg); }
-  .section-borgona { background-color: var(--artesanal-primary); }
-  .section-navy    { background-color: var(--unimag-blue-dark); }
+  /* Backgrounds de sección */
+  .section-white   { background-color: var(--makicol-surface); }
+  .section-beige   { background-color: var(--makicol-bg); }
+  .section-borgona { background-color: var(--makicol-primary); }
+  .section-navy    { background-color: var(--makicol-dark); }
+  /* Tinte suave del verde primario — variedad sin recurrir a bloque sólido */
+  .section-primary-tint { background-color: var(--makicol-primary-50); }
 
   /* Dark card — for hero section (dark background) */
   .glass-card-dark {
-    background: rgba(20, 14, 5, 0.72);
+    background: rgba(10, 20, 15, 0.72);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(200, 146, 26, 0.30);
+    border: 1px solid rgba(218, 175, 55, 0.35);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.40);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--artesanal-gold) 0%, var(--artesanal-teal) 100%);
+    background: linear-gradient(135deg, var(--makicol-yellow) 0%, var(--makicol-green) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-family: 'Playfair Display', 'Georgia', serif;
+    font-family: var(--font-brand);
+    font-weight: 800;
   }
 
-  /* Fuente caligráfica — igual que .lp-hero-lema de la feria */
-  .lema-script {
-    font-family: 'Pinyon Script', cursive;
-    color: var(--artesanal-primary);
+  /* Wordmark: "Makicol" en Plus Jakarta Sans Bold + verde título */
+  .brand-title {
+    font-family: var(--font-brand);
+    font-weight: 700;
+    color: var(--makicol-title-text);
+  }
+
+  /* Wordmark: "Marketplace" en Plus Jakarta Sans Regular + teal */
+  .brand-subtitle {
+    font-family: var(--font-brand);
+    font-weight: 400;
+    color: var(--makicol-teal-text);
   }
 
   .glow-gold {
-    box-shadow: 0 0 24px rgba(200, 146, 26, 0.30);
+    box-shadow: 0 0 24px rgba(218, 175, 55, 0.35);
   }
 
-  /* Separador dorado — igual que .lp-deco de la feria */
+  /* Separador dorado */
   .section-divider {
-    background: linear-gradient(90deg, transparent, var(--artesanal-gold) 30%, var(--artesanal-gold) 70%, transparent);
+    background: linear-gradient(90deg, transparent, var(--makicol-gold) 30%, var(--makicol-gold) 70%, transparent);
     height: 2px;
     border: none;
     opacity: 0.55;
@@ -130,13 +222,13 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: var(--artesanal-gold);
+    background: var(--makicol-yellow);
     cursor: pointer;
-    border: 2px solid var(--artesanal-primary);
+    border: 2px solid var(--makicol-blue);
   }
 
   .range-thumb::-webkit-slider-runnable-track {
-    background: #d4b87a;
+    background: #e8e2c8;
     border-radius: 4px;
     height: 6px;
   }
@@ -146,7 +238,7 @@
     appearance: none;
     height: 6px;
     border-radius: 4px;
-    background: #d4b87a;
+    background: #e8e2c8;
     outline: none;
     cursor: pointer;
   }
@@ -164,22 +256,22 @@
   }
 
   /* ===== TEXTO EN SECCIONES CLARAS (blanco y beige) ===== */
-  /* Excluye hero (oscuro) y arquitectura (borgoña — sus glass-cards son blancas) */
-  section:not(#hero):not(#arquitectura) .text-white   { color: var(--artesanal-text); }
-  section:not(#hero):not(#arquitectura) .text-slate-300 { color: #5a3820; }
-  section:not(#hero):not(#arquitectura) .text-slate-400 { color: #7a5030; }
-  section:not(#hero):not(#arquitectura) .text-slate-500 { color: #8a6040; }
+  /* Excluye hero (oscuro) y arquitectura (verde — sus glass-cards son blancas) */
+  section:not(#hero):not(#arquitectura) .text-white   { color: var(--makicol-text); }
+  section:not(#hero):not(#arquitectura) .text-slate-300 { color: #3a4a3f; }
+  section:not(#hero):not(#arquitectura) .text-slate-400 { color: #57685c; }
+  section:not(#hero):not(#arquitectura) .text-slate-500 { color: #6e7f73; }
 
-  /* Arquitectura (fondo borgoña): texto claro en la sección, oscuro DENTRO de las tarjetas */
-  #arquitectura .glass-card .text-white   { color: var(--artesanal-text); }
-  #arquitectura .glass-card .text-slate-300 { color: #5a3820; }
-  #arquitectura .glass-card .text-slate-400 { color: #7a5030; }
-  #arquitectura .glass-card .text-slate-500 { color: #8a6040; }
+  /* Arquitectura (fondo verde Makicol): texto claro en la sección, oscuro DENTRO de las tarjetas */
+  #arquitectura .glass-card .text-white   { color: var(--makicol-text); }
+  #arquitectura .glass-card .text-slate-300 { color: #3a4a3f; }
+  #arquitectura .glass-card .text-slate-400 { color: #57685c; }
+  #arquitectura .glass-card .text-slate-500 { color: #6e7f73; }
 
-  /* ===== NAVBAR SCROLLED — borgoña wine (igual que nav de la feria) ===== */
+  /* ===== NAVBAR SCROLLED — verde Makicol ===== */
   .nav-scrolled {
-    background-color: var(--artesanal-primary);
-    border-bottom: 1px solid rgba(200, 146, 26, 0.35);
+    background-color: var(--makicol-primary);
+    border-bottom: 1px solid rgba(218, 175, 55, 0.35);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   }
 }

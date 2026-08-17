@@ -11,7 +11,7 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
     <section id="arquitectura" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16 section-borgona">
 
       <div class="absolute inset-0"
-           style="background: radial-gradient(ellipse at 20% 80%, rgba(125,28,58,0.08) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(42,184,176,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 40%, rgba(200,146,26,0.07) 0%, transparent 45%);">
+           style="background: radial-gradient(ellipse at 20% 80%, rgba(41,84,64,0.08) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(46,204,113,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 40%, rgba(218,175,55,0.07) 0%, transparent 45%);">
       </div>
 
       <div class="relative max-w-7xl mx-auto">
@@ -20,7 +20,7 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
           iconBg="rgba(255,255,255,0.15)"
           badge="Módulo 03 — Arquitectura"
           title="Arquitectura Cloud del Marketplace"
-          subtitle="Topología Azure para el Marketplace Caribe Artesanal: capa de pagos (MercadoPago/PSE), media para reels y CDN para el catálogo de artesanos."
+          subtitle="Topología Azure para Makicol Marketplace: capa de pagos (Wompi/PSE/Efecty), media para reels y CDN para el catálogo de artesanos."
           [onDark]="true"/>
 
         <!-- Architecture principle banner -->
@@ -47,15 +47,15 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
     </section>
 
     <!-- Footer -->
-    <!-- Footer — azul Unimagdalena oscuro, igual que .lp-footer de la feria -->
+    <!-- Footer — azul institucional Makicol -->
     <footer class="section-navy py-10 px-4 text-center">
       <div class="max-w-7xl mx-auto">
-        <div class="text-2xl mb-3">�</div>
-        <p class="font-bold text-base mb-1" style="color:rgba(255,255,255,0.92); font-family:'Playfair Display',Georgia,serif;">
-          Marketplace Caribe Artesanal
+        <img src="/assets/makicol-icono-base.svg" alt="Makicol" class="mx-auto mb-3" style="height:32px; opacity:0.85;">
+        <p class="font-bold text-base mb-1" style="color:rgba(255,255,255,0.92); font-family:'Plus Jakarta Sans',sans-serif;">
+          Makicol Marketplace
         </p>
         <p style="color:rgba(255,255,255,0.55); font-size:0.82rem; margin:3px 0;">
-          Vicerrectoría de Investigación · FilSMar 2026 · Unimagdalena · Santa Marta
+          Artesanías y emprendimiento colombiano · Vende y compra en todo el país
         </p>
         <p style="color:rgba(255,255,255,0.38); font-size:0.72rem; margin-top:6px;">
           Propuesta Ejecutiva v1.0 · Angular 21 + Azure Cloud
@@ -69,17 +69,17 @@ export class ArchitectureComponent {
     {
       icon: '�',
       title: 'Acceso Abierto a Productores',
-      text: 'Cualquier artesano o editorial de Santa Marta puede registrarse y vender desde el día 1 sin instalar nada, solo con un navegador.'
+      text: 'Cualquier artesano o emprendedor de Colombia puede registrarse y vender desde el día 1 sin instalar nada, solo con un navegador.'
     },
     {
       icon: '�',
       title: 'Pagos Seguros Colombianos',
-      text: 'MercadoPago Colombia integrado desde Fase 1: PSE, Nequi, Daviplata y tarjeta. La capa de pagos es independiente de la infraestructura.'
+      text: 'Wompi (Bancolombia) integrado desde Fase 1: PSE, Nequi, Daviplata, tarjeta y Efecty en efectivo. La capa de pagos es independiente de la infraestructura.'
     },
     {
       icon: '💸',
       title: 'Autosostenible con Patrocinadores',
-      text: 'Año 1 cubierto por Unimagdalena y aliados. Desde el mes 8, las comisiones de venta superan el costo operativo de Azure.'
+      text: 'Año 1 cubierto por inversión inicial y aliados estratégicos. Desde el mes 8, las comisiones de venta superan el costo operativo de Azure.'
     },
   ];
 }

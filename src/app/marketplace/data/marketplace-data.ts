@@ -78,10 +78,10 @@ export const PRODUCTOS: Producto[] = [
     descripcion: 'Cerámica inspirada en la tradición Tayrona, modelada a mano y cocida en horno de leña por maestro artesano.',
   },
   {
-    id: 6, nombre: 'Voces del Caribe — Antología', artesano: 'Editorial Unimagdalena',
+    id: 6, nombre: 'Voces del Caribe — Antología', artesano: 'Editorial Caribe Cultural',
     region: 'Santa Marta, Magdalena', precio: 35000, categoria: 'Libros',
     rating: 4.7, resenas: 23, imagen: '/assets/foto6.webp', vendidos: 134,
-    descripcion: 'Antología de poesía y narrativa de autores del litoral Caribe colombiano. FilSMar 2025. 280 páginas.',
+    descripcion: 'Antología de poesía y narrativa de autores del litoral Caribe colombiano. Edición independiente, 280 páginas.',
   },
   {
     id: 7, nombre: 'Collar de Semillas Wayúu', artesano: 'María Pushaina',

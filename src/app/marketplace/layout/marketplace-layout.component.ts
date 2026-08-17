@@ -7,25 +7,24 @@ import { MarketplaceNavbarComponent } from './marketplace-navbar.component';
   standalone: true,
   imports: [RouterOutlet, MarketplaceNavbarComponent],
   template: `
-    <div style="min-height:100vh; background:#EDD9A3; display:flex; flex-direction:column;">
+    <div style="min-height:100vh; background:#FDFBF3; display:flex; flex-direction:column;">
       <app-marketplace-navbar/>
       <main style="flex:1;">
         <router-outlet/>
       </main>
-      <footer style="background:#003366; padding:32px 24px; text-align:center;">
-        <img src="/assets/logo-corazon.png" alt="Caribe Artesanal"
-             style="height:52px; margin:0 auto 12px; display:block; opacity:0.85; object-fit:contain;">
-        <p style="font-family:'Playfair Display',Georgia,serif; color:rgba(255,255,255,0.92); font-size:1rem; font-weight:700; margin:0 0 4px;">
-          Marketplace Caribe Artesanal
-        </p>
-        <p style="color:rgba(255,255,255,0.55); font-size:0.82rem; margin:3px 0;">
-          Artesanos del Caribe · FilSMar 2026 · Unimagdalena · Santa Marta, Colombia
+      <footer style="background:#fff; padding:36px 24px 28px; text-align:center; border-top:3px solid #DAAF37;">
+        <!-- Fondo claro a propósito: el logo real (multicolor) necesita superficie clara para verse fiel al original. -->
+        <span class="sr-only">Makicol Marketplace</span>
+        <img src="/assets/makicol-logo-header.svg" alt="Makicol Marketplace"
+             style="height:44px; margin:0 auto 14px; display:block; object-fit:contain;">
+        <p style="color:#57685c; font-size:0.85rem; margin:3px 0;">
+          Artesanías y emprendimiento colombiano · Vende y compra en todo el país
         </p>
         <div style="display:flex; justify-content:center; gap:24px; margin-top:16px;">
-          <a href="#" style="color:rgba(255,255,255,0.60); font-size:0.8rem; text-decoration:none;">Términos</a>
-          <a href="#" style="color:rgba(255,255,255,0.60); font-size:0.8rem; text-decoration:none;">Privacidad</a>
-          <a href="#" style="color:rgba(255,255,255,0.60); font-size:0.8rem; text-decoration:none;">Ayuda</a>
-          <a href="#" style="color:rgba(255,255,255,0.60); font-size:0.8rem; text-decoration:none;">Contacto</a>
+          <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Términos</a>
+          <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Privacidad</a>
+          <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Ayuda</a>
+          <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Contacto</a>
         </div>
       </footer>
     </div>

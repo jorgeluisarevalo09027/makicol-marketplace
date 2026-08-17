@@ -26,8 +26,8 @@ interface MatrixRow {
             <button
               class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               [class]="activeCategory() === 'all'
-                ? 'bg-sky-500 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'"
+                ? 'bg-sky-400 text-white'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200'"
               (click)="activeCategory.set('all')">
               Todas
             </button>
@@ -35,8 +35,8 @@ interface MatrixRow {
               <button
                 class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
                 [class]="activeCategory() === cat.id
-                  ? 'bg-sky-500 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'"
+                  ? 'bg-sky-400 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200'"
                 (click)="activeCategory.set(cat.id)">
                 {{ cat.icon }} {{ cat.label }}
               </button>
@@ -129,7 +129,7 @@ export class FeatureMatrixComponent {
     { category: 'comercio', feature: 'Carrito de compras', pwa: { rating: 'excellent', detail: 'LocalStorage + sincronización' }, native: { rating: 'excellent', detail: 'Persistencia nativa' } },
     { category: 'comercio', feature: 'Acceso de productores', pwa: { rating: 'excellent', detail: 'Sin instalación requerida' }, native: { rating: 'fair', detail: 'Barrera de instalación' } },
     { category: 'comercio', feature: 'SEO y descubribilidad', pwa: { rating: 'excellent', detail: 'Indexado por Google' }, native: { rating: 'poor', detail: 'No indexable por buscadores' } },
-    { category: 'pagos', feature: 'PSE / Transferencia', pwa: { rating: 'excellent', detail: 'MercadoPago Web SDK' }, native: { rating: 'excellent', detail: 'MercadoPago Mobile SDK' } },
+    { category: 'pagos', feature: 'PSE / Transferencia', pwa: { rating: 'excellent', detail: 'Wompi Web SDK' }, native: { rating: 'excellent', detail: 'Wompi Mobile SDK' } },
     { category: 'pagos', feature: 'Nequi / Daviplata', pwa: { rating: 'excellent', detail: 'Integrado en checkout' }, native: { rating: 'excellent', detail: 'Deep link nativo' } },
     { category: 'pagos', feature: 'Tarjeta crédito/débito', pwa: { rating: 'excellent', detail: 'Web Payments API + 3DS' }, native: { rating: 'excellent', detail: 'Token nativo cifrado' } },
     { category: 'pagos', feature: 'Historial de ventas', pwa: { rating: 'excellent', detail: 'Dashboard web para productores' }, native: { rating: 'good', detail: 'Notificación en tiempo real' } },
