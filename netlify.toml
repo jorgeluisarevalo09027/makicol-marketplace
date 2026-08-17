@@ -1,6 +1,6 @@
 [build]
   command = "ng build"
-  publish = "dist/azure-platform-proposal/browser"
+  publish = "dist/makicol-marketplace/browser"
 
 [build.environment]
   NODE_VERSION = "22"

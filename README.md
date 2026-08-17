@@ -1,4 +1,6 @@
-# AzurePlatformProposal
+# Makicol Marketplace
+
+Propuesta ejecutiva del Marketplace Digital Caribe Artesanal (FilSMar / Unimagdalena, Santa Marta).
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
 

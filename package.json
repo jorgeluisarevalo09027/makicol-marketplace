@@ -1,5 +1,5 @@
 {
-  "name": "azure-platform-proposal",
+  "name": "makicol-marketplace",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:azure-platform-proposal": "node dist/azure-platform-proposal/server/server.mjs"
+    "serve:ssr:makicol-marketplace": "node dist/makicol-marketplace/server/server.mjs"
   },
   "private": true,
   "packageManager": "npm@11.9.0",

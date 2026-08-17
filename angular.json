@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "azure-platform-proposal": {
+    "makicol-marketplace": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -90,10 +90,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "azure-platform-proposal:build:production"
+              "buildTarget": "makicol-marketplace:build:production"
             },
             "development": {
-              "buildTarget": "azure-platform-proposal:build:development"
+              "buildTarget": "makicol-marketplace:build:development"
             }
           },
           "defaultConfiguration": "development"
