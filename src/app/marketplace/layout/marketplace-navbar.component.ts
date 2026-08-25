@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -7,31 +7,29 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, FormsModule],
   styles: [`
-    .mkt-cat-pill {
+    .mkt-cat-link {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.82rem;
+      padding: 6px 10px;
+      font-size: 0.86rem;
       font-weight: 600;
       white-space: nowrap;
       text-decoration: none;
       cursor: pointer;
-      border: 1.5px solid #C6D7CD;
-      transition: background 0.18s, color 0.18s, box-shadow 0.18s, border-color 0.18s;
-      background: #F2F6F4;
+      border: none;
+      background: transparent;
       color: #295440;
+      transition: color 0.15s;
     }
-    .mkt-cat-pill:hover {
-      background: #E3EBE7;
-      border-color: #9FBBAC;
+    .mkt-cat-link:hover {
+      color: #2C7350;
     }
-    .mkt-cat-pill.active {
-      background: #2C7350;
-      color: #fff;
-      border-color: #2C7350;
-      box-shadow: 0 2px 10px rgba(44,115,80,0.30);
+    .mkt-cat-link.active {
+      color: #2C7350;
+      font-weight: 800;
+    }
+    .mkt-dropdown-item:hover {
+      background: #F2F6F4;
     }
     .mkt-nav-action {
       color: #295440;
@@ -49,9 +47,73 @@ import { FormsModule } from '@angular/forms';
     .mkt-nav-action:hover, .mkt-nav-action.active-page {
       background: rgba(41,84,64,0.08);
     }
+    .mkt-promo-banner {
+      height: 44px; width: auto; max-width: 260px; object-fit: contain;
+      border-radius: 22px; flex-shrink: 0;
+    }
+    .mkt-search-wrap {
+      flex: 1; min-width: 0; max-width: 540px; margin: 0 auto;
+    }
+    .mkt-promo-mobile-row {
+      display: none;
+    }
+    @media (max-width: 700px) {
+      .mkt-promo-banner {
+        display: none;
+      }
+      .mkt-promo-mobile-row {
+        display: flex;
+        justify-content: center;
+        padding: 8px 1rem 10px;
+        background: #fff;
+        border-top: 1px solid rgba(41,84,64,0.06);
+      }
+      .mkt-promo-mobile-row img {
+        max-width: 100%;
+        height: 42px;
+        width: auto;
+        object-fit: contain;
+        border-radius: 21px;
+      }
+      .mkt-fila2-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .mkt-nav-links {
+        order: 2;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .mkt-actions {
+        order: 1;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        border-bottom: 1px solid rgba(41,84,64,0.08);
+        padding-bottom: 8px;
+      }
+    }
   `],
   template: `
     <header style="background:#fff; position:sticky; top:0; z-index:50; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+
+      <!-- ── Barra decorativa superior ── -->
+      <div style="background:#295440;">
+        <div style="max-width:1200px; margin:0 auto; padding:6px 1rem;
+                    display:flex; align-items:center; justify-content:space-between;
+                    gap:12px; font-size:0.78rem; color:#fff; flex-wrap:wrap;">
+          <span style="display:inline-flex; align-items:center; gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:16px; color:#FFCD00;">local_shipping</span>
+            Envíos a toda Colombia
+          </span>
+          <span style="display:inline-flex; align-items:center; gap:20px;">
+            <span>Pago seguro</span>
+            <span>Atención personalizada</span>
+          </span>
+        </div>
+      </div>
+
       <div style="height:3px; background:linear-gradient(90deg,#FFCD00,#003893,#C8102E);"></div>
 
       <!-- ── Fila 1: Logo · Búsqueda · Acciones ── -->
@@ -68,113 +130,200 @@ import { FormsModule } from '@angular/forms';
           </a>
 
           <!-- Barra de búsqueda -->
-          <div style="flex:1; max-width:540px; margin:0 auto;">
+          <div class="mkt-search-wrap">
             <div style="display:flex; align-items:center; background:#FDFBF3; border-radius:8px;
                         overflow:hidden; border:2px solid #DAAF37;">
               <input [(ngModel)]="searchQuery"
                      placeholder="Buscar artesanías, libros, tejidos..."
-                     style="flex:1; border:none; outline:none; padding:8px 12px;
+                     style="flex:1; min-width:0; border:none; outline:none; padding:8px 12px;
                             font-size:0.88rem; color:#1F2A22; background:transparent;">
               <button style="padding:8px 15px; background:#FFCD00; border:none;
-                             cursor:pointer; color:#295440; font-size:1rem; line-height:1;">
+                             cursor:pointer; color:#295440; font-size:1rem; line-height:1; flex-shrink:0;">
                 🔍
               </button>
             </div>
           </div>
 
-          <!-- Acciones: Pedidos · Vender · Carrito · Ingresar -->
-          <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+          <!-- Banner promocional -->
+          <img src="/assets/D_NQ_629384-MLA115900532115_082026-OO.webp" alt="Promoción meli+"
+               class="mkt-promo-banner">
 
-            <a routerLink="/marketplace/pedidos" class="mkt-nav-action"
-               routerLinkActive="active-page">
-              <span style="font-size:1.1rem; line-height:1;">📦</span>
-              <span>Pedidos</span>
+        </div>
+      </div>
+
+      <!-- ── Fila publicidad (solo mobile) ── -->
+      <div class="mkt-promo-mobile-row">
+        <img src="/assets/D_NQ_629384-MLA115900532115_082026-OO.webp" alt="Promoción meli+">
+      </div>
+
+      <!-- ── Fila 2: Categorías + Acciones ── -->
+      <div style="background:#FDFBF3; border-top:1px solid rgba(41,84,64,0.08);">
+        <div class="mkt-fila2-inner" style="max-width:1200px; margin:0 auto; padding:8px 1rem;
+                    display:flex; align-items:center; justify-content:space-between;
+                    gap:12px; flex-wrap:wrap;">
+
+          <!-- Navegación principal -->
+          <div class="mkt-nav-links" style="display:flex; align-items:center; gap:2px; flex-shrink:0; position:relative;">
+            <a routerLink="/marketplace/catalogo"
+               class="mkt-cat-link"
+               routerLinkActive="active"
+               [routerLinkActiveOptions]="{exact:true}">
+              Catálogo
             </a>
 
-            <a routerLink="/marketplace/registro" class="mkt-nav-action"
-               routerLinkActive="active-page">
-              <span style="font-size:1.1rem; line-height:1;">🏪</span>
-              <span>Vender</span>
-            </a>
+            <!-- Dropdown Categorías -->
+            <div style="position:relative;">
+              <button class="mkt-cat-link"
+                      [class.active]="categoriasMenuAbierto()"
+                      (click)="$event.stopPropagation(); categoriasMenuAbierto.set(!categoriasMenuAbierto())"
+                      style="display:inline-flex; align-items:center; gap:2px;">
+                Categorías
+                <span class="material-symbols-outlined" style="font-size:18px;">
+                  {{ categoriasMenuAbierto() ? 'expand_less' : 'expand_more' }}
+                </span>
+              </button>
 
-            <!-- Carrito con badge -->
-            <a routerLink="/marketplace/pago"
-               style="position:relative; color:#295440; text-decoration:none; padding:7px 11px;
-                      border-radius:8px; background:rgba(41,84,64,0.06);
-                      border:1px solid rgba(41,84,64,0.18); margin-left:4px;">
-              <span style="font-size:1.2rem; line-height:1;">🛒</span>
-              <span style="position:absolute; top:-5px; right:-5px; background:#C8102E; color:#fff;
-                           font-size:0.62rem; font-weight:800; min-width:18px; height:18px;
-                           border-radius:9px; display:flex; align-items:center; justify-content:center;
-                           padding:0 3px; border:2px solid #fff;">2</span>
-            </a>
+              @if (categoriasMenuAbierto()) {
+                <div (click)="$event.stopPropagation()"
+                     style="position:absolute; top:calc(100% + 8px); left:0; background:#fff; border-radius:10px;
+                            box-shadow:0 8px 24px rgba(0,0,0,0.15); border:1px solid #EFE9DD; min-width:180px;
+                            padding:6px; z-index:60;">
+                  @for (cat of filtros; track cat) {
+                    <a routerLink="/marketplace/buscar"
+                       [queryParams]="{ categoria: cat }"
+                       (click)="categoriasMenuAbierto.set(false)"
+                       class="mkt-dropdown-item"
+                       style="display:block; padding:9px 14px; border-radius:6px; text-decoration:none;
+                              color:#1F2A22; font-size:0.85rem; font-weight:600; transition:background 0.15s;">
+                      {{ cat }}
+                    </a>
+                  }
+                </div>
+              }
+            </div>
 
-            <button style="background:#FFCD00; color:#295440; border:none; border-radius:8px;
-                           padding:7px 15px; font-size:0.8rem; font-weight:700; cursor:pointer;
-                           white-space:nowrap; margin-left:4px; letter-spacing:0.2px;">
-              Ingresar
-            </button>
+            <a routerLink="/marketplace/creadores" class="mkt-cat-link" routerLinkActive="active">Creadores</a>
+            <a routerLink="/marketplace/historias" class="mkt-cat-link" routerLinkActive="active">Historias</a>
+            <a routerLink="/marketplace/sobre-maki" class="mkt-cat-link" routerLinkActive="active">Sobre Maki</a>
+          </div>
+
+          <!-- Acciones: Ingresar → (Pedidos · Vender · Carrito · Dirección) -->
+          <div class="mkt-actions" style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+
+            @if (!sesionIniciada()) {
+              <button (click)="sesionIniciada.set(true)"
+                      style="background:#FFCD00; color:#295440; border:none; border-radius:8px;
+                             padding:7px 15px; font-size:0.8rem; font-weight:700; cursor:pointer;
+                             white-space:nowrap; letter-spacing:0.2px;">
+                Ingresar
+              </button>
+            } @else {
+              <a routerLink="/marketplace/pedidos" class="mkt-nav-action"
+                 routerLinkActive="active-page">
+                <span class="material-symbols-outlined" style="font-size:1.1rem; line-height:1;">inventory_2</span>
+                <span>Pedidos</span>
+              </a>
+
+              <a routerLink="/marketplace/registro" class="mkt-nav-action"
+                 routerLinkActive="active-page">
+                <span class="material-symbols-outlined" style="font-size:1.1rem; line-height:1;">storefront</span>
+                <span>Vender</span>
+              </a>
+
+              <!-- Carrito con badge -->
+              <a routerLink="/marketplace/pago"
+                 style="position:relative; color:#295440; text-decoration:none; padding:7px 11px;
+                        border-radius:8px; background:rgba(41,84,64,0.06);
+                        border:1px solid rgba(41,84,64,0.18); margin-left:4px;">
+                <span class="material-symbols-outlined" style="font-size:1.2rem; line-height:1;">shopping_cart</span>
+                <span style="position:absolute; top:-5px; right:-5px; background:#C8102E; color:#fff;
+                             font-size:0.62rem; font-weight:800; min-width:18px; height:18px;
+                             border-radius:9px; display:flex; align-items:center; justify-content:center;
+                             padding:0 3px; border:2px solid #fff;">2</span>
+              </a>
+
+              <!-- Pill de dirección de entrega -->
+              <button (click)="modalDireccionAbierto.set(true)"
+                      style="display:flex; align-items:center; gap:6px;  color:#295440;
+                             border:none; border-radius:8px; padding:5px 12px; margin-left:4px;
+                             cursor:pointer; text-align:left; line-height:1.2;">
+                <span class="material-symbols-outlined" style="font-size:1.3rem;">location_on</span>
+                <span>
+                  <span style="display:block; font-size:0.68rem; opacity:0.75;">Enviar a Jorge</span>
+                  <span style="display:block; font-size:0.78rem; font-weight:700; max-width:150px;
+                               overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">San Lucas La Quinta ...</span>
+                </span>
+              </button>
+            }
 
           </div>
-        </div>
-      </div>
-
-      <!-- ── Fila 2: Categorías como pills ── -->
-      <div style="background:#FDFBF3; border-top:1px solid rgba(41,84,64,0.08);">
-        <div style="max-width:1200px; margin:0 auto; padding:8px 1rem;
-                    display:flex; align-items:center; gap:6px;
-                    overflow-x:auto; scrollbar-width:none;">
-
-          <!-- Páginas principales — routerLink + routerLinkActive para highlight correcto -->
-          <a routerLink="/marketplace/catalogo"
-             class="mkt-cat-pill"
-             routerLinkActive="active"
-             [routerLinkActiveOptions]="{exact:true}">
-            🛍️ Catálogo
-          </a>
-
-          <!-- Separador visual -->
-          <span style="width:1px; height:20px; background:rgba(41,84,64,0.15);
-                       flex-shrink:0; margin:0 4px;"></span>
-
-          <!-- Filtros de categoría — estado manejado por signal (misma ruta /buscar) -->
-          @for (cat of filtros; track cat.label) {
-            <button class="mkt-cat-pill"
-                    [class.active]="categoriaActiva() === cat.label"
-                    (click)="seleccionar(cat)">
-              {{ cat.icono }} {{ cat.label }}
-            </button>
-          }
-
-          <!-- Separador + Vender -->
-          <span style="width:1px; height:20px; background:rgba(41,84,64,0.15);
-                       flex-shrink:0; margin:0 4px;"></span>
-          <a routerLink="/marketplace/registro"
-             class="mkt-cat-pill"
-             routerLinkActive="active">
-            🏪 Vender aquí
-          </a>
 
         </div>
       </div>
+
+      <!-- ── Modal: seleccionar dirección de entrega ── -->
+      @if (modalDireccionAbierto()) {
+        <div (click)="modalDireccionAbierto.set(false)"
+             style="position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100;
+                    display:flex; align-items:center; justify-content:center;">
+          <div (click)="$event.stopPropagation()"
+               style="background:#fff; border-radius:12px; padding:24px; width:100%; max-width:380px;
+                      box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+            <h3 style="margin:0 0 16px; font-size:1.05rem; color:#1F2A22; font-weight:700;">
+              Elegir dirección de entrega
+            </h3>
+
+            @for (dir of direcciones; track dir.id) {
+              <label style="display:flex; align-items:flex-start; gap:10px; padding:10px 0;
+                             border-bottom:1px solid #F0EAE0; cursor:pointer;">
+                <input type="radio" name="direccion" [checked]="dir.id === direccionSeleccionada()"
+                       (change)="direccionSeleccionada.set(dir.id)"
+                       style="margin-top:3px;">
+                <span>
+                  <span style="display:block; font-weight:600; font-size:0.9rem; color:#1F2A22;">{{ dir.titulo }}</span>
+                  <span style="display:block; font-size:0.8rem; color:#57685c;">{{ dir.detalle }}</span>
+                </span>
+              </label>
+            }
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+              <button (click)="modalDireccionAbierto.set(false)"
+                      style="flex:1; background:#295440; color:#fff; border:none; border-radius:8px;
+                             padding:10px; font-size:0.85rem; font-weight:700; cursor:pointer;">
+                Confirmar
+              </button>
+              <button (click)="modalDireccionAbierto.set(false)"
+                      style="flex:1; background:#F2F6F4; color:#295440; border:1.5px solid #C6D7CD; border-radius:8px;
+                             padding:10px; font-size:0.85rem; font-weight:700; cursor:pointer;">
+                + Agregar dirección
+              </button>
+            </div>
+          </div>
+        </div>
+      }
 
     </header>
   `,
 })
 export class MarketplaceNavbarComponent {
-  searchQuery     = '';
-  categoriaActiva = signal('Todos');
+  searchQuery = '';
 
-  filtros = [
-    { label: 'Todos',      icono: '✨', ruta: '/marketplace/catalogo' },
-    { label: 'Tejidos',    icono: '🧶', ruta: '/marketplace/buscar'   },
-    { label: 'Sombreros',  icono: '👒', ruta: '/marketplace/buscar'   },
-    { label: 'Joyería',    icono: '💍', ruta: '/marketplace/buscar'   },
-    { label: 'Cerámica',   icono: '🏺', ruta: '/marketplace/buscar'   },
-    { label: 'Libros',     icono: '📚', ruta: '/marketplace/buscar'   },
+  categoriasMenuAbierto = signal(false);
+
+  sesionIniciada        = signal(false);
+  modalDireccionAbierto = signal(false);
+  direccionSeleccionada = signal(1);
+
+  @HostListener('document:click')
+  cerrarCategoriasMenu() {
+    this.categoriasMenuAbierto.set(false);
+  }
+
+  direcciones = [
+    { id: 1, titulo: 'Casa',    detalle: 'San Lucas La Quinta, Bogotá' },
+    { id: 2, titulo: 'Trabajo', detalle: 'Cra 45 #12-34, Medellín' },
+    { id: 3, titulo: 'Otra',    detalle: 'Calle 10 #5-67, Cali' },
   ];
 
-  seleccionar(cat: { label: string; ruta: string }) {
-    this.categoriaActiva.set(cat.label);
-  }
+  filtros = ['Todos', 'Tejidos', 'Sombreros', 'Joyería', 'Cerámica', 'Libros'];
 }

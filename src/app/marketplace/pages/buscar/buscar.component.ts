@@ -1,4 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
 import { PRODUCTOS, CATEGORIAS, REGIONES } from '../../data/marketplace-data';
@@ -7,6 +9,38 @@ import { PRODUCTOS, CATEGORIAS, REGIONES } from '../../data/marketplace-data';
   selector: 'app-buscar',
   standalone: true,
   imports: [ProductCardComponent, FormsModule],
+  styles: [`
+    .buscar-layout {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .buscar-aside {
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 140px;
+    }
+    .buscar-filtros-toggle {
+      display: none;
+    }
+    @media (max-width: 860px) {
+      .buscar-layout {
+        flex-direction: column;
+      }
+      .buscar-aside {
+        width: 100%;
+        position: static;
+        display: none;
+      }
+      .buscar-aside.abierto {
+        display: block;
+      }
+      .buscar-filtros-toggle {
+        display: flex;
+      }
+    }
+  `],
   template: `
     <!-- Header de búsqueda -->
     <div style="background:#2C7350; padding:32px 16px;">
@@ -27,10 +61,19 @@ import { PRODUCTOS, CATEGORIAS, REGIONES } from '../../data/marketplace-data';
       </div>
     </div>
 
-    <div style="max-width:1200px; margin:0 auto; padding:28px 16px; display:flex; gap:24px; align-items:flex-start;">
+    <div style="max-width:1200px; margin:0 auto; padding:28px 16px;" class="buscar-layout">
+
+      <!-- Toggle de filtros (solo mobile) -->
+      <button (click)="filtrosAbiertos.set(!filtrosAbiertos())" class="buscar-filtros-toggle"
+              style="width:100%; align-items:center; justify-content:space-between; padding:12px 16px; background:#fff;
+                     border:1.5px solid #C6D7CD; border-radius:10px; font-weight:700; color:#295440; font-size:0.9rem; cursor:pointer;">
+        <span>Filtros {{ categoriasSeleccionadas().length || regionesSeleccionadas().length ? '(activos)' : '' }}</span>
+        <span class="material-symbols-outlined">{{ filtrosAbiertos() ? 'expand_less' : 'expand_more' }}</span>
+      </button>
 
       <!-- Panel de filtros -->
-      <aside style="width:240px; flex-shrink:0; background:#fff; border-left:4px solid #FFCD00; border-radius:10px; padding:20px; box-shadow:0 2px 12px rgba(41,84,64,0.09); position:sticky; top:140px;">
+      <aside class="buscar-aside" [class.abierto]="filtrosAbiertos()"
+             style="background:#fff; border-left:4px solid #FFCD00; border-radius:10px; padding:20px; box-shadow:0 2px 12px rgba(41,84,64,0.09);">
         <h3 style="font-family:'Plus Jakarta Sans',sans-serif; color:#295440; font-size:1.1rem; font-weight:700; margin:0 0 16px;">
           Filtros
         </h3>
@@ -137,9 +180,21 @@ export class BuscarComponent {
   ratingMin              = signal(0);
   categoriasSeleccionadas = signal<string[]>([]);
   regionesSeleccionadas  = signal<string[]>([]);
+  filtrosAbiertos        = signal(false);
 
   categorias = CATEGORIAS.filter(c => c !== 'Todos');
   regiones   = REGIONES;
+
+  constructor(private route: ActivatedRoute) {
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed())
+      .subscribe(params => {
+        const categoria = params.get('categoria');
+        if (categoria && this.categorias.includes(categoria)) {
+          this.categoriasSeleccionadas.set([categoria]);
+        }
+      });
+  }
 
   resultados = computed(() => {
     const q      = this.query.toLowerCase();

@@ -7,11 +7,36 @@ import { PEDIDOS, RESENAS } from '../../data/marketplace-data';
   selector: 'app-pedidos',
   standalone: true,
   imports: [RouterLink, StarRatingComponent],
+  styles: [`
+    .ped-metricas {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .ped-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .ped-table-wrap {
+      overflow-x: auto;
+    }
+    @media (max-width: 700px) {
+      .ped-metricas {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .ped-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  `],
   template: `
     <div style="max-width:1100px; margin:0 auto; padding:32px 16px 48px;">
 
       <!-- Header artesano -->
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px; padding:24px; background:#fff; border-left:4px solid #FFCD00; border-radius:12px; box-shadow:0 2px 12px rgba(41,84,64,0.09);">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px; padding:24px; background:#fff; border-left:4px solid #FFCD00; border-radius:12px; box-shadow:0 2px 12px rgba(41,84,64,0.09); flex-wrap:wrap;">
         <div style="width:68px; height:68px; border-radius:50%; background:#FDFBF3; border:4px solid #FFCD00; display:flex; align-items:center; justify-content:center; font-size:2.2rem; flex-shrink:0;">
           🧶
         </div>
@@ -29,7 +54,7 @@ import { PEDIDOS, RESENAS } from '../../data/marketplace-data';
       </div>
 
       <!-- Métricas -->
-      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:32px;">
+      <div class="ped-metricas">
         @for (m of metricas; track m.label) {
           <div style="background:#fff; border-left:4px solid; border-radius:12px; padding:20px; box-shadow:0 2px 12px rgba(41,84,64,0.09); text-align:center;"
                [style.border-left-color]="m.color">
@@ -43,7 +68,7 @@ import { PEDIDOS, RESENAS } from '../../data/marketplace-data';
         }
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:flex-start;">
+      <div class="ped-layout">
 
         <!-- Tabla de pedidos -->
         <div>
@@ -55,8 +80,8 @@ import { PEDIDOS, RESENAS } from '../../data/marketplace-data';
             <div style="flex:1; height:2px; max-width:80px; background:linear-gradient(to left,transparent,#FFCD00);"></div>
           </div>
 
-          <div style="background:#fff; border-left:4px solid #FFCD00; border-radius:12px; box-shadow:0 2px 12px rgba(41,84,64,0.09); overflow:hidden;">
-            <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+          <div style="background:#fff; border-left:4px solid #FFCD00; border-radius:12px; box-shadow:0 2px 12px rgba(41,84,64,0.09);" class="ped-table-wrap">
+            <table style="width:100%; min-width:520px; border-collapse:collapse; font-size:0.85rem;">
               <thead>
                 <tr style="background:#E3EBE7;">
                   <th style="padding:12px 16px; text-align:left; font-weight:700; color:#295440; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px;">Pedido</th>

@@ -1,100 +1,176 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
 import { StarRatingComponent } from '../../shared/star-rating/star-rating.component';
-import { PRODUCTOS, ARTESANOS, CATEGORIAS } from '../../data/marketplace-data';
+import { DiscoverySectionComponent } from '../../shared/discovery-section/discovery-section.component';
+import { PromoBannerComponent } from '../../shared/promo-banner/promo-banner.component';
+import { PRODUCTOS, ARTESANOS, Producto } from '../../data/marketplace-data';
+
+type BloqueProductos = { tipo: 'productos'; titulo: string; items: Producto[] };
+type BloqueArtesanos = { tipo: 'artesanos' };
+type BloquePromo = {
+  tipo: 'promo'; titulo: string; subtitulo: string; ctaTexto: string; ctaRuta: string;
+  color: string; imagenes: string[];
+};
+type Bloque = BloqueProductos | BloqueArtesanos | BloquePromo;
 
 @Component({
   selector: 'app-catalogo',
   standalone: true,
-  imports: [ProductCardComponent, StarRatingComponent, RouterLink],
+  imports: [ProductCardComponent, StarRatingComponent, RouterLink, DiscoverySectionComponent, PromoBannerComponent],
+  styles: [`
+    .hero-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: #295440;
+      font-weight: 700;
+      margin: 0 0 12px;
+      max-width: 480px;
+      line-height: 1.15;
+    }
+    .hero-scrim {
+      display: none;
+    }
+    @media (max-width: 700px) {
+      .hero-content {
+        padding: 28px 20px !important;
+      }
+      .hero-titulo {
+        font-size: 1.7rem;
+      }
+      .hero-scrim {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(100deg, #F0EAE0 45%, rgba(240,234,224,0.55) 70%, transparent 100%);
+      }
+    }
+  `],
   template: `
     <!-- Hero banner del catálogo -->
-    <section style="position:relative; overflow:hidden; background:#2C7350; min-height:240px; display:flex; align-items:center;">
-      <img src="/assets/artesanias.png" alt="Artesanías colombianas"
-           style="position:absolute; right:0; top:0; height:100%; width:50%; object-fit:cover; object-position:center; opacity:0.35;">
-      <img src="/assets/decoracion-esquina.png" alt=""
-           style="position:absolute; left:0; top:0; height:100%; opacity:0.18; object-fit:cover; width:200px;">
-      <div style="position:relative; z-index:2; padding:40px 32px; max-width:1200px; margin:0 auto; width:100%;">
-        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:400; font-size:1.1rem; color:#FFCD00; margin:0 0 4px; letter-spacing:0.3px;">
-          Hecho a mano, hecho en Colombia
-        </p>
-        <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:2rem; color:#fff; font-weight:800; margin:0 0 8px;">
-          Artesanías colombianas de todo el país
+    <section style="position:relative; overflow:hidden; min-height:280px; display:flex; align-items:center;
+                    background-color:#F0EAE0; background-image:url('/assets/hero_banner_1.jpg'); background-size:cover; background-position:right center; background-repeat:no-repeat;">
+      <div class="hero-scrim"></div>
+      <div class="hero-content" style="position:relative; z-index:2; padding:40px 32px; max-width:1200px; margin:0 auto; width:100%;">
+        <h1 class="hero-titulo">
+          Hecho por manos de aquí<span style="color:#E8871E;">.</span>
         </h1>
-        <p style="color:rgba(255,255,255,0.75); font-size:0.95rem; margin:0 0 20px;">
-          {{ productosFiltrados().length }} productos disponibles de artesanos verificados
+        <p style="color:#4B5A50; font-size:1rem; margin:0 0 24px; max-width:380px; line-height:1.4;">
+          Descubre piezas únicas creadas por manos colombianas.
         </p>
-        <a routerLink="/marketplace/buscar"
-           style="display:inline-flex; align-items:center; gap:8px; background:#FFCD00; color:#295440; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:700; font-size:0.9rem;">
-          🔍 Explorar con filtros
-        </a>
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+          <a routerLink="/marketplace/buscar"
+             style="display:inline-flex; align-items:center; gap:8px; background:#295440; color:#fff; padding:12px 22px; border-radius:8px; text-decoration:none; font-weight:700; font-size:0.9rem;">
+            Explorar piezas <span>→</span>
+          </a>
+          <a routerLink="/marketplace/buscar"
+             style="color:#295440; font-size:0.9rem; font-weight:600; text-decoration:underline; text-decoration-color:#FFCD00;">
+            Conoce a los creadores
+          </a>
+        </div>
       </div>
     </section>
 
     <div style="max-width:1200px; margin:0 auto; padding:32px 16px;">
 
-      <!-- Filtro por categoría -->
-      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px;">
-        @for (cat of categorias; track cat) {
-          <button (click)="categoriaActiva.set(cat)"
-                  style="padding:7px 16px; border-radius:20px; border:2px solid; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.2s;"
-                  [style.background]="categoriaActiva() === cat ? '#2C7350' : '#F2F6F4'"
-                  [style.border-color]="categoriaActiva() === cat ? '#2C7350' : '#C6D7CD'"
-                  [style.color]="categoriaActiva() === cat ? '#fff' : '#295440'">
-            {{ cat }}
-          </button>
-        }
-      </div>
-
-      <!-- Grid de productos -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:20px; margin-bottom:48px;">
-        @for (p of productosFiltrados(); track p.id) {
-          <app-product-card [producto]="p"/>
-        }
-      </div>
-
-      <!-- Separador dorado -->
-      <hr style="border:none; height:2px; background:linear-gradient(90deg,transparent,#FFCD00 30%,#FFCD00 70%,transparent); opacity:0.5; margin:0 0 40px;">
-
-      <!-- Artesanos destacados -->
-      <div style="margin-bottom:48px;">
-        <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
-          <div style="flex:1; height:2px; max-width:120px; background:linear-gradient(to right,transparent,#FFCD00);"></div>
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#295440; font-size:1.6rem; font-weight:700; margin:0; white-space:nowrap;">
-            Artesanos Destacados
-          </h2>
-          <div style="flex:1; height:2px; max-width:120px; background:linear-gradient(to left,transparent,#FFCD00);"></div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:16px;">
-          @for (a of artesanos; track a.id) {
-            <div style="background:#fff; border-left:4px solid #FFCD00; border-radius:10px; padding:20px; box-shadow:0 2px 12px rgba(41,84,64,0.09); display:flex; gap:14px; align-items:flex-start;">
-              <div style="width:52px; height:52px; border-radius:50%; background:#FDFBF3; border:3px solid #FFCD00; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0;">
-                {{ a.icono }}
-              </div>
-              <div style="flex:1; min-width:0;">
-                <p style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:#1F2A22; margin:0 0 2px; font-size:0.95rem;">{{ a.nombre }}</p>
-                <p style="color:#339496; font-size:0.78rem; font-weight:600; margin:0 0 4px;">{{ a.tipo }}</p>
-                <p style="color:#57685c; font-size:0.75rem; margin:0 0 6px;">📍 {{ a.region }}</p>
-                <app-star-rating [rating]="a.rating" [count]="a.resenas"/>
-                <p style="color:#8a6040; font-size:0.72rem; margin:4px 0 0;">{{ a.productos }} productos activos</p>
-              </div>
-            </div>
+      <!-- Bloques de descubrimiento: secciones de productos, artesanos y promociones intercaladas -->
+      @for (bloque of bloques; track $index) {
+        @switch (bloque.tipo) {
+          @case ('productos') {
+            <app-discovery-section [titulo]="bloque.titulo">
+              @for (p of bloque.items; track p.id) {
+                <div style="width:230px; flex-shrink:0;">
+                  <app-product-card [producto]="p"/>
+                </div>
+              }
+            </app-discovery-section>
           }
-        </div>
-      </div>
+          @case ('artesanos') {
+            <app-discovery-section titulo="Artesanos Destacados">
+              @for (a of artesanos; track a.id) {
+                <a [routerLink]="['/marketplace/creadores', a.id]"
+                   style="width:280px; flex-shrink:0; background:#fff; border-left:4px solid #FFCD00; border-radius:10px; padding:20px;
+                          box-shadow:0 2px 12px rgba(41,84,64,0.09); display:flex; gap:14px; align-items:flex-start; text-decoration:none;">
+                  <img [src]="a.avatar" [alt]="a.nombre"
+                       style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:3px solid #FFCD00; flex-shrink:0;">
+                  <div style="flex:1; min-width:0;">
+                    <p style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:#1F2A22; margin:0 0 2px; font-size:0.95rem;">{{ a.nombre }}</p>
+                    <p style="color:#339496; font-size:0.78rem; font-weight:600; margin:0 0 4px;">{{ a.tipo }}</p>
+                    <p style="color:#57685c; font-size:0.75rem; margin:0 0 6px;">📍 {{ a.ciudad }}</p>
+                    <app-star-rating [rating]="a.rating" [count]="a.resenas"/>
+                    <p style="color:#8a6040; font-size:0.72rem; margin:4px 0 0;">{{ a.productos }} productos activos</p>
+                  </div>
+                </a>
+              }
+            </app-discovery-section>
+          }
+          @case ('promo') {
+            <app-promo-banner [titulo]="bloque.titulo" [subtitulo]="bloque.subtitulo"
+                               [ctaTexto]="bloque.ctaTexto" [ctaRuta]="bloque.ctaRuta"
+                               [color]="bloque.color" [imagenes]="bloque.imagenes"/>
+          }
+        }
+      }
 
     </div>
   `,
 })
 export class CatalogoComponent {
-  categorias        = CATEGORIAS;
-  artesanos         = ARTESANOS;
-  categoriaActiva   = signal('Todos');
-  productosFiltrados = computed(() =>
-    this.categoriaActiva() === 'Todos'
-      ? PRODUCTOS
-      : PRODUCTOS.filter(p => p.categoria === this.categoriaActiva())
-  );
+  artesanos = ARTESANOS;
+
+  private rotarLista<T>(lista: T[], offset: number): T[] {
+    const n = lista.length;
+    return Array.from({ length: n }, (_, i) => lista[(i + offset) % n]);
+  }
+
+  private seccionesProductos: { titulo: string; items: Producto[] }[] = [
+    { titulo: 'Piezas que encontramos para ti', items: this.rotarLista(PRODUCTOS, 0) },
+    { titulo: 'Relacionado con tus visitas',    items: this.rotarLista(PRODUCTOS, 3) },
+    { titulo: 'Inspirado en tus favoritos',     items: this.rotarLista(PRODUCTOS, 5) },
+    { titulo: 'Ofertas del día',                items: [...PRODUCTOS].reverse() },
+  ];
+
+  private promosCopy = [
+    {
+      titulo: 'Hay mucho por descubrir.',
+      subtitulo: 'Miles de creaciones únicas hechas por manos colombianas con historias increíbles.',
+      color: '#2C7350',
+    },
+    {
+      titulo: 'Cada pieza tiene una historia.',
+      subtitulo: 'Conoce el proceso y las manos detrás de cada creación artesanal colombiana.',
+      color: '#8a6040',
+    },
+  ];
+
+  bloques: Bloque[] = this.construirBloques();
+
+  private construirBloques(): Bloque[] {
+    const base: Bloque[] = [
+      { tipo: 'artesanos' as const },
+      ...this.seccionesProductos.map(s => ({ tipo: 'productos' as const, ...s })),
+    ];
+
+    const resultado: Bloque[] = [];
+    let promoIndex = 0;
+
+    base.forEach((bloque, i) => {
+      resultado.push(bloque);
+      const esUltimo = i === base.length - 1;
+      if ((i + 1) % 3 === 0 && !esUltimo) {
+        const copy = this.promosCopy[promoIndex % this.promosCopy.length];
+        resultado.push({
+          tipo: 'promo',
+          ...copy,
+          ctaTexto: 'Descubrir más',
+          ctaRuta: '/marketplace/buscar',
+          imagenes: this.rotarLista(PRODUCTOS, promoIndex * 2 + 1).slice(0, 4).map(p => p.imagen),
+        });
+        promoIndex++;
+      }
+    });
+
+    return resultado;
+  }
 }

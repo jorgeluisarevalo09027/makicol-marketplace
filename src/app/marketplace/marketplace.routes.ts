@@ -32,6 +32,36 @@ export const marketplaceRoutes: Routes = [
         loadComponent: () =>
           import('./pages/pedidos/pedidos.component').then(m => m.PedidosComponent),
       },
+      {
+        path: 'creadores',
+        loadComponent: () =>
+          import('./pages/creadores/creadores.component').then(m => m.CreadoresComponent),
+      },
+      {
+        path: 'creadores/:id',
+        loadComponent: () =>
+          import('./pages/creador-detalle/creador-detalle.component').then(m => m.CreadorDetalleComponent),
+      },
+      {
+        path: 'productos/:id',
+        loadComponent: () =>
+          import('./pages/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent),
+      },
+      {
+        path: 'historias',
+        loadComponent: () =>
+          import('./pages/historias/historias.component').then(m => m.HistoriasComponent),
+      },
+      {
+        path: 'sobre-maki',
+        loadComponent: () =>
+          import('./pages/sobre-maki/sobre-maki.component').then(m => m.SobreMakiComponent),
+      },
+      {
+        path: 'terminos',
+        loadComponent: () =>
+          import('./pages/terminos/terminos.component').then(m => m.TerminosComponent),
+      },
     ],
   },
 ];

@@ -1,13 +1,15 @@
 import { Component, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
-import { Producto } from '../../data/marketplace-data';
+import { Producto, ARTESANOS } from '../../data/marketplace-data';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [StarRatingComponent],
+  imports: [StarRatingComponent, RouterLink],
   template: `
-    <div class="bg-white rounded-xl overflow-hidden shadow-sm border-b-2 flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-md cursor-pointer"
+    <div (click)="irADetalle()"
+         class="bg-white rounded-xl overflow-hidden shadow-sm border-b-2 flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-md cursor-pointer"
          style="border-bottom-color:#FFCD00;">
 
       <!-- Image -->
@@ -32,7 +34,14 @@ import { Producto } from '../../data/marketplace-data';
           {{ producto().nombre }}
         </h3>
         <div class="text-xs" style="color:#57685c;">
-          <span class="font-semibold" style="color:#295440;">{{ producto().artesano }}</span>
+          @if (artesanoId(); as id) {
+            <a [routerLink]="['/marketplace/creadores', id]" (click)="$event.stopPropagation()"
+               class="font-semibold" style="color:#295440; text-decoration:none;">
+              {{ producto().artesano }}
+            </a>
+          } @else {
+            <span class="font-semibold" style="color:#295440;">{{ producto().artesano }}</span>
+          }
           · {{ producto().region }}
         </div>
         <app-star-rating [rating]="producto().rating" [count]="producto().resenas"/>
@@ -43,7 +52,7 @@ import { Producto } from '../../data/marketplace-data';
             </p>
             <p class="text-xs" style="color:#8a6040;">COP · {{ producto().vendidos }} vendidos</p>
           </div>
-          <button (click)="addedToCart.set(true)"
+          <button (click)="$event.stopPropagation(); addedToCart.set(true)"
                   class="text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-200"
                   [style.background]="addedToCart() ? '#2ECC71' : '#2C7350'"
                   style="color:#fff; white-space:nowrap;">
@@ -57,6 +66,16 @@ import { Producto } from '../../data/marketplace-data';
 export class ProductCardComponent {
   producto    = input.required<Producto>();
   addedToCart = signal(false);
+
+  constructor(private router: Router) {}
+
+  artesanoId(): number | null {
+    return ARTESANOS.find(a => a.nombre === this.producto().artesano)?.id ?? null;
+  }
+
+  irADetalle() {
+    this.router.navigate(['/marketplace/productos', this.producto().id]);
+  }
 
   fmt(n: number): string {
     return '$\u00a0' + new Intl.NumberFormat('es-CO').format(n);

@@ -6,6 +6,26 @@ import { RouterLink } from '@angular/router';
   selector: 'app-pago',
   standalone: true,
   imports: [FormsModule, RouterLink],
+  styles: [`
+    .pago-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .pago-resumen {
+      position: sticky;
+      top: 150px;
+    }
+    @media (max-width: 800px) {
+      .pago-grid {
+        grid-template-columns: 1fr;
+      }
+      .pago-resumen {
+        position: static;
+      }
+    }
+  `],
   template: `
     <div style="max-width:1000px; margin:32px auto; padding:0 16px 48px;">
 
@@ -19,7 +39,7 @@ import { RouterLink } from '@angular/router';
         </h1>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 380px; gap:24px; align-items:flex-start;">
+      <div class="pago-grid">
 
         <!-- Panel de pago -->
         <div>
@@ -156,7 +176,7 @@ import { RouterLink } from '@angular/router';
 
         <!-- Resumen del pedido -->
         <div>
-          <div style="background:#fff; border-left:4px solid #FFCD00; border-radius:12px; padding:24px; box-shadow:0 2px 12px rgba(41,84,64,0.09); position:sticky; top:150px;">
+          <div class="pago-resumen" style="background:#fff; border-left:4px solid #FFCD00; border-radius:12px; padding:24px; box-shadow:0 2px 12px rgba(41,84,64,0.09);">
             <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#295440; font-size:1.1rem; font-weight:700; margin:0 0 16px;">
               Resumen del pedido
             </h2>

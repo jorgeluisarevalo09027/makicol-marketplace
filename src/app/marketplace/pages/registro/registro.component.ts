@@ -5,6 +5,27 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-registro',
   standalone: true,
   imports: [FormsModule],
+  styles: [`
+    .reg-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .reg-card {
+      padding: 32px;
+    }
+    @media (max-width: 560px) {
+      .reg-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .reg-grid-2 > div[style*="span 2"] {
+        grid-column: span 1 !important;
+      }
+      .reg-card {
+        padding: 20px;
+      }
+    }
+  `],
   template: `
     <div style="max-width:680px; margin:40px auto; padding:0 16px 48px;">
 
@@ -47,14 +68,14 @@ import { FormsModule } from '@angular/forms';
       </div>
 
       <!-- Card del formulario -->
-      <div style="background:#fff; border-left:4px solid #FFCD00; border-radius:12px; padding:32px; box-shadow:0 2px 16px rgba(41,84,64,0.10);">
+      <div class="reg-card" style="background:#fff; border-left:4px solid #FFCD00; border-radius:12px; box-shadow:0 2px 16px rgba(41,84,64,0.10);">
 
         <!-- PASO 1: Datos personales -->
         @if (pasoActual() === 1) {
           <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#295440; font-size:1.3rem; margin:0 0 24px;">
             1. Datos Personales
           </h2>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="reg-grid-2">
             <div>
               <label style="display:block; font-size:0.82rem; font-weight:600; color:#1F2A22; margin-bottom:5px;">Nombre completo *</label>
               <input [(ngModel)]="form.nombre" placeholder="ej. María Pushaina"

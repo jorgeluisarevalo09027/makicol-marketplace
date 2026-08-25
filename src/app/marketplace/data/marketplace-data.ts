@@ -16,11 +16,17 @@ export interface Artesano {
   id: number;
   nombre: string;
   region: string;
+  ciudad: string;
   tipo: string;
   rating: number;
   resenas: number;
   productos: number;
   icono: string;
+  avatar: string;
+  portada: string;
+  anioInicio: number;
+  bio: string;
+  materiales: string[];
 }
 
 export interface Pedido {
@@ -98,10 +104,34 @@ export const PRODUCTOS: Producto[] = [
 ];
 
 export const ARTESANOS: Artesano[] = [
-  { id: 1, nombre: 'María Pushaina', region: 'Riohacha, Guajira', tipo: 'Tejidos Wayúu', rating: 4.8, resenas: 234, productos: 12, icono: '🧶' },
-  { id: 2, nombre: 'Carmen Vidal', region: 'El Carmen de Bolívar', tipo: 'Sombreros vueltiao', rating: 4.9, resenas: 312, productos: 8, icono: '👒' },
-  { id: 3, nombre: 'Luis Castillo', region: 'Mompox, Bolívar', tipo: 'Filigrana de plata', rating: 4.6, resenas: 89, productos: 15, icono: '💍' },
-  { id: 4, nombre: 'Rosa Noriega', region: 'Valledupar, Cesar', tipo: 'Tejidos y tapices', rating: 4.7, resenas: 145, productos: 9, icono: '🎨' },
+  {
+    id: 1, nombre: 'María Pushaina', region: 'Riohacha, Guajira', ciudad: 'Riohacha',
+    tipo: 'Tejidos Wayúu', rating: 4.8, resenas: 234, productos: 12, icono: '🧶',
+    avatar: '/assets/artesana-maria-pushaina-avatar.webp', portada: '/assets/artesana-maria-pushaina-portada.webp',
+    anioInicio: 2011, materiales: ['Algodón', 'Fique', 'Cuentas de vidrio'],
+    bio: 'Tejo mochilas Wayúu desde que tengo memoria; mi abuela me enseñó los primeros nudos a los ocho años en el desierto de la Guajira. Cada mochila me toma entre 15 y 20 días de trabajo, tejida en telar tradicional con hilos de algodón teñidos con tintes que aprendí a preparar en mi comunidad. Para nosotras cada color y patrón cuenta una historia: el kanás representa el pensamiento y la vida de mi pueblo. Vender mis piezas me ha permitido sostener a mi familia y seguir enseñando el oficio a las mujeres jóvenes de mi ranchería.',
+  },
+  {
+    id: 2, nombre: 'Carmen Vidal', region: 'El Carmen de Bolívar', ciudad: 'El Carmen de Bolívar',
+    tipo: 'Sombreros vueltiao', rating: 4.9, resenas: 312, productos: 8, icono: '👒',
+    avatar: '/assets/artesana-carmen-vidal-avatar.webp', portada: '/assets/artesana-carmen-vidal-portada.webp',
+    anioInicio: 2008, materiales: ['Caña flecha'],
+    bio: 'Soy tejedora de sombrero vueltiao desde hace más de 15 años en el norte de Bolívar, tierra donde nació esta tradición declarada Patrimonio Cultural Inmaterial. Trabajo la caña flecha desde que se cosecha hasta que se teje en las famosas "vueltas" que le dan el nombre a cada sombrero: entre más vueltas, más fino y más tiempo de trabajo. Un sombrero de 21 vueltas me puede tomar más de una semana de tejido diario. Cada pieza que sale de mis manos lleva el orgullo de mi región y de las mujeres que me enseñaron el oficio.',
+  },
+  {
+    id: 3, nombre: 'Luis Castillo', region: 'Mompox, Bolívar', ciudad: 'Mompox',
+    tipo: 'Filigrana de plata', rating: 4.6, resenas: 89, productos: 15, icono: '💍',
+    avatar: '/assets/artesano-luis-castillo-avatar.webp', portada: '/assets/artesano-luis-castillo-portada.webp',
+    anioInicio: 2015, materiales: ['Plata 950'],
+    bio: 'Aprendí filigrana en los talleres familiares de Mompox, un oficio que llegó con los orfebres coloniales y que hoy es Patrimonio de la Humanidad UNESCO. Trabajo la plata 950 hilo por hilo, enrollando y soldando cada filamento a mano hasta formar figuras como mariposas, flores y peces, símbolos tradicionales del río Magdalena. Cada joya puede tomarme entre 3 y 10 días según su complejidad. Mantener vivo este oficio es también mantener viva la historia de mi ciudad.',
+  },
+  {
+    id: 4, nombre: 'Rosa Noriega', region: 'Valledupar, Cesar', ciudad: 'Valledupar',
+    tipo: 'Tejidos y tapices', rating: 4.7, resenas: 145, productos: 9, icono: '🎨',
+    avatar: '/assets/artesana-rosa-noriega-avatar.webp', portada: '/assets/artesana-rosa-noriega-portada.webp',
+    anioInicio: 2005, materiales: ['Algodón', 'Lana virgen'],
+    bio: 'Tejo tapices y hamacas en telar horizontal desde hace casi 20 años en Valledupar, inspirándome en los colores y ritmos del folclor vallenato que escuché toda mi vida en mi casa. Cada tapiz nace de un boceto que dibujo antes de montar el telar, y puede tomarme entre una y tres semanas de tejido según el tamaño. Me acompañan dos aprendices a quienes les enseño el oficio, porque creo que un tejido solo tiene sentido si se sigue transmitiendo.',
+  },
 ];
 
 export const PEDIDOS: Pedido[] = [

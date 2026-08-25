@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { MarketplaceNavbarComponent } from './marketplace-navbar.component';
 
 @Component({
   selector: 'app-marketplace-layout',
   standalone: true,
-  imports: [RouterOutlet, MarketplaceNavbarComponent],
+  imports: [RouterOutlet, RouterLink, MarketplaceNavbarComponent],
   template: `
     <div style="min-height:100vh; background:#FDFBF3; display:flex; flex-direction:column;">
       <app-marketplace-navbar/>
@@ -21,7 +21,7 @@ import { MarketplaceNavbarComponent } from './marketplace-navbar.component';
           Artesanías y emprendimiento colombiano · Vende y compra en todo el país
         </p>
         <div style="display:flex; justify-content:center; gap:24px; margin-top:16px;">
-          <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Términos</a>
+          <a routerLink="/marketplace/terminos" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Términos</a>
           <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Privacidad</a>
           <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Ayuda</a>
           <a href="#" style="color:#295440; font-size:0.8rem; text-decoration:none; font-weight:600;">Contacto</a>
