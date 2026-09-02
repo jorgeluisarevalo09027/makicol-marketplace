@@ -35,7 +35,7 @@ import { Producto, ARTESANOS } from '../../data/marketplace-data';
         </h3>
         <div class="text-xs" style="color:#57685c;">
           @if (artesanoId(); as id) {
-            <a [routerLink]="['/marketplace/creadores', id]" (click)="$event.stopPropagation()"
+            <a [routerLink]="['/marketplace/comprador/creadores', id]" (click)="$event.stopPropagation()"
                class="font-semibold" style="color:#295440; text-decoration:none;">
               {{ producto().artesano }}
             </a>
@@ -74,7 +74,7 @@ export class ProductCardComponent {
   }
 
   irADetalle() {
-    this.router.navigate(['/marketplace/productos', this.producto().id]);
+    this.router.navigate(['/marketplace/comprador/productos', this.producto().id]);
   }
 
   fmt(n: number): string {

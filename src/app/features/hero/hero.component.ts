@@ -111,7 +111,7 @@ import { RouterLink } from '@angular/router';
 
         <!-- Botón puente al Marketplace prototipo -->
         <div class="animate-fade-in" style="animation-delay:0.5s;">
-          <a routerLink="/marketplace/catalogo"
+          <a routerLink="/marketplace"
              class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5"
              style="background:linear-gradient(135deg,#FFCD00,#C8102E); color:#fff; box-shadow:0 4px 24px rgba(218,175,55,0.40); text-decoration:none;">
             <span style="font-size:1.2rem;">🛒</span>
@@ -123,6 +123,14 @@ import { RouterLink } from '@angular/router';
           <p style="color:rgba(255,255,255,0.45); font-size:0.75rem; margin-top:8px; text-align:center;">
             Catálogo · Pagos · Pedidos · Registro · Búsqueda
           </p>
+        </div>
+
+        <!-- Botón puente al informe de envíos internacionales -->
+        <div class="animate-fade-in" style="animation-delay:0.55s; margin-top:14px;">
+          <a routerLink="/envios-internacionales"
+             style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
+            🌎 Ver investigación: Envíos internacionales (piloto Zona Caribe)
+          </a>
         </div>
 
         <!-- Module navigation pills -->

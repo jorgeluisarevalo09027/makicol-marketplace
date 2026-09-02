@@ -64,7 +64,7 @@ export class PromoBannerComponent {
   titulo    = input.required<string>();
   subtitulo = input.required<string>();
   ctaTexto  = input('Descubrir más');
-  ctaRuta   = input('/marketplace/buscar');
+  ctaRuta   = input('/marketplace/comprador/buscar');
   color     = input('#2C7350');
   imagenes  = input.required<string[]>();
 }
