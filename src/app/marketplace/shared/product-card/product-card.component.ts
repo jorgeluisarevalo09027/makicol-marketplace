@@ -2,6 +2,8 @@ import { Component, input, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { Producto, ARTESANOS } from '../../data/marketplace-data';
+import { SesionCompradorService } from '../services/sesion-comprador.service';
+import { FavoritosService } from '../services/favoritos.service';
 
 @Component({
   selector: 'app-product-card',
@@ -10,7 +12,7 @@ import { Producto, ARTESANOS } from '../../data/marketplace-data';
   template: `
     <div (click)="irADetalle()"
          class="bg-white rounded-xl overflow-hidden shadow-sm border-b-2 flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-md cursor-pointer"
-         style="border-bottom-color:#FFCD00;">
+         style="border-bottom-color:#FFCD00; position:relative;">
 
       <!-- Image -->
       <div class="relative overflow-hidden" style="aspect-ratio:4/3;">
@@ -25,6 +27,17 @@ import { Producto, ARTESANOS } from '../../data/marketplace-data';
                 style="background:#FFCD00;">
             ⭐ Destacado
           </span>
+        }
+        @if (sesion.sesionIniciada()) {
+          <button (click)="$event.stopPropagation(); favoritos.toggle(producto().id)"
+                  class="absolute flex items-center justify-center transition-transform duration-150 hover:scale-110"
+                  style="bottom:8px; right:8px; width:32px; height:32px; border-radius:50%; border:none; cursor:pointer;
+                         background:rgba(255,255,255,0.92); box-shadow:0 2px 6px rgba(0,0,0,0.18);"
+                  [attr.aria-label]="favoritos.esFavorito(producto().id) ? 'Quitar de favoritos' : 'Guardar en favoritos'">
+            <span [style.color]="favoritos.esFavorito(producto().id) ? '#C8102E' : '#8a9099'" style="font-size:1.05rem;">
+              {{ favoritos.esFavorito(producto().id) ? '♥' : '♡' }}
+            </span>
+          </button>
         }
       </div>
 
@@ -67,7 +80,7 @@ export class ProductCardComponent {
   producto    = input.required<Producto>();
   addedToCart = signal(false);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, public sesion: SesionCompradorService, public favoritos: FavoritosService) {}
 
   artesanoId(): number | null {
     return ARTESANOS.find(a => a.nombre === this.producto().artesano)?.id ?? null;

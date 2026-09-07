@@ -1,0 +1,349 @@
+@startuml Makicol_ER_v5
+!theme plain
+title Makicol Marketplace — Data model (v5 — audit, state machines, multi-region times)
+skinparam linetype ortho
+
+entity "User" as user {
+  * id : UUID <<PK>>
+  --
+  name : text
+  email : text <<unique>>
+  role : enum(buyer, artisan, support, auditor)
+  registration_date : date
+  language : text <<es, en, de, ...>>
+  ..audit..
+  created_at : datetimeoffset
+  updated_at : datetimeoffset
+  updated_by : UUID <<FK -> user.id>>
+}
+
+entity "BuyerProfile" as buyer_profile {
+  * user_id : UUID <<PK, FK>>
+  --
+  city : text
+  shipping_address : text
+  timezone : text <<IANA, e.g. America/New_York>>
+}
+
+entity "ArtisanProfile" as artisan_profile {
+  * user_id : UUID <<PK, FK>>
+  --
+  region : text
+  city : text
+  craft_type : text
+  bio : text
+  start_year : int
+  materials : text[]
+  payment_method : enum(nequi, daviplata, pse)
+  timezone : text <<IANA, e.g. Europe/Madrid>>
+  verification_status_id : int <<FK>>
+  ..audit..
+  created_at : datetimeoffset
+  updated_at : datetimeoffset
+  updated_by : UUID <<FK -> user.id>>
+}
+
+entity "SupportAgent" as support_agent {
+  * user_id : UUID <<PK, FK>>
+  --
+  level : text
+}
+
+entity "Product" as product {
+  * id : UUID <<PK>>
+  --
+  artisan_id : UUID <<FK>>
+  name : text
+  category : text
+  region : text
+  price : numeric
+  description : text
+  image_url : text
+  sold_count : int
+  is_active : boolean <<default true>>
+  ..audit..
+  created_at : datetimeoffset
+  created_by : UUID <<FK -> user.id>>
+  updated_at : datetimeoffset
+  updated_by : UUID <<FK -> user.id>>
+}
+note right of product
+  "is_active" is a simple boolean, NOT a state table:
+  it is a freely reversible two-way switch with no
+  sequence to protect. A state/transition table here
+  would be over-engineering — this is the intentional
+  exception to the EstadoX / TransicionEstadoX pattern.
+end note
+
+entity "Order" as order {
+  * id : UUID <<PK>>
+  --
+  buyer_id : UUID <<FK>>
+  placed_at : datetimeoffset
+  total : numeric
+  status_id : int <<FK>>
+  origin_timezone : text <<IANA, copy from buyer profile>>
+  ..audit..
+  created_at : datetimeoffset
+  updated_at : datetimeoffset
+  updated_by : UUID <<FK -> user.id>>
+}
+
+entity "OrderStatus" as order_status {
+  * id : int <<PK>>
+  --
+  name : text <<seed: Recibido, En preparación, Enviado, Entregado>>
+  display_order : int
+  is_terminal : boolean
+}
+
+entity "OrderStatusTransition" as order_status_transition {
+  * from_status_id : int <<PK, FK>>
+  * to_status_id : int <<PK, FK>>
+  --
+  allowed_role : enum(buyer, artisan, system)
+}
+note right of order_status_transition
+  Por ahora es solo dato de referencia en el modelo
+  (documenta qué saltos son válidos), sin trigger que
+  lo obligue todavía. Se expande a validación real
+  (trigger o capa de aplicación) en una fase futura.
+end note
+
+entity "OrderItem" as order_item {
+  * id : UUID <<PK>>
+  --
+  order_id : UUID <<FK>>
+  product_id : UUID <<FK>>
+  quantity : int
+  unit_price : numeric
+}
+
+entity "Review" as review {
+  * id : UUID <<PK>>
+  --
+  author_id : UUID <<FK>>
+  product_id : UUID <<FK>>
+  rating : int
+  comment : text
+  posted_on : date
+}
+
+entity "WishlistItem" as wishlist_item {
+  * buyer_id : UUID <<PK, FK>>
+  * product_id : UUID <<PK, FK>>
+  --
+  added_on : date
+}
+
+entity "SupportCase" as support_case {
+  * id : UUID <<PK>>
+  --
+  requester_id : UUID <<FK>>
+  requester_role : enum(buyer, artisan)
+  category : text
+  subject : text
+  status_id : int <<FK>>
+  priority : enum(low, medium, high)
+  created_at : datetimeoffset
+  related_order_id : UUID <<FK, nullable>>
+  ..audit..
+  created_at : datetimeoffset
+  updated_at : datetimeoffset
+  updated_by : UUID <<FK -> user.id, agent or requester>>
+}
+
+entity "SupportCaseStatus" as support_case_status {
+  * id : int <<PK>>
+  --
+  name : text <<seed: Abierto, En proceso, Resuelto, Cerrado>>
+  display_order : int
+  is_terminal : boolean
+}
+
+entity "SupportCaseStatusTransition" as support_case_status_transition {
+  * from_status_id : int <<PK, FK>>
+  * to_status_id : int <<PK, FK>>
+  --
+  allowed_role : enum(support, system)
+}
+note right of support_case_status_transition
+  Dato de referencia por ahora (incluye el caso
+  "Cerrado -> Abierto" para reapertura). Sin
+  validación forzada todavía.
+end note
+
+entity "SupportMessage" as support_message {
+  * id : UUID <<PK>>
+  --
+  case_id : UUID <<FK>>
+  author_id : UUID <<FK>>
+  author_role : enum(buyer, artisan, support)
+  body : text
+  sent_at : datetimeoffset
+}
+
+entity "FaqItem" as faq_item {
+  * id : UUID <<PK>>
+  --
+  question : text
+  answer : text
+  category : text
+  target_role : enum(buyer, artisan)
+}
+
+entity "ArtisanVerificationStatus" as artisan_verification_status {
+  * id : int <<PK>>
+  --
+  name : text <<seed: Pendiente, Verificado, Rechazado>>
+  display_order : int
+  is_terminal : boolean
+}
+
+entity "ArtisanVerificationStatusTransition" as artisan_verification_status_transition {
+  * from_status_id : int <<PK, FK>>
+  * to_status_id : int <<PK, FK>>
+  --
+  allowed_role : enum(system, support)
+}
+note right of artisan_verification_status_transition
+  Dato de referencia por ahora. La verificación hoy
+  es automática (24h post-registro) — este modelo
+  deja espacio para una revisión manual futura.
+end note
+
+entity "InternationalShipment" as international_shipment {
+  * id : UUID <<PK>>
+  --
+  order_id : UUID <<FK, unique>>
+  status_id : int <<FK>>
+  courier : text <<DHL, FedEx, etc.>>
+  tracking_number : text
+  certificate_of_origin_ref : text
+  ..audit..
+  created_at : datetimeoffset
+  updated_at : datetimeoffset
+  updated_by : UUID <<FK -> user.id>>
+}
+note right of international_shipment
+  Nombre explícito: este seguimiento granular es
+  específico del piloto de envíos internacionales
+  (ver /envios-internacionales). Los pedidos
+  nacionales NO generan esta entidad — se quedan
+  solo con Order.status_id (más simple).
+  1 Pedido internacional <-> 1 EnvioInternacional.
+end note
+
+entity "InternationalShipmentStatus" as international_shipment_status {
+  * id : int <<PK>>
+  --
+  name : text <<seed: Preparación, Trámites de exportación, En tránsito, Aduana EE.UU., Entregado>>
+  display_order : int
+  is_terminal : boolean
+}
+
+entity "InternationalShipmentStatusTransition" as international_shipment_status_transition {
+  * from_status_id : int <<PK, FK>>
+  * to_status_id : int <<PK, FK>>
+  --
+  allowed_role : enum(artisan, support, system)
+}
+note right of international_shipment_status_transition
+  Dato de referencia por ahora — refleja las 6 etapas
+  del diagrama de flujo de envíos internacionales.
+end note
+
+entity "MonthlyMetric" as monthly_metric {
+  * month : date <<PK>>
+  --
+  gmv : numeric
+  completed_orders : int
+  total_cases : int
+}
+note right of monthly_metric
+  No es una tabla transaccional:
+  es una vista/agregado que
+  alimenta el rol Auditor,
+  calculada sobre Order y SupportCase.
+end note
+
+entity "ActivityLog" as activity_log {
+  * id : UUID <<PK>>
+  --
+  entity_type : enum(user, artisan_profile, product, order, support_case, international_shipment, ...)
+  entity_id : UUID
+  action : enum(create, update, delete)
+  user_id : UUID <<FK -> user.id>>
+  occurred_at : datetimeoffset
+  changes : jsonb <<diff before/after, includes status changes>>
+}
+note right of activity_log
+  Log de auditoría transversal: registra CADA
+  creación/modificación/eliminación, incluyendo
+  cada transición de estado de Order, SupportCase,
+  InternationalShipment y ArtisanProfile — no se
+  necesita una tabla de historial separada por
+  entidad, esta la cubre a todas.
+  Es "append-only" (nunca se edita ni se borra).
+  entity_type + entity_id es una referencia
+  polimórfica (no una FK física a una sola tabla) —
+  por eso no se dibuja como línea de relación.
+  Alimenta directamente al rol Soporte (historial
+  de un caso/pedido) y al rol Auditor (trazabilidad
+  y detección de cambios anómalos).
+end note
+
+note bottom of order
+  ESTRATEGIA DE TIEMPOS (multi-región):
+  - Todos los campos de fecha-hora que representan
+    un instante real se almacenan en datetimeoffset
+    en Azure SQL (no datetime2 ni date si incluyen
+    hora). Eso mantiene el instante UTC como valor
+    canónico y, al mismo tiempo, conserva el offset
+    original del usuario (ej. -05:00 para Miami).
+  - "date" solo se usa para campos de calendario sin
+    hora: User.registration_date, Review.posted_on,
+    WishlistItem.added_on, MonthlyMetric.month.
+  - BuyerProfile y ArtisanProfile guardan "timezone"
+    (IANA) para poder mostrar hora local y respetar
+    fechas de corte.
+  - El frontend Angular recibe ISO 8601 y puede
+    mostrar con DatePipe en la zona del navegador,
+    o forzar la zona del perfil vía un pipe custom
+    usando el IANA guardado.
+end note
+
+user ||--o| buyer_profile
+user ||--o| artisan_profile
+user ||--o| support_agent
+
+artisan_verification_status ||--o{ artisan_profile : "estado actual"
+artisan_verification_status_transition }o--|| artisan_verification_status : from/to
+
+artisan_profile ||--o{ product : publica
+
+user ||--o{ order : compra
+order_status ||--o{ order : "estado actual"
+order_status_transition }o--|| order_status : from/to
+order ||--|{ order_item : contiene
+product ||--o{ order_item : "vendido en"
+order ||--o| international_shipment : "genera (si es internacional)"
+international_shipment_status ||--o{ international_shipment : "estado actual"
+international_shipment_status_transition }o--|| international_shipment_status : from/to
+
+user ||--o{ review : escribe
+product ||--o{ review : recibe
+
+user ||--o{ wishlist_item : guarda
+product ||--o{ wishlist_item : "es guardado en"
+
+user ||--o{ support_case : "abre (como solicitante)"
+support_case_status ||--o{ support_case : "estado actual"
+support_case_status_transition }o--|| support_case_status : from/to
+support_case ||--o{ support_message : contiene
+user ||--o{ support_message : "escribe (autor)"
+support_case }o--o| order : "referencia (opcional)"
+
+user ||--o{ activity_log : "genera (autor del cambio)"
+
+@enduml

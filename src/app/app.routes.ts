@@ -25,5 +25,17 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/international-shipping/international-shipping.component').then(m => m.InternationalShippingComponent),
   },
+  // Evaluación de arquitectura: ¿separar Storefront (comprador/artesano) de Back-office (soporte/auditor)?
+  {
+    path: 'evaluacion-backoffice',
+    loadComponent: () =>
+      import('./features/backoffice-evaluation/backoffice-evaluation.component').then(m => m.BackofficeEvaluationComponent),
+  },
+  // Diseño de base de datos (trabajo en progreso) para los 4 roles del marketplace.
+  {
+    path: 'base-de-datos',
+    loadComponent: () =>
+      import('./features/database-design/database-design.component').then(m => m.DatabaseDesignComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

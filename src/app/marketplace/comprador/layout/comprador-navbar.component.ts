@@ -1,6 +1,7 @@
 import { Component, HostListener, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SesionCompradorService } from '../../shared/services/sesion-comprador.service';
 
 @Component({
   selector: 'app-comprador-navbar',
@@ -210,8 +211,8 @@ import { FormsModule } from '@angular/forms';
           <!-- Acciones: Ingresar → (Mis pedidos · Carrito · Dirección) -->
           <div class="mkt-actions" style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
 
-            @if (!sesionIniciada()) {
-              <button (click)="sesionIniciada.set(true)"
+            @if (!sesion.sesionIniciada()) {
+              <button (click)="sesion.iniciarSesion()"
                       style="background:#FFCD00; color:#295440; border:none; border-radius:8px;
                              padding:7px 15px; font-size:0.8rem; font-weight:700; cursor:pointer;
                              white-space:nowrap; letter-spacing:0.2px;">
@@ -222,6 +223,12 @@ import { FormsModule } from '@angular/forms';
                  routerLinkActive="active-page">
                 <span class="material-symbols-outlined" style="font-size:1.1rem; line-height:1;">inventory_2</span>
                 <span>Mis pedidos</span>
+              </a>
+
+              <a routerLink="/marketplace/comprador/favoritos" class="mkt-nav-action"
+                 routerLinkActive="active-page">
+                <span class="material-symbols-outlined" style="font-size:1.1rem; line-height:1;">favorite</span>
+                <span>Favoritos</span>
               </a>
 
               <a routerLink="/marketplace/comprador/ayuda" class="mkt-nav-action"
@@ -310,9 +317,10 @@ export class CompradorNavbarComponent {
 
   categoriasMenuAbierto = signal(false);
 
-  sesionIniciada        = signal(false);
   modalDireccionAbierto = signal(false);
   direccionSeleccionada = signal(1);
+
+  constructor(public sesion: SesionCompradorService) {}
 
   @HostListener('document:click')
   cerrarCategoriasMenu() {

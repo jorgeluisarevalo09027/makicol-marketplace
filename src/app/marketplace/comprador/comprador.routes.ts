@@ -43,6 +43,11 @@ export const compradorRoutes: Routes = [
           import('./pages/mis-casos/mis-casos.component').then(m => m.MisCasosCompradorComponent),
       },
       {
+        path: 'favoritos',
+        loadComponent: () =>
+          import('./pages/favoritos/favoritos.component').then(m => m.FavoritosComponent),
+      },
+      {
         path: 'creadores',
         loadComponent: () =>
           import('./pages/creadores/creadores.component').then(m => m.CreadoresComponent),

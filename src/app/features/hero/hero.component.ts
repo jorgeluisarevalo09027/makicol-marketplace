@@ -126,10 +126,18 @@ import { RouterLink } from '@angular/router';
         </div>
 
         <!-- Botón puente al informe de envíos internacionales -->
-        <div class="animate-fade-in" style="animation-delay:0.55s; margin-top:14px;">
+        <div class="animate-fade-in" style="animation-delay:0.55s; margin-top:14px; display:flex; flex-direction:column; align-items:center; gap:8px;">
           <a routerLink="/envios-internacionales"
              style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
             🌎 Ver investigación: Envíos internacionales (piloto Zona Caribe)
+          </a>
+          <a routerLink="/evaluacion-backoffice"
+             style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
+            🏛️ Ver evaluación: Storefront vs. Back-office
+          </a>
+          <a routerLink="/base-de-datos"
+             style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
+            🗄️ Ver diseño de base de datos (trabajo en progreso)
           </a>
         </div>
 
