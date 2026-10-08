@@ -22,12 +22,18 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-devkit/core": "^21.2.6",
+    "@angular-devkit/schematics": "^21.2.6",
     "@angular/build": "^21.2.6",
     "@angular/cli": "^21.2.6",
     "@angular/compiler-cli": "^21.2.0",
+    "@nx/angular": "23.2.1",
+    "@nx/workspace": "23.2.1",
+    "@schematics/angular": "^21.2.6",
     "@tailwindcss/postcss": "^4.3.2",
     "@types/node": "^20.17.19",
     "autoprefixer": "^10.5.2",
+    "nx": "23.2.1",
     "postcss": "^8.5.16",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.3.2",

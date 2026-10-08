@@ -1,23 +1,57 @@
-@startuml Makicol_ER_v5
+@startuml Makicol_ER_v6
 !theme plain
-title Makicol Marketplace — Data model (v5 — audit, state machines, multi-region times)
+title Makicol Marketplace — Data model (v6 — esquema "makicol", prefijo Mk, coexistencia aislada con Feria Artesanal)
 skinparam linetype ortho
+skinparam packageStyle rectangle
 
-entity "User" as user {
+note as coexistencia
+  COEXISTENCIA CON FERIA ARTESANAL (misma BD Azure SQL, mismo App Service)
+  - Feria Artesanal vive en el esquema "dbo" (Regiones, Departamentos, Municipios,
+    Artesanos, Ediciones, Dias, Eventos, Fotos, Usuarios, RefreshTokens, AuditLogs...).
+    NO se toca ninguna de sus tablas, migraciones ni código.
+  - Makicol vive COMPLETO en el esquema "makicol" y todas sus tablas llevan
+    el prefijo "Mk". Tiene su propio DbContext, su propia tabla de historial
+    de migraciones (makicol.__EFMigrationsHistory) y su propia autenticación.
+  - REGLA: cero foreign keys, vistas o consultas cruzadas entre "dbo" y "makicol".
+    Lo único compartido es la cadena de conexión y el host (para evitar costos
+    duplicados hasta que Makicol se separe a sus propios recursos).
+  - Salida futura: "dotnet ef migrations script --context MakicolDbContext"
+    reproduce el esquema "makicol" íntegro en una BD nueva sin renombrar nada.
+end note
+
+package "Esquema: makicol" {
+
+entity "MkUser" as user {
   * id : UUID <<PK>>
   --
   name : text
   email : text <<unique>>
+  password_hash : text
   role : enum(buyer, artisan, support, auditor)
   registration_date : date
   language : text <<es, en, de, ...>>
   ..audit..
   created_at : datetimeoffset
   updated_at : datetimeoffset
-  updated_by : UUID <<FK -> user.id>>
+  updated_by : UUID <<FK -> MkUser.id>>
 }
 
-entity "BuyerProfile" as buyer_profile {
+entity "MkRefreshToken" as refresh_token {
+  * id : UUID <<PK>>
+  --
+  user_id : UUID <<FK>>
+  token : text
+  expires_at : datetimeoffset
+  is_revoked : boolean
+  created_at : datetimeoffset
+}
+note right of refresh_token
+  Autenticación PROPIA de Makicol (JWT + refresh).
+  No reutiliza dbo.Usuarios ni dbo.RefreshTokens
+  de Feria: solo comparte el mecanismo/librería.
+end note
+
+entity "MkBuyerProfile" as buyer_profile {
   * user_id : UUID <<PK, FK>>
   --
   city : text
@@ -25,7 +59,7 @@ entity "BuyerProfile" as buyer_profile {
   timezone : text <<IANA, e.g. America/New_York>>
 }
 
-entity "ArtisanProfile" as artisan_profile {
+entity "MkArtisanProfile" as artisan_profile {
   * user_id : UUID <<PK, FK>>
   --
   region : text
@@ -40,16 +74,21 @@ entity "ArtisanProfile" as artisan_profile {
   ..audit..
   created_at : datetimeoffset
   updated_at : datetimeoffset
-  updated_by : UUID <<FK -> user.id>>
+  updated_by : UUID <<FK -> MkUser.id>>
 }
+note right of artisan_profile
+  region / city son texto propio de Makicol.
+  NO referencian dbo.Municipios de Feria
+  (regla de cero cruces entre esquemas).
+end note
 
-entity "SupportAgent" as support_agent {
+entity "MkSupportAgent" as support_agent {
   * user_id : UUID <<PK, FK>>
   --
   level : text
 }
 
-entity "Product" as product {
+entity "MkProduct" as product {
   * id : UUID <<PK>>
   --
   artisan_id : UUID <<FK>>
@@ -63,19 +102,18 @@ entity "Product" as product {
   is_active : boolean <<default true>>
   ..audit..
   created_at : datetimeoffset
-  created_by : UUID <<FK -> user.id>>
+  created_by : UUID <<FK -> MkUser.id>>
   updated_at : datetimeoffset
-  updated_by : UUID <<FK -> user.id>>
+  updated_by : UUID <<FK -> MkUser.id>>
 }
 note right of product
-  "is_active" is a simple boolean, NOT a state table:
-  it is a freely reversible two-way switch with no
-  sequence to protect. A state/transition table here
-  would be over-engineering — this is the intentional
-  exception to the EstadoX / TransicionEstadoX pattern.
+  "is_active" es un booleano simple, NO una tabla
+  de estados: interruptor de 2 valores libremente
+  reversible, sin secuencia que proteger. Excepción
+  intencional al patrón MkXStatus / MkXStatusTransition.
 end note
 
-entity "Order" as order {
+entity "MkOrder" as order {
   * id : UUID <<PK>>
   --
   buyer_id : UUID <<FK>>
@@ -86,10 +124,10 @@ entity "Order" as order {
   ..audit..
   created_at : datetimeoffset
   updated_at : datetimeoffset
-  updated_by : UUID <<FK -> user.id>>
+  updated_by : UUID <<FK -> MkUser.id>>
 }
 
-entity "OrderStatus" as order_status {
+entity "MkOrderStatus" as order_status {
   * id : int <<PK>>
   --
   name : text <<seed: Recibido, En preparación, Enviado, Entregado>>
@@ -97,20 +135,19 @@ entity "OrderStatus" as order_status {
   is_terminal : boolean
 }
 
-entity "OrderStatusTransition" as order_status_transition {
+entity "MkOrderStatusTransition" as order_status_transition {
   * from_status_id : int <<PK, FK>>
   * to_status_id : int <<PK, FK>>
   --
   allowed_role : enum(buyer, artisan, system)
 }
 note right of order_status_transition
-  Por ahora es solo dato de referencia en el modelo
-  (documenta qué saltos son válidos), sin trigger que
-  lo obligue todavía. Se expande a validación real
-  (trigger o capa de aplicación) en una fase futura.
+  Por ahora solo dato de referencia (documenta
+  saltos válidos), sin trigger. Se expande a
+  validación real en una fase futura.
 end note
 
-entity "OrderItem" as order_item {
+entity "MkOrderItem" as order_item {
   * id : UUID <<PK>>
   --
   order_id : UUID <<FK>>
@@ -119,7 +156,7 @@ entity "OrderItem" as order_item {
   unit_price : numeric
 }
 
-entity "Review" as review {
+entity "MkReview" as review {
   * id : UUID <<PK>>
   --
   author_id : UUID <<FK>>
@@ -129,14 +166,14 @@ entity "Review" as review {
   posted_on : date
 }
 
-entity "WishlistItem" as wishlist_item {
+entity "MkWishlistItem" as wishlist_item {
   * buyer_id : UUID <<PK, FK>>
   * product_id : UUID <<PK, FK>>
   --
   added_on : date
 }
 
-entity "SupportCase" as support_case {
+entity "MkSupportCase" as support_case {
   * id : UUID <<PK>>
   --
   requester_id : UUID <<FK>>
@@ -145,15 +182,14 @@ entity "SupportCase" as support_case {
   subject : text
   status_id : int <<FK>>
   priority : enum(low, medium, high)
-  created_at : datetimeoffset
   related_order_id : UUID <<FK, nullable>>
   ..audit..
   created_at : datetimeoffset
   updated_at : datetimeoffset
-  updated_by : UUID <<FK -> user.id, agent or requester>>
+  updated_by : UUID <<FK -> MkUser.id, agent or requester>>
 }
 
-entity "SupportCaseStatus" as support_case_status {
+entity "MkSupportCaseStatus" as support_case_status {
   * id : int <<PK>>
   --
   name : text <<seed: Abierto, En proceso, Resuelto, Cerrado>>
@@ -161,19 +197,18 @@ entity "SupportCaseStatus" as support_case_status {
   is_terminal : boolean
 }
 
-entity "SupportCaseStatusTransition" as support_case_status_transition {
+entity "MkSupportCaseStatusTransition" as support_case_status_transition {
   * from_status_id : int <<PK, FK>>
   * to_status_id : int <<PK, FK>>
   --
   allowed_role : enum(support, system)
 }
 note right of support_case_status_transition
-  Dato de referencia por ahora (incluye el caso
-  "Cerrado -> Abierto" para reapertura). Sin
-  validación forzada todavía.
+  Dato de referencia por ahora (incluye
+  "Cerrado -> Abierto" para reapertura).
 end note
 
-entity "SupportMessage" as support_message {
+entity "MkSupportMessage" as support_message {
   * id : UUID <<PK>>
   --
   case_id : UUID <<FK>>
@@ -183,7 +218,7 @@ entity "SupportMessage" as support_message {
   sent_at : datetimeoffset
 }
 
-entity "FaqItem" as faq_item {
+entity "MkFaqItem" as faq_item {
   * id : UUID <<PK>>
   --
   question : text
@@ -192,7 +227,7 @@ entity "FaqItem" as faq_item {
   target_role : enum(buyer, artisan)
 }
 
-entity "ArtisanVerificationStatus" as artisan_verification_status {
+entity "MkArtisanVerificationStatus" as artisan_verification_status {
   * id : int <<PK>>
   --
   name : text <<seed: Pendiente, Verificado, Rechazado>>
@@ -200,19 +235,19 @@ entity "ArtisanVerificationStatus" as artisan_verification_status {
   is_terminal : boolean
 }
 
-entity "ArtisanVerificationStatusTransition" as artisan_verification_status_transition {
+entity "MkArtisanVerificationStatusTransition" as artisan_verification_status_transition {
   * from_status_id : int <<PK, FK>>
   * to_status_id : int <<PK, FK>>
   --
   allowed_role : enum(system, support)
 }
 note right of artisan_verification_status_transition
-  Dato de referencia por ahora. La verificación hoy
-  es automática (24h post-registro) — este modelo
-  deja espacio para una revisión manual futura.
+  Dato de referencia por ahora. Verificación hoy
+  automática (24h post-registro); deja espacio
+  para revisión manual futura.
 end note
 
-entity "InternationalShipment" as international_shipment {
+entity "MkInternationalShipment" as international_shipment {
   * id : UUID <<PK>>
   --
   order_id : UUID <<FK, unique>>
@@ -223,18 +258,16 @@ entity "InternationalShipment" as international_shipment {
   ..audit..
   created_at : datetimeoffset
   updated_at : datetimeoffset
-  updated_by : UUID <<FK -> user.id>>
+  updated_by : UUID <<FK -> MkUser.id>>
 }
 note right of international_shipment
-  Nombre explícito: este seguimiento granular es
-  específico del piloto de envíos internacionales
-  (ver /envios-internacionales). Los pedidos
-  nacionales NO generan esta entidad — se quedan
-  solo con Order.status_id (más simple).
-  1 Pedido internacional <-> 1 EnvioInternacional.
+  Seguimiento granular específico del piloto
+  internacional (ver /envios-internacionales).
+  Pedidos nacionales NO generan esta entidad.
+  1 MkOrder internacional <-> 1 MkInternationalShipment.
 end note
 
-entity "InternationalShipmentStatus" as international_shipment_status {
+entity "MkInternationalShipmentStatus" as international_shipment_status {
   * id : int <<PK>>
   --
   name : text <<seed: Preparación, Trámites de exportación, En tránsito, Aduana EE.UU., Entregado>>
@@ -242,18 +275,14 @@ entity "InternationalShipmentStatus" as international_shipment_status {
   is_terminal : boolean
 }
 
-entity "InternationalShipmentStatusTransition" as international_shipment_status_transition {
+entity "MkInternationalShipmentStatusTransition" as international_shipment_status_transition {
   * from_status_id : int <<PK, FK>>
   * to_status_id : int <<PK, FK>>
   --
   allowed_role : enum(artisan, support, system)
 }
-note right of international_shipment_status_transition
-  Dato de referencia por ahora — refleja las 6 etapas
-  del diagrama de flujo de envíos internacionales.
-end note
 
-entity "MonthlyMetric" as monthly_metric {
+entity "MkMonthlyMetric" as monthly_metric {
   * month : date <<PK>>
   --
   gmv : numeric
@@ -261,58 +290,44 @@ entity "MonthlyMetric" as monthly_metric {
   total_cases : int
 }
 note right of monthly_metric
-  No es una tabla transaccional:
-  es una vista/agregado que
-  alimenta el rol Auditor,
-  calculada sobre Order y SupportCase.
+  Vista/agregado para el rol Auditor,
+  calculada sobre MkOrder y MkSupportCase.
+  No es tabla transaccional.
 end note
 
-entity "ActivityLog" as activity_log {
+entity "MkActivityLog" as activity_log {
   * id : UUID <<PK>>
   --
   entity_type : enum(user, artisan_profile, product, order, support_case, international_shipment, ...)
   entity_id : UUID
   action : enum(create, update, delete)
-  user_id : UUID <<FK -> user.id>>
+  user_id : UUID <<FK -> MkUser.id>>
   occurred_at : datetimeoffset
   changes : jsonb <<diff before/after, includes status changes>>
 }
 note right of activity_log
-  Log de auditoría transversal: registra CADA
-  creación/modificación/eliminación, incluyendo
-  cada transición de estado de Order, SupportCase,
-  InternationalShipment y ArtisanProfile — no se
-  necesita una tabla de historial separada por
-  entidad, esta la cubre a todas.
-  Es "append-only" (nunca se edita ni se borra).
-  entity_type + entity_id es una referencia
-  polimórfica (no una FK física a una sola tabla) —
-  por eso no se dibuja como línea de relación.
-  Alimenta directamente al rol Soporte (historial
-  de un caso/pedido) y al rol Auditor (trazabilidad
-  y detección de cambios anómalos).
+  Log de auditoría append-only de Makicol,
+  independiente de dbo.AuditLogs de Feria.
+  Registra cada creación/modificación/eliminación
+  y cada transición de estado. entity_type +
+  entity_id es referencia polimórfica (sin FK física).
 end note
 
 note bottom of order
   ESTRATEGIA DE TIEMPOS (multi-región):
-  - Todos los campos de fecha-hora que representan
-    un instante real se almacenan en datetimeoffset
-    en Azure SQL (no datetime2 ni date si incluyen
-    hora). Eso mantiene el instante UTC como valor
-    canónico y, al mismo tiempo, conserva el offset
-    original del usuario (ej. -05:00 para Miami).
-  - "date" solo se usa para campos de calendario sin
-    hora: User.registration_date, Review.posted_on,
-    WishlistItem.added_on, MonthlyMetric.month.
-  - BuyerProfile y ArtisanProfile guardan "timezone"
-    (IANA) para poder mostrar hora local y respetar
-    fechas de corte.
-  - El frontend Angular recibe ISO 8601 y puede
-    mostrar con DatePipe en la zona del navegador,
-    o forzar la zona del perfil vía un pipe custom
-    usando el IANA guardado.
+  - Instantes reales -> datetimeoffset (Azure SQL):
+    instante UTC canónico + offset original del usuario.
+  - "date" solo para calendario sin hora:
+    MkUser.registration_date, MkReview.posted_on,
+    MkWishlistItem.added_on, MkMonthlyMetric.month.
+  - MkBuyerProfile / MkArtisanProfile guardan timezone (IANA).
+  - El frontend Angular recibe ISO 8601 y formatea con
+    Intl.DateTimeFormat (TimezoneService + pipe mktDate).
 end note
 
+}
+
+user ||--o{ refresh_token : "posee"
 user ||--o| buyer_profile
 user ||--o| artisan_profile
 user ||--o| support_agent

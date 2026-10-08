@@ -139,6 +139,10 @@ import { RouterLink } from '@angular/router';
              style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
             🗄️ Ver diseño de base de datos (trabajo en progreso)
           </a>
+          <a routerLink="/contrato-api"
+             style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
+            🔌 Ver contrato de API /api/makicol (servicio compartido)
+          </a>
         </div>
 
         <!-- Module navigation pills -->

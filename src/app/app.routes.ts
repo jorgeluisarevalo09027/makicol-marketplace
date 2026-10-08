@@ -37,5 +37,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/database-design/database-design.component').then(m => m.DatabaseDesignComponent),
   },
+  // Contrato de API /api/makicol/* que expondrá el servicio compartido con Feria Artesanal.
+  {
+    path: 'contrato-api',
+    loadComponent: () =>
+      import('./features/api-contract/api-contract.component').then(m => m.ApiContractComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

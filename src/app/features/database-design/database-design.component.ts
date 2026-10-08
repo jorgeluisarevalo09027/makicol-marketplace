@@ -1,4 +1,4 @@
-import { Component, HostListener, signal } from '@angular/core';
+﻿import { Component, HostListener, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -118,12 +118,30 @@ interface Entidad {
               Las descripciones, notas y la interfaz de esta página se mantienen en español para el contexto de la propuesta.
             </p>
           </div>
+
+          <div style="background:#fff; border-left:4px solid #C8102E; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-top:14px;">
+            <h4 style="color:#1F2A22; font-weight:800; font-size:0.9rem; margin:0 0 8px;">🧱 v6: coexistencia aislada con Feria Artesanal</h4>
+            <p style="color:#57685c; font-size:0.85rem; line-height:1.6; margin:0 0 8px;">
+              Para evitar costos duplicados en Azure, Makicol se despliega inicialmente en la <strong>misma base de datos y el mismo
+              App Service</strong> que el proyecto Feria Artesanal (API .NET 8 + Azure SQL ya publicados). Para que ambos convivan sin
+              tocarse:
+            </p>
+            <ul style="color:#57685c; font-size:0.85rem; line-height:1.7; margin:0 0 8px; padding-left:18px;">
+              <li>Feria Artesanal se queda intacta en el esquema <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">dbo</code>. No se modifica ninguna tabla, migración ni código.</li>
+              <li>Makicol vive completo en el esquema <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">makicol</code> y todas sus tablas llevan el prefijo <strong>Mk</strong> (<code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">MkUser</code>, <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">MkOrder</code>, …), lo que además evita palabras reservadas de SQL Server como <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">Order</code> y <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">User</code>.</li>
+              <li><strong>Regla: cero cruces.</strong> Ninguna FK, vista ni consulta entre <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">dbo</code> y <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">makicol</code>. Makicol tiene su propio <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">DbContext</code>, su propio historial de migraciones y su propia autenticación (<strong>MkRefreshToken</strong>, nueva en esta versión).</li>
+              <li>Salida futura: <code style="background:#F2F6F4; padding:1px 5px; border-radius:4px; font-size:0.78rem;">dotnet ef migrations script --context MakicolDbContext</code> reproduce el esquema íntegro en una BD propia sin renombrar nada.</li>
+            </ul>
+            <a routerLink="/contrato-api" style="display:inline-flex; align-items:center; gap:6px; color:#295440; font-size:0.85rem; font-weight:800; text-decoration:none;">
+              Ver contrato de API que expondrá el servicio →
+            </a>
+          </div>
         </section>
 
         <!-- Diagrama -->
         <section>
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-            <span style="color:#295440; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">📐 Diagrama entidad-relación (v5)</span>
+            <span style="color:#295440; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">📐 Diagrama entidad-relación (v6)</span>
             <button (click)="abrirModal()"
                     style="display:inline-flex; align-items:center; gap:6px; background:#295440; color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:0.8rem; font-weight:700; cursor:pointer;">
               <span class="material-symbols-outlined" style="font-size:1.1rem;">fullscreen</span>
@@ -131,7 +149,7 @@ interface Entidad {
             </button>
           </div>
           <div style="background:#fff; border-radius:14px; padding:16px; box-shadow:0 2px 16px rgba(41,84,64,0.08); overflow-x:auto; text-align:center;">
-            <img src="/assets/makicol-er-diagram-v5.svg" alt="Diagrama entidad-relación Makicol v5, con nombres en inglés, auditoría, estados y tiempos multi-región" style="max-width:100%; height:auto;">
+            <img src="/assets/makicol-er-diagram-v6.svg" alt="Diagrama entidad-relación Makicol v6, esquema makicol con prefijo Mk" style="max-width:100%; height:auto;">
           </div>
         </section>
 
@@ -235,8 +253,8 @@ interface Entidad {
              (window:touchend)="terminarArrastre()"
              style="flex:1; overflow:hidden; display:flex; align-items:center; justify-content:center; cursor:grab;"
              [style.cursor]="arrastrando() ? 'grabbing' : 'grab'">
-          <img src="/assets/makicol-er-diagram-v5.svg"
-               alt="Diagrama entidad-relación Makicol v5 ampliado"
+          <img src="/assets/makicol-er-diagram-v6.svg"
+               alt="Diagrama entidad-relación Makicol v6 ampliado"
                (dblclick)="zoomReset()"
                style="max-width:none; user-select:none; -webkit-user-drag:none;"
                [style.transform]="'translate(' + panX() + 'px, ' + panY() + 'px) scale(' + zoom() + ')'"
@@ -348,70 +366,73 @@ export class DatabaseDesignComponent {
   }
 
   entidades: Entidad[] = [
-    { nombre: 'User', icono: '🪪', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'],
-      campos: ['id : UUID (PK)', 'name : text', 'email : text (unique)', 'role : enum', 'language : text (es, en, de...)', 'registration_date : date', 'created_at : datetimeoffset', 'updated_at / updated_by : audit'],
-      descripcion: 'Cuenta base compartida por los 4 roles; el rol determina qué perfil extendido tiene.' },
-    { nombre: 'BuyerProfile', icono: '🛍️', color: '#003893', bg: '#EAF1FC', roles: ['Comprador'],
+    { nombre: 'MkUser', icono: '🪪', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'],
+      campos: ['id : UUID (PK)', 'name : text', 'email : text (unique)', 'password_hash : text', 'role : enum', 'language : text (es, en, de...)', 'registration_date : date', 'created_at : datetimeoffset', 'updated_at / updated_by : audit'],
+      descripcion: 'Cuenta base compartida por los 4 roles; el rol determina qué perfil extendido tiene. Independiente de dbo.Usuarios de Feria.' },
+    { nombre: 'MkRefreshToken', icono: '🔑', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'],
+      campos: ['id : UUID (PK)', 'user_id : FK -> MkUser', 'token : text', 'expires_at : datetimeoffset', 'is_revoked : boolean', 'created_at : datetimeoffset'],
+      descripcion: 'Autenticación propia de Makicol (JWT + refresh). No reutiliza dbo.RefreshTokens de Feria; solo comparte el mecanismo.' },
+    { nombre: 'MkBuyerProfile', icono: '🛍️', color: '#003893', bg: '#EAF1FC', roles: ['Comprador'],
       campos: ['user_id : UUID (PK, FK)', 'city : text', 'shipping_address : text', 'timezone : text (IANA)'],
       descripcion: 'Datos adicionales de envío del comprador e idioma/zona horaria preferidos (America/New_York, Europe/Madrid, etc.).' },
-    { nombre: 'ArtisanProfile', icono: '🧶', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano'],
+    { nombre: 'MkArtisanProfile', icono: '🧶', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano'],
       campos: ['user_id : UUID (PK, FK)', 'region : text', 'craft_type : text', 'bio : text', 'payment_method : enum', 'timezone : text (IANA)', 'verification_status_id : FK', 'created_at : datetimeoffset', 'updated_at / updated_by : audit'],
       descripcion: 'Perfil de vendedor: oficio, historia, método de cobro, zona horaria y estado de verificación de cuenta.' },
-    { nombre: 'Product', icono: '📦', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Comprador', 'Auditor'],
+    { nombre: 'MkProduct', icono: '📦', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Comprador', 'Auditor'],
       campos: ['id : UUID (PK)', 'artisan_id : FK', 'name : text', 'category : text', 'price : numeric', 'sold_count : int', 'is_active : boolean (default true)', 'created_at : datetimeoffset', 'created_by : FK', 'updated_at : datetimeoffset', 'updated_by : FK'],
       descripcion: 'Catálogo publicado por los artesanos. "is_active" es un booleano simple (no tabla de estados) — ver nota en el diagrama sobre por qué se excluye a propósito del patrón EstadoX.' },
-    { nombre: 'Order', icono: '🧾', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'],
-      campos: ['id : UUID (PK)', 'buyer_id : FK', 'placed_at : datetimeoffset', 'total : numeric', 'status_id : FK -> OrderStatus', 'origin_timezone : text (IANA, copia del perfil)', 'created_at : datetimeoffset', 'updated_at / updated_by : audit'],
+    { nombre: 'MkOrder', icono: '🧾', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'],
+      campos: ['id : UUID (PK)', 'buyer_id : FK', 'placed_at : datetimeoffset', 'total : numeric', 'status_id : FK -> MkOrderStatus', 'origin_timezone : text (IANA, copia del perfil)', 'created_at : datetimeoffset', 'updated_at / updated_by : audit'],
       descripcion: 'Compra realizada por un comprador; base del GMV que consume el Auditor. El timestamp y el offset se guardan en datetimeoffset para soportar multi-región.' },
-    { nombre: 'OrderStatus', icono: '🏷️', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'],
+    { nombre: 'MkOrderStatus', icono: '🏷️', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'],
       campos: ['id : int (PK)', 'name : text', 'display_order : int', 'is_terminal : boolean'],
       descripcion: 'Tabla semilla: Recibido, En preparación, Enviado, Entregado.' },
-    { nombre: 'OrderStatusTransition', icono: '🔀', color: '#003893', bg: '#EAF1FC', roles: ['Auditor'],
+    { nombre: 'MkOrderStatusTransition', icono: '🔀', color: '#003893', bg: '#EAF1FC', roles: ['Auditor'],
       campos: ['from_status_id : FK (PK)', 'to_status_id : FK (PK)', 'allowed_role : enum(buyer, artisan, system)'],
       descripcion: 'Saltos válidos entre estados de Pedido. Dato de referencia por ahora, sin trigger que lo obligue todavía.' },
-    { nombre: 'OrderItem', icono: '📋', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano'],
+    { nombre: 'MkOrderItem', icono: '📋', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano'],
       campos: ['id : UUID (PK)', 'order_id : FK', 'product_id : FK', 'quantity : int', 'unit_price : numeric'],
       descripcion: 'Línea de producto dentro de un pedido — un pedido puede incluir productos de varios artesanos.' },
-    { nombre: 'Review', icono: '⭐', color: '#B08900', bg: '#FDF6E3', roles: ['Comprador', 'Artesano', 'Auditor'],
+    { nombre: 'MkReview', icono: '⭐', color: '#B08900', bg: '#FDF6E3', roles: ['Comprador', 'Artesano', 'Auditor'],
       campos: ['id : UUID (PK)', 'author_id : FK', 'product_id : FK', 'rating : int', 'comment : text', 'posted_on : date'],
       descripcion: 'Calificación y comentario de un comprador sobre un producto recibido. Solo fecha, sin hora.' },
-    { nombre: 'WishlistItem', icono: '❤️', color: '#C8102E', bg: '#FBE9EC', roles: ['Comprador'],
+    { nombre: 'MkWishlistItem', icono: '❤️', color: '#C8102E', bg: '#FBE9EC', roles: ['Comprador'],
       campos: ['buyer_id : FK (PK)', 'product_id : FK (PK)', 'added_on : date'],
       descripcion: 'Relación muchos-a-muchos entre comprador y producto — la lista de deseos. Solo fecha, sin hora.' },
-    { nombre: 'SupportCase', icono: '🎧', color: '#57685c', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'],
-      campos: ['id : UUID (PK)', 'requester_id : FK', 'requester_role : enum', 'category : text', 'status_id : FK -> SupportCaseStatus', 'priority : enum', 'created_at : datetimeoffset', 'related_order_id : FK (nullable)', 'updated_at / updated_by : audit'],
+    { nombre: 'MkSupportCase', icono: '🎧', color: '#57685c', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'],
+      campos: ['id : UUID (PK)', 'requester_id : FK', 'requester_role : enum', 'category : text', 'status_id : FK -> MkSupportCaseStatus', 'priority : enum', 'created_at : datetimeoffset', 'related_order_id : FK (nullable)', 'updated_at / updated_by : audit'],
       descripcion: 'Caso de soporte abierto por comprador o artesano; el auditor lo cruza contra ventas. Timestamp en datetimeoffset para seguimiento multi-región.' },
-    { nombre: 'SupportCaseStatus', icono: '🏷️', color: '#57685c', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'],
+    { nombre: 'MkSupportCaseStatus', icono: '🏷️', color: '#57685c', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'],
       campos: ['id : int (PK)', 'name : text', 'display_order : int', 'is_terminal : boolean'],
       descripcion: 'Tabla semilla: Abierto, En proceso, Resuelto, Cerrado.' },
-    { nombre: 'SupportCaseStatusTransition', icono: '🔀', color: '#57685c', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'],
+    { nombre: 'MkSupportCaseStatusTransition', icono: '🔀', color: '#57685c', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'],
       campos: ['from_status_id : FK (PK)', 'to_status_id : FK (PK)', 'allowed_role : enum(support, system)'],
       descripcion: 'Saltos válidos entre estados de Caso, incluye reapertura (Cerrado -> Abierto). Dato de referencia por ahora.' },
-    { nombre: 'SupportMessage', icono: '💬', color: '#57685c', bg: '#F4F5F6', roles: ['Soporte'],
+    { nombre: 'MkSupportMessage', icono: '💬', color: '#57685c', bg: '#F4F5F6', roles: ['Soporte'],
       campos: ['id : UUID (PK)', 'case_id : FK', 'author_id : FK', 'author_role : enum', 'body : text', 'sent_at : datetimeoffset'],
       descripcion: 'Hilo de conversación dentro de un caso. Timestamp en datetimeoffset para mantener trazabilidad exacta.' },
-    { nombre: 'FaqItem', icono: '❓', color: '#57685c', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte'],
+    { nombre: 'MkFaqItem', icono: '❓', color: '#57685c', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte'],
       campos: ['id : UUID (PK)', 'question : text', 'answer : text', 'category : text', 'target_role : enum'],
       descripcion: 'Preguntas frecuentes mostradas en el centro de ayuda de cada rol.' },
-    { nombre: 'ArtisanVerificationStatus', icono: '🏷️', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Soporte'],
+    { nombre: 'MkArtisanVerificationStatus', icono: '🏷️', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Soporte'],
       campos: ['id : int (PK)', 'name : text', 'display_order : int', 'is_terminal : boolean'],
       descripcion: 'Tabla semilla: Pendiente, Verificado, Rechazado. Hoy la verificación es automática (24h post-registro); deja espacio para revisión manual futura.' },
-    { nombre: 'ArtisanVerificationStatusTransition', icono: '🔀', color: '#8a6040', bg: '#FBF3E9', roles: ['Soporte'],
+    { nombre: 'MkArtisanVerificationStatusTransition', icono: '🔀', color: '#8a6040', bg: '#FBF3E9', roles: ['Soporte'],
       campos: ['from_status_id : FK (PK)', 'to_status_id : FK (PK)', 'allowed_role : enum(system, support)'],
       descripcion: 'Saltos válidos entre estados de verificación del artesano. Dato de referencia por ahora.' },
-    { nombre: 'InternationalShipment', icono: '🌎', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'],
-      campos: ['id : UUID (PK)', 'order_id : FK (unique)', 'status_id : FK -> InternationalShipmentStatus', 'courier : text', 'tracking_number : text', 'certificate_of_origin_ref : text', 'created_at : datetimeoffset', 'updated_at : datetimeoffset', 'updated_by : FK'],
+    { nombre: 'MkInternationalShipment', icono: '🌎', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'],
+      campos: ['id : UUID (PK)', 'order_id : FK (unique)', 'status_id : FK -> MkInternationalShipmentStatus', 'courier : text', 'tracking_number : text', 'certificate_of_origin_ref : text', 'created_at : datetimeoffset', 'updated_at : datetimeoffset', 'updated_by : FK'],
       descripcion: 'Nombre explícito: seguimiento granular específico del piloto internacional. Los pedidos nacionales no generan esta entidad. 1 Pedido internacional <-> 1 EnvioInternacional.' },
-    { nombre: 'InternationalShipmentStatus', icono: '🏷️', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'],
+    { nombre: 'MkInternationalShipmentStatus', icono: '🏷️', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'],
       campos: ['id : int (PK)', 'name : text', 'display_order : int', 'is_terminal : boolean'],
       descripcion: 'Tabla semilla: Preparación, Trámites de exportación, En tránsito, Aduana EE.UU., Entregado — las etapas del flujo internacional.' },
-    { nombre: 'InternationalShipmentStatusTransition', icono: '🔀', color: '#B08900', bg: '#FDF6E3', roles: ['Auditor'],
+    { nombre: 'MkInternationalShipmentStatusTransition', icono: '🔀', color: '#B08900', bg: '#FDF6E3', roles: ['Auditor'],
       campos: ['from_status_id : FK (PK)', 'to_status_id : FK (PK)', 'allowed_role : enum(artisan, support, system)'],
       descripcion: 'Saltos válidos entre etapas del envío internacional. Dato de referencia por ahora.' },
-    { nombre: 'MonthlyMetric', icono: '📊', color: '#6d3fae', bg: '#F1EAFB', roles: ['Auditor'],
+    { nombre: 'MkMonthlyMetric', icono: '📊', color: '#6d3fae', bg: '#F1EAFB', roles: ['Auditor'],
       campos: ['month : date (PK)', 'gmv : numeric', 'completed_orders : int', 'total_cases : int'],
       descripcion: 'Vista/agregado calculado sobre Order y SupportCase — no es una tabla transaccional propia. Solo fecha, sin hora.' },
-    { nombre: 'ActivityLog', icono: '🕵️', color: '#C8102E', bg: '#FBE9EC', roles: ['Soporte', 'Auditor'],
+    { nombre: 'MkActivityLog', icono: '🕵️', color: '#C8102E', bg: '#FBE9EC', roles: ['Soporte', 'Auditor'],
       campos: ['id : UUID (PK)', 'entity_type : enum', 'entity_id : UUID (polymorphic ref)', 'action : enum(create, update, delete)', 'user_id : FK', 'occurred_at : datetimeoffset', 'changes : jsonb (diff, includes status changes)'],
       descripcion: 'Log de auditoría transversal, append-only: registra cada cambio, incluyendo cada transición de estado de Order, SupportCase, InternationalShipment y ArtisanProfile. Base del historial de Soporte y trazabilidad de Auditor.' },
   ];
