@@ -1171,6 +1171,38 @@ Lectura:
   ejecutada.
 - Cualquier cambio de backend requiere autorización expresa y separada (editar, compilar, desplegar).
 
+### B6. Lista de cambios propuestos a la propuesta (sin aplicar)
+
+Nada de esto está ejecutado. Cada cambio espera tu aprobación (columna **OK**). Los números de auditoría
+remiten a 3.2.
+
+| ID | Pieza | Cambio propuesto | Auditoría | OK |
+|---|---|---|---|---|
+| C1 | `hero` | Quitar "500+ productores" y "50.000 visitantes" o presentarlos como metas con su base | #1, #2 | |
+| C2 | `hero` | Sustituir el botón al prototipo por el enlace al demo desplegado | 3.3 | |
+| C3 | `hero` | Corregir las tres imágenes inexistentes (`fondo-arena`, `decoracion-esquina`, `artesanias`) | 3.7 | |
+| C4 | `hero`, fases | Cambiar la promesa de pagos en línea y reels: pagos "en diseño" (modelo B primero) y reels como visión | #13, #14 | |
+| C5 | `financial` | Poner el patrocinio como primera fuente, marcado como objetivo sin acuerdo; la comisión pasa a posibilidad | #3, #6, B1 | |
+| C6 | `financial` | Retirar "ingreso de ~USD 600/mes" y "autofinanciación desde el mes 8" (o respaldarlos con curva) | #4, #5 | |
+| C7 | `financial` | Unificar tabla y simulador en un modelo; retirar Media Services y CDN Akamai; Front Door a USD 35 | #7 a #11 | |
+| C8 | `technical` | Angular 22; PWA y Wompi SDK solo como opciones, no como existentes | 3.5 | |
+| C9 | `architecture` | Sustituir el diagrama por B5 (demo hoy y producción prevista); quitar Azure AD B2C y mostrar Auth0 como propuesta | #12, #16, B5 | |
+| C10 | `architecture/scalability-phases` | Condensar la Fase 3 (IA, app, Etsy, Cosmos DB, OpenAI) en una línea de visión | #15 | |
+| C11 | `international-shipping` | Rotular "fase futura, no ejecutada"; corregir certificado de origen (autocertificación), fechar tarifas y marcar el recargo del 15 % como sin verificar | #17 a #19, #21 | |
+| C12 | `backoffice-evaluation` | Resumir en una sección: el demo ya separa por rol | 3.5 | |
+| C13 | `database-design` | Corregir verificación automática y pedido multi-artesano; pasar a ER v7 desde el backend; mover v1 a v5 a histórico | 3.7 | |
+| C14 | `contrato-api` | Reemplazar la tabla manual por el Swagger del demo; conservar solo las reglas de diseño | 3.7 | |
+| C15 | `marketplace/` y assets | Retirar el prototipo tras rescatar 3.3; eliminar `logo-corazon.png` y `makicol-logo-header1.svg` | 3.3, 3.7 | |
+| C16 | Equipo | Añadir la sección de equipo | #22 | |
+| C17 | `.gitignore` | Añadir `.nx` | 3.7 | |
+
+**Orden sugerido si apruebas:** primero lo que corrige afirmaciones falsas o engañosas (C1, C4, C6, C9, C11,
+C13), luego lo cosmético y la limpieza (C3, C15, C17), y al final las secciones nuevas (C5, C16). C15 es
+destructivo y exige tu autorización explícita.
+
+**Dependencias:** C5 y C6 necesitan una cifra de patrocinio (B1); C9 depende de confirmar Auth0; C16 necesita
+los datos del equipo.
+
 ## Pendientes inmediatos
 
 0. Verificar lo que aún figura como "sin verificar" en 3.6 y revisar el navbar, `technical` en detalle y
