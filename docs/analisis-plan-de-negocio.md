@@ -18,7 +18,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 |---|---|---|
 | 1 | Pagos y envíos (O1 a O8) | **Borrador completo** (§1); decisiones en O8 |
 | 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **Borrador completo** (§2); decisiones en A7 |
-| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario en primera pasada** (§3); sin cambios en la propuesta |
+| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario y diagramas de arquitectura B5** (§3); faltan B1, B5b y revisiones sin verificar; sin cambios en la propuesta |
 | 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F7 en borrador** (§0 y §4); falta contrastar pantallas y revisión visual |
 
 ## 0. Convenciones de los diagramas
@@ -1096,6 +1096,33 @@ muestra esos espacios vacíos (sin verificar visualmente).
 **Artefactos del repo:** `.gitignore` excluye `/dist`, `/node_modules` y `/.angular/cache`, y `git ls-files` no
 muestra ninguno versionado. `.nx` no figura en `.gitignore` pero no hay archivos suyos versionados; conviene
 añadirlo.
+
+### B5. Arquitectura: demo hoy y producción prevista
+
+**Demo hoy** (`diagramas/b5-arquitectura-demo-hoy.svg`):
+
+![Arquitectura del demo](diagramas/b5-arquitectura-demo-hoy.svg)
+
+- Verificado en código: front Angular/Nx con cuatro shells por rol y área pública; API ASP.NET Core
+  (`net8.0` en el `.csproj`) con MediatR, FluentValidation, EF Core 8 sobre SQL Server, BCrypt y JWT propio;
+  límite de intentos en login y refresh.
+- `azure-pipelines.yml` restaura, compila y publica el artefacto `drop` con .NET 9; el YAML no tiene paso de
+  despliegue (cómo llega a Azure App Service no está documentado en el repo).
+- **Sin verificar en ejecución:** el uso real de Blob Storage (solo consta el paquete `Azure.Storage.Blobs`) y
+  el hosting del front (Static Web Apps, según el historial de git).
+- No existen en el demo: pagos, comisión, guías, rastreo, correo transaccional, recuperar contraseña ni MFA.
+
+**Producción prevista** (`diagramas/b5-arquitectura-produccion-prevista.svg`) — **propuesta, no implementada**:
+
+![Arquitectura prevista](diagramas/b5-arquitectura-produccion-prevista.svg)
+
+- Auth0 como proveedor (recomendación provisional, A2–A8), MFA para soporte y auditor, y validación del token
+  por JWKS en la API.
+- Módulo de envíos nuevo (guía PDF, rastreo, recaudo), simulado primero en el backend; Servientrega sin
+  contrato ni cotización (O11).
+- Wompi solo si algún artesano adopta el modelo A; envíos internacionales rotulados como fase futura no
+  ejecutada.
+- Cualquier cambio de backend requiere autorización expresa y separada (editar, compilar, desplegar).
 
 ## Pendientes inmediatos
 

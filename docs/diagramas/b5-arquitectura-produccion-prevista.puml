@@ -1,0 +1,47 @@
+@startuml b5-arquitectura-produccion-prevista
+title Arquitectura prevista para el piloto (PROPUESTA, sujeta a cambios)
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam rectangle {
+  BorderColor #1F2A22
+  RoundCorner 8
+}
+skinparam ArrowColor #1F2A22
+skinparam NoteBackgroundColor #FDF6E3
+skinparam NoteBorderColor #B08900
+
+actor "Comprador\nArtesano\nSoporte (MFA)\nAuditor (MFA)" as U
+
+rectangle "Front (Angular 22)\nadaptador de autenticación\npor redirección PKCE" as FE #EAF1FC
+rectangle "Auth0 (propuesto)\nlogin, MFA para soporte y auditor,\nusuarios y contraseñas importadas" as IDP #FBF3E9
+
+rectangle "API (ASP.NET Core)" as API #E4EFE6 {
+  rectangle "Núcleo actual\npedidos, catálogo, soporte, auditoría" as CORE #E4EFE6
+  rectangle "Módulo de envíos (nuevo)\nguía PDF, rastreo, recaudo\n(simulado primero)" as SHIP #E4EFE6
+  rectangle "Validación de tokens\nJWKS del proveedor" as JWT #E4EFE6
+}
+
+database "SQL Server" as DB #E4EFE6
+cloud "Blob Storage" as BLOB #E4EFE6
+cloud "Servientrega\n(contrato de la plataforma,\nsin firmar)" as SRV #F2F2F2
+
+rectangle "Pasarela de pago (Wompi)\nsolo modelo A, a futuro" as PAY #F2F2F2
+rectangle "Envíos internacionales\nfase futura, no ejecutada" as INTL #F2F2F2
+
+U --> FE
+FE --> IDP : inicio de sesión
+FE --> JWT : REST + token
+JWT --> CORE
+CORE --> DB
+CORE --> BLOB
+CORE --> SHIP
+SHIP ..> SRV : guía, rastreo, recaudo
+CORE ..> PAY
+SHIP ..> INTL
+
+note bottom of SRV
+  Planteamiento basado en información pública (O11):
+  sin contrato ni cotización de Servientrega.
+end note
+@enduml

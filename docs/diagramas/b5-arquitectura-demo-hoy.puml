@@ -1,0 +1,47 @@
+@startuml b5-arquitectura-demo-hoy
+title Arquitectura del demo (hoy)
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam rectangle {
+  BorderColor #1F2A22
+  RoundCorner 8
+}
+skinparam ArrowColor #1F2A22
+skinparam NoteBackgroundColor #FDF6E3
+skinparam NoteBorderColor #B08900
+
+actor "Comprador\nArtesano\nSoporte\nAuditor" as U
+
+rectangle "Front (Angular 22, Nx)" as FE #EAF1FC {
+  rectangle "SPA con 4 shells por rol\n+ área pública\n(Static Web Apps según\nel historial de git)" as SPA #EAF1FC
+}
+
+rectangle "API (ASP.NET Core, net8.0)" as API #E4EFE6 {
+  rectangle "WebApi\nJWT propio\nlímite de login: 5 intentos / 60 s\nSwagger" as WA #E4EFE6
+  rectangle "Application\nMediatR + FluentValidation" as APP #E4EFE6
+  rectangle "Infrastructure\nEF Core + BCrypt" as INF #E4EFE6
+}
+
+database "SQL Server\n(EF Core 8)" as DB #E4EFE6
+cloud "Blob Storage\n(paquete Azure.Storage.Blobs)" as BLOB #E4EFE6
+rectangle "Azure Pipelines\ncompila y publica un zip\n(sin paso de despliegue en el YAML)" as CI #F2F2F2
+
+U --> SPA : HTTPS
+SPA --> WA : REST /api/*\nBearer JWT
+WA --> APP
+APP --> INF
+INF --> DB
+INF --> BLOB
+CI ..> API : artefacto "drop"
+
+note bottom of API
+  No existe en el demo: pagos, comisión, guías de envío,
+  rastreo, correo transaccional, recuperar contraseña ni MFA.
+end note
+
+note bottom of BLOB
+  El uso real del almacenamiento de archivos
+  no se ha verificado en ejecución.
+end note
+@enduml
