@@ -18,7 +18,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 |---|---|---|
 | 1 | Pagos y envíos (O1 a O8) | pendiente |
 | 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **A1 en borrador** (§2) |
-| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | pendiente |
+| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario en primera pasada** (§3); sin cambios en la propuesta |
 | 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F5 en borrador** (§0 y §4); F6 y F7 pendientes |
 
 ## 0. Convenciones de los diagramas
@@ -284,10 +284,172 @@ seguro propio. Se sorteó sin cambiar la configuración del sistema, forzando la
 
 **Aún por contrastar:** flujo de reseñas, alta de un artesano nuevo y las pantallas (no solo los datos).
 
+## 3. Inventario de la propuesta (Parte 3)
+
+Alcance: lectura de `hero`, `financial` (tabla y simulador), `international-shipping`,
+`architecture/scalability-phases`, `backoffice-evaluation` y `technical` (por grep). Sin leer en detalle:
+`database-design`, el navbar y los assets. **No se ha modificado ni borrado nada de la propuesta.**
+
+### 3.1 Estructura actual del sitio
+
+| Ruta | Contenido | Vigencia frente al demo |
+|---|---|---|
+| `/` | Selector de rol del **prototipo** (`marketplace/`) | Desactualizado; el demo real lo reemplaza |
+| `/marketplace/*` | Prototipo navegable (51 archivos, datos simulados) | Desactualizado; candidato a retirar tras rescatar texto |
+| `/propuesta` | Navbar, hero, financiero, técnico, arquitectura | Es el núcleo del plan de negocio, con cifras por corregir |
+| `/envios-internacionales` | Investigación regulatoria y tarifas | Valiosa; parte de las cifras es incorrecta o sin fecha |
+| `/evaluacion-backoffice` | Storefront frente a back-office | Desactualizada (ver 3.5) |
+| `/base-de-datos` | ER v6 y tablas `Mk*` | Por contrastar con las entidades reales del backend |
+| `/contrato-api` | Contrato `/api/makicol/*` | **Desactualizado**: el demo usa `/api/*` (sin prefijo `makicol`) |
+
+### 3.2 Auditoría de cifras y afirmaciones
+
+Estado: **V** verificada, **A** a actualizar, **S** sin sustento, **N** no aplica hoy (visión), **?** sin verificar.
+Las filas con fuente externa se sustentan en 3.6.
+
+| # | Afirmación (dónde) | Estado | Observación |
+|---|---|---|---|
+| 1 | "500+ productores registrados en Makicol" (hero, Fase 1) | **S** | El demo tiene 4 artesanos de prueba. Sin evidencia de 500 productores ni de su relación con Makicol |
+| 2 | "50.000 visitantes proyectados al año" (hero) | **S** | Sin fuente ni metodología |
+| 3 | Comisión "5-8 %" (financiero) frente a "6 %" (FAQ del prototipo, panel del auditor) | **A** | Dos cifras para lo mismo; elegir una (el demo no calcula comisión) |
+| 4 | 200 productores x USD 50/mes x 6 % = ~USD 600/mes | **A** | La cuenta es correcta, pero ignora el costo de la pasarela: el neto sería ~USD 232 (ver 3.6) |
+| 5 | "Se autofinancia desde el mes 8" y "sostenible desde el primer año" | **S** | No hay curva de crecimiento que lo respalde |
+| 6 | Patrocinadores (Ministerio de Cultura, Banco de la República) cubren ~USD 1.800 el año 1 | **S** | Sin acuerdo ni carta; presentarlo como objetivo, no como hecho |
+| 7 | Costo Fase 1 "USD 131-180/mes" (fases) | **A** | Es el total de la tabla solo con 50 productores (131). Con 200 productores la misma tabla da **260** |
+| 8 | Tabla de costos frente a simulador | **A** | Dos modelos distintos (productores frente a usuarios activos) con precios diferentes: 300 usuarios = USD 126 en el simulador y 200 productores = USD 260 en la tabla. Unificar |
+| 9 | "Azure Media Services" (tabla, fases, simulador) | **A** (verificado) | Retirado el **30-jun-2024**. Reemplazar o sacar los reels del alcance |
+| 10 | "Azure CDN (Akamai)" (tabla) | **A** (verificado) | Retirado el **31-oct-2023**; además "CDN Standard from Microsoft (classic)" se retira el **30-sep-2027** |
+| 11 | Front Door Standard "USD 22" con WAF | **A** (verificado) | La base publicada es **USD 35/mes**; el WAF administrado exige Premium (USD 330) |
+| 12 | "API marketplace + Angular SSR PWA" en App Service | **A** | El front del demo es un SPA en Azure Static Web Apps y el SSR se revirtió (historial de git); la PWA no se ha verificado |
+| 13 | Pagos con Wompi (PSE, Nequi, Daviplata, tarjeta, Efecty) en Fase 1, "Ago-Nov 2026 (lanzamiento MVP)" | **A** | Hoy es octubre de 2026 y el demo **no cobra**. Los medios coinciden con los de Wompi, pero cambiar el estado a "en diseño" y la fecha a una propia |
+| 14 | "Reels de 30 s" (Fase 2, hero) | **N** | No existe ni está en construcción; mover a visión |
+| 15 | Fase 3: IA, app Android, Etsy y Amazon Handmade, Cosmos DB, OpenAI | **N** | Sin sustento a corto plazo; condensar |
+| 16 | "Azure AD B2C" (arquitectura) frente a "autenticación propia" (contrato) | **A** (verificado) | B2C no se vende a clientes nuevos desde el **1-may-2025**; Microsoft recomienda Entra External ID |
+| 17 | Fin del "de minimis" de EE. UU. el 29-ago-2025; recargo ~15 % | **V** (fecha) / **?** (recargo) | Fecha confirmada por CBP. Por el correo postal no se exige entrada de CBP: el operador paga según la tasa IEEPA. El recargo del 15 % no apareció en fuentes oficiales |
+| 18 | Certificado de Origen TLC: DIAN gratis, Cámara de Comercio COP 25.000-80.000, VUCE, vigencia de 4 años | **A** (verificado en lo esencial) | Para el acuerdo con EE. UU. la DIAN indica **autocertificación** (la emite productor, exportador o importador, sin la DIAN y sin formulario obligatorio). La ruta de Cámara de Comercio y su costo no se sustentan; la vigencia de 4 años no se confirmó |
+| 19 | Tarifas de FedEx, DHL y 4-72 (COP y USD) | **?** | Cotizaciones de fecha desconocida; requieren cotización vigente |
+| 20 | Evaluación de catálogo para el piloto (8 productos) | **A** | Mezcla nombres del demo con otros que ya no están (Hamaca San Jacinto, Cerámica Ritual Tayrona). Alinear con el catálogo actual del seed |
+| 21 | "20 días hábiles de entrega" y "3-7 días de tránsito" | **?** | Dependen de las tarifas anteriores |
+| 22 | Equipo y experiencia (no figuran en el sitio) | **A** | Falta la sección de equipo (B2c) |
+
+Coincidencia útil: el "Collar de semillas Wayúu" figura como riesgo **alto** (APHIS) y excluido del piloto, y
+también está publicado en el catálogo del demo; sirve de ejemplo en el plan de negocio.
+
+### 3.3 Prototipo `src/app/marketplace/`: qué rescatar antes de retirar
+
+| Contenido | Dónde vive | Destino propuesto |
+|---|---|---|
+| Comisión del 6 % y su redacción de "solo por venta completada" | `data/marketplace-data.ts`, registro del artesano | Modelo de ingresos del plan (decidir con la Parte 1) |
+| Liberación del pago 3-5 días tras confirmar la entrega | FAQ del artesano | Flujo de pago del modelo coordinado (Parte 1) |
+| Flujo de registro del artesano con método de cobro | `artesano/pages/registro` | Ficha F3 (artesano) |
+| Términos del marketplace | `comprador/pages/terminos` | Revisar contra `specs/pendientes.md` del front (texto legal pendiente de decisión) |
+| FAQ y datos simulados de pedidos y ventas | `data/` | Retirar; el demo tiene datos de prueba reales |
+| Botones y enlaces a `/marketplace` | `hero`, `international-shipping`, `shared` | Reemplazar por el enlace al demo desplegado |
+
+### 3.4 Decisiones propuestas por pieza (sin ejecutar)
+
+| Pieza | Decisión propuesta | Motivo |
+|---|---|---|
+| `marketplace/` | **Retirar** tras rescatar 3.3 y con tu autorización | El demo real lo sustituye |
+| `hero` | **Actualizar** | Cifras sin sustento, botón al prototipo, promesa de pagos y reels |
+| `financial` (tabla y simulador) | **Actualizar y unificar** | Dos modelos, servicios retirados, ingreso que ignora la pasarela |
+| `technical` | **Actualizar** | Angular 21 frente a 22 y PWA sin verificar |
+| `architecture` (diagrama y fases) | **Actualizar** | Mostrar demo hoy y producción prevista (B5); retirar B2C, Media Services y CDN Akamai |
+| `international-shipping` | **Conservar y corregir** | De lo más sólido, pero con certificado de origen y recargos por corregir y tarifas por fechar |
+| `backoffice-evaluation` | **Resumir** | Desactualizada (ver 3.5) |
+| `database-design` y ER v1-v5 | **Actualizar a la v6 vigente** y mover las anteriores a histórico | Son 6 iteraciones; solo la última es útil |
+| `contrato-api` | **Actualizar** | Prefijo y autenticación distintos del demo |
+| `docs/valoracion-trabajo-realizado.md` y su prompt | **Actualizar** (equipo, métricas y tarifas) | Ver B5b |
+| `public/assets` | **Auditar uso** | Imágenes de 0,3 a 1 MB c/u; varias parecen del prototipo |
+| `.angular`, `.nx`, `dist`, favicons sueltos | **Verificar `.gitignore`** | Artefactos de build que no deben versionarse |
+
+### 3.5 Lectura de `backoffice-evaluation` y `technical`
+
+- **`backoffice-evaluation`:** recomienda separar el frontend en storefront y back-office, "mientras el equipo
+  es pequeño" mantener el monolito. Está **desactualizado**: afirma que la autenticación "aún no está
+  implementada" y habla de "un solo proyecto Angular"; hoy el front es un monorepo Nx con 43 proyectos,
+  límites por capa y por rol aplicados por lint, y fragmentos de carga diferida por rol. Decisión: **resumir
+  en una sola sección** ("el demo ya separa por rol; separar aplicaciones queda como opción futura").
+- **`technical` (PWA frente a nativo):** menciona "Angular 21" (el front usa Angular 22), "Wompi Web SDK",
+  "Web Payments API + 3DS" y PWA instalable. **Sin verificar**: la PWA no aparece como funcionalidad del demo.
+  Decisión provisional: conservar la comparación y actualizarla a lo que realmente existe.
+
+### 3.6 Verificación externa (primera ronda, consultada el 26-oct-2026)
+
+Fuentes citadas: Microsoft Learn (retiro de Azure Media Services; preguntas frecuentes de Azure AD B2C y de
+Entra External ID; retiro de Azure CDN Akamai; precios de Front Door), CBP (CSMS 66065494) y Federal Register
+(orden ejecutiva 14324), DIAN (Abecé de pruebas de origen), Wompi (planes y tarifas, documentación de
+pagos a terceros y centro de ayuda), Auth0 (página de precios), Servientrega (documentación de su API) y
+la normativa de sistemas de pago de bajo valor (Decreto 1692 de 2020).
+
+**Pagos (Parte 1):**
+
+| Dato | Resultado | Fuente |
+|---|---|---|
+| Tarifa de Wompi (plan Agregador) | **2,65 % + COP 700 + IVA** por transacción exitosa; el dinero llega al día hábil siguiente | wompi.com, planes y tarifas |
+| Tarifas en enlaces de pago de Nequi Negocios | Nequi o Bancolombia 1,5 %; tarjetas 1,99 %; PSE 2,69 % (más IVA). En tarjetas, retención en la fuente de 1,5 % para el comercio | Nequi, centro de ayuda |
+| Medios de pago de Wompi | Tarjetas (incluidas internacionales), PSE, Botón Bancolombia, Nequi, Daviplata, QR y efectivo | wompi.com |
+| División de pagos entre vendedores ("split") | El centro de ayuda de Wompi (artículo de 2020) dice que **no maneja split**: desembolsa al comercio registrado. Existe una **API de pagos a terceros** (dispersión a cuentas bancarias, por lotes, con webhook y llaves BRE-B) | Wompi, soporte y documentación |
+| Regulación | Decreto 1692 de 2020 distingue adquirente y agregador dentro de los sistemas de pago de bajo valor. El Banco de la República advierte que retener dinero de terceros puede tipificar actividades reguladas. **Para el modelo de recaudo y liberación hace falta concepto legal** | Decreto 1692; Banco de la República, concepto Q16-1712 |
+
+**Lectura para el modelo de cobro (borrador, sin asesoría legal):**
+
+- El **Modelo B** (el pago es directo y la plataforma registra y concilia) no toca dinero de terceros: es el
+  de menor riesgo regulatorio.
+- El **Modelo A** (recaudo y liberación tras la entrega) es técnicamente posible con Wompi (cobro más API de
+  pagos a terceros), pero la plataforma recibiría y retendría fondos de otros, lo que exige confirmar con un
+  abogado si basta contratar a un agregador o si la plataforma debe constituirse en uno.
+
+**Economía de la comisión (cálculo propio con los supuestos de la propuesta):**
+
+| Concepto | Valor |
+|---|---|
+| Venta promedio | USD 50 = COP 158.734 (TRM 3.174,67 del documento de valoración del 19-oct-2026, sin verificar) |
+| Comisión de la plataforma (6 %) | COP 9.524 |
+| Costo de Wompi (2,65 % + 700 + IVA) | COP 5.839, es decir **3,68 % de la venta** |
+| **Margen neto por venta** | **COP 3.685, es decir 2,32 % de la venta** |
+| 200 productores x una venta de USD 50 al mes | Comisión USD 600; costo de Wompi USD 368; **neto USD 232/mes**, frente a una infraestructura de USD 260 que da la propia tabla para 200 productores |
+
+Conclusión: **el "ingreso de ~USD 600/mes que supera el costo operativo" no se sostiene** si la plataforma
+cobra por pasarela, porque el costo de la pasarela se come cerca de 60 % de la comisión del 6 %. El
+modelo de ingresos necesita revisarse (comisión, fijo por pedido, plan por artesano o menor costo de
+infraestructura).
+
+**Identidad (Parte 2):**
+
+| Dato | Resultado | Fuente |
+|---|---|---|
+| Azure AD B2C | No se vende a clientes nuevos desde el 1-may-2025; P2 se descontinúa el 15-mar-2026; soporte al menos hasta mayo de 2030 | Microsoft Learn |
+| Microsoft Entra External ID | Es el producto recomendado para aplicaciones nuevas (no es un cambio de nombre de B2C) | Microsoft Learn |
+| Auth0, plan gratuito | Hasta **25.000 usuarios activos al mes**, redes sociales ilimitadas, sin contraseña, un dominio propio y protección básica | auth0.com/pricing |
+| Auth0, planes de pago (B2C) | Essentials desde USD 35/mes (500 usuarios; 1.000 = USD 70; 5.000 = USD 350); Professional desde USD 240/mes | auth0.com/pricing |
+| Migrar usuarios existentes con su contraseña | Las "conexiones de base de datos personalizadas" aparecen en el plan Professional según un análisis de terceros; **sin confirmar con Auth0** | itsecureops.com (fuente secundaria) |
+
+Lectura: el plan gratuito de Auth0 cubre con holgura el tamaño previsto (cientos de productores y compradores
+al inicio); el cambio a un plan de pago ocurriría por funciones (MFA, soporte), no por volumen. Falta
+comparar el costo de Entra External ID y confirmar cómo migrar los hashes BCrypt del demo.
+
+**Envíos (Parte 1):**
+
+| Dato | Resultado | Fuente |
+|---|---|---|
+| API de Servientrega | Existe una **API pública** (Swagger) con webhooks y integración con WooCommerce y Shopify; las credenciales (`clientKey`) las entrega Servientrega | servientregaapi.com |
+| Rastreo clásico | Servicio web SOAP `wsRastreoEnvios` (operación `EstadoGuias`) que exige el **ID de cliente** y los números de guía | Servientrega |
+| Alternativa de agregador | AfterShip normaliza estados (`Pending`, `InfoReceived`, `InTransit`, `OutForDelivery`, `AttemptFail`, `Delivered`, `AvailableForPickup`, `Exception`, `Expired`) | AfterShip |
+| Conclusión | Recibir estados reales exige un **contrato de cliente con la transportadora** o un agregador de pago por uso. Los estados normalizados sirven de base para el mapa de la Parte 1 (O5) | |
+
+**Aun sin verificar:** tarifas de FedEx, DHL y 4-72 (cambian a diario y requieren cotización), el recargo
+del ~15 % de los operadores, la vigencia del certificado de origen, el precio de Entra External ID, la
+migración de usuarios a Auth0, la TRM actual, tarifas de transportadoras nacionales y cualquier cifra de
+mercado o de patrocinadores.
+
 ## Pendientes inmediatos
 
+0. Verificar lo que aún figura como "sin verificar" en 3.6 y leer `database-design`, el navbar y los
+   assets.
 1. Contrastar las pantallas del demo (reseñas, alta de artesano, listado de verificaciones) con una
    revisión visual tuya o capturas.
 2. Completar A1 con la revisión del controlador completo y los límites de intentos configurados.
 3. Flujos de extremo a extremo (F6) y fichas F7 completas.
-4. Inventario de la propuesta (B2, B2b, B3, B4) y recolección de cifras para la auditoría B2b.
+4. Completar el inventario (B4) con `database-design`, `contrato-api`, el navbar, los assets y los
+   artefactos del repo; y comparar con fuente el costo de Entra External ID y de las transportadoras.
