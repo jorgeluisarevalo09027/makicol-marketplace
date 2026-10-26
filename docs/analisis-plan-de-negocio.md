@@ -17,7 +17,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 | Parte | Contenido | Estado |
 |---|---|---|
 | 1 | Pagos y envíos (O1 a O8) | **Borrador completo** (§1); decisiones en O8 |
-| 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **A1 en borrador** (§2) |
+| 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **Borrador completo** (§2); decisiones en A7 |
 | 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario en primera pasada** (§3); sin cambios en la propuesta |
 | 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F7 en borrador** (§0 y §4); falta contrastar pantallas y revisión visual |
 
@@ -332,6 +332,92 @@ Diagrama: [`diagramas/a1-autenticacion-demo.puml`](diagramas/a1-autenticacion-de
 **Contradicción con la propuesta (A2, adelanto):** el contrato de API de la propuesta dice
 "autenticación propia" con JWT propio, y su diagrama de arquitectura muestra Azure AD B2C. Auth0 no
 aparece en el sitio de la propuesta.
+
+### A2. Qué debe cubrir el reemplazo (requisitos)
+
+Derivados de A1 y de los roles del demo:
+
+| Requisito | Origen |
+|---|---|
+| Cuatro roles (comprador, artesano, soporte, auditor) emitidos como claim y validados por la API | A1 |
+| Registro y login con correo y contraseña; recuperación de contraseña y verificación de correo | Hoy no se encontraron en el backend (ver A1) |
+| Sesión renovable sin reingresar clave; cierre de sesión real | Hoy: JWT de 30 min, refresh de 7 días, token en `localStorage` |
+| MFA al menos para soporte y auditor | Roles con acceso amplio; **por decidir** |
+| Idiomas es/en en las pantallas de acceso | Propuesta (comprador internacional); hoy solo español |
+| Migrar a los usuarios del demo sin forzarles a cambiar de clave | Hashes BCrypt de `BCrypt.Net-Next` 4.0.3 en la tabla de usuarios |
+| Costo compatible con un proyecto financiado por patrocinio | Decisión del usuario (O3) |
+| Sin cambiar de plataforma de despliegue la API .NET 8 | Backend actual |
+
+### A3. Opciones y comparación
+
+Decisión previa: **migrar no es obligatorio** para el piloto. El demo ya funciona con JWT propio; el cambio busca
+endurecer la seguridad y quitar mantenimiento. Opciones:
+
+| Opción | Costo (verificado salvo indicación) | Migración de contraseñas BCrypt | Observaciones |
+|---|---|---|---|
+| **0. Mantener el esquema propio y endurecerlo** | Sin costo de licencia; costo de desarrollo | No aplica | Hay que construir recuperación de clave, verificación, MFA, límite de intentos y rotación de tokens; el equipo asume la seguridad |
+| **1. Auth0** | Gratis hasta **25.000 usuarios activos al mes** (incluye 1 dominio propio, con tarjeta solo para validarlo; soporte de comunidad); Essentials desde **USD 35 al mes** por 500 usuarios (USD 70 por 1.000), con MFA profesional y roles | **Importación masiva** admite `bcrypt` (prefijos `$2a$`, `$2b$`, `$2y$`); migración gradual con base de datos propia, pero esa función figura en el plan Professional (desde USD 240 al mes) | Proveedor externo de Okta; los datos viven fuera de Colombia |
+| **2. Microsoft Entra External ID** | Gratis los primeros **50.000 usuarios activos al mes**; los complementos premium (por ejemplo SMS) no tienen nivel gratuito | **No importa hashes**. La migración es "en el momento": un endpoint alojado por ti (normalmente una Azure Function) valida la clave contra el sistema anterior en el primer inicio de sesión | Encaja con el despliegue en Azure; sustituye a Azure AD B2C (cerrado a clientes nuevos desde el 1-may-2025, ver 3.6). El soporte de roles de aplicación en inquilinos externos se está incorporando por fases |
+| **3. Keycloak u otro autoalojado** | Sin licencia; costo de servidor y operación | Admite importar hashes (**sin verificar**) | Máxima propiedad de los datos, pero aumenta la carga operativa; sin cifra verificada |
+
+La arquitectura de la propuesta muestra Azure AD B2C (cerrado a clientes nuevos) y no cuantifica la identidad;
+el costo de la opción elegida debe entrar al plan de negocio.
+
+### A4. Plan de migración de usuarios y contraseñas (propuesto)
+
+Supuesto de trabajo: el demo tiene pocos usuarios reales (cuentas semilla); el costo de migrar es bajo.
+
+| Paso | Auth0 | Entra External ID |
+|---|---|---|
+| 1. Exportar usuarios | Un JSON con correo, nombre, rol (como metadato) e id actual; límite de 500 KB por archivo (unos 1.000 usuarios) y dos trabajos simultáneos | Crear cuentas con el id actual como atributo propio |
+| 2. Contraseñas | Incluir el hash BCrypt. El campo `password_hash` exige costo 10; BCrypt.Net-Next usa por defecto un costo de **11 (por verificar con un hash real de la base)**, así que se usaría `custom_password_hash` con `bcrypt` | Sin importación de hashes: se marca a cada usuario como "por migrar" y se valida su clave contra la API actual en el primer acceso |
+| 3. Validación en el primer acceso | No hace falta endpoint propio; Auth0 re-hashea con su bcrypt al primer login correcto | **Exige un endpoint nuevo** en el backend para comprobar credenciales y una Azure Function; los usuarios sin migrar deben restablecer clave |
+| 4. Roles | Metadato o roles del proveedor, emitidos como claim | Atributo propio emitido en el token |
+| 5. Corte | Cambiar el emisor y la audiencia que valida la API; retirar el login propio cuando todos hayan entrado | Igual, tras un periodo de convivencia |
+
+Si los hashes no se importan bien, Auth0 reporta clave incorrecta y el usuario debe restablecerla: hay que
+probar con una cuenta de prueba antes del corte.
+
+### A5. Cambios en el front (propuesto)
+
+El front ya aisla la autenticación tras un puerto; el cambio se limitaría a un adaptador nuevo:
+
+- Inicio de sesión por **redirección con PKCE** hacia el proveedor (ver F6d) en vez del formulario propio.
+- Renovación de sesión gestionada por el proveedor; el interceptor sigue adjuntando el token.
+- Las rutas siguen protegidas por rol (`/comprador`, `/artesano`, `/soporte`, `/auditor`); el rol sale del claim.
+- Pantallas propias de login y registro se retiran o se reducen a un botón de entrada.
+- Requiere spec primero (el comportamiento cambia) y pruebas con el ID de la regla; no añade dependencias hasta
+  que decidas la opción.
+
+### A6. Cambios en el backend (propuesto, requiere BR y tu autorización)
+
+| Cambio | Detalle |
+|---|---|
+| Validar tokens del proveedor | Emisor, audiencia y claves públicas (JWKS) en lugar de la clave propia |
+| Vincular identidad externa con usuario | Campo o tabla con el identificador externo; el correo sigue siendo único |
+| Crear el perfil en el primer acceso | Hoy el registro crea usuario y perfil de comprador o artesano en una sola operación |
+| Retirar emisión propia | Dejar de generar y guardar refresh tokens (`MkRefreshToken`) |
+| Endpoint de validación de credenciales | Solo para Entra External ID (migración en el momento) |
+
+### A7. Riesgos, costos y orden recomendado
+
+**Riesgos:** dependencia de un proveedor y de su plan; datos personales fuera de Colombia (requiere criterio
+jurídico, ver O10); si Auth0 supera los 25.000 usuarios activos pasa a precios por bloques (por ejemplo USD 3.500
+al mes por 50.000 en Essentials); Entra exige más piezas propias en la migración.
+
+**Recomendación preliminar (análisis propio, sin decidir):**
+
+1. **No migrar antes del piloto** salvo que un patrocinador lo exija: el piloto es pequeño y el dinero se
+   dedica al producto.
+2. **Registrar las BR** (A6) y mantener el puerto de autenticación para no cerrar opciones.
+3. Si hay que elegir ya: **Auth0** si prima la sencillez de migrar contraseñas y la rapidez; **Entra External
+   ID** si prima el costo a escala (50.000 usuarios gratis) y estar en el mismo ecosistema que el despliegue,
+   asumiendo más trabajo de migración y un endpoint nuevo.
+4. Antes de comprometer un proveedor: decidir MFA, idiomas y dónde residirán los datos, con apoyo del abogado.
+
+**Decisiones que te tocan (Parte 2):** ¿migrar antes o después del piloto? ¿Auth0 o Entra External ID, o seguir
+con el esquema propio endurecido? ¿MFA obligatoria para soporte y auditor? ¿Cuándo autorizas las BR de
+backend?
 
 ## 4. Flujos por rol (Parte 4)
 
