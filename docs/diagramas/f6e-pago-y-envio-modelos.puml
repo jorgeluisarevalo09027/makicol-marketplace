@@ -36,13 +36,14 @@ alt MODELO A: por la plataforma (recaudo y liberación)
     Requiere concepto legal: la plataforma
     retendría fondos de terceros (Decreto 1692 de 2020).
   end note
-else MODELO B: directo (registrar y conciliar)
+else MODELO B: directo (sin comisión; se empieza por este)
   S --> C : Datos de pago del artesano (medio elegido)
   C -> A : Paga directamente (Nequi, Daviplata, transferencia...)
   A -> S : Marca "pago recibido" y prepara el pedido
-  A -> T : Despacha por su cuenta
+  A -> T : Despacha por su cuenta (piloto: Servientrega,\ncontra entrega si aplica)
   A -> S : Registra la guía y avanza los estados
-  S -> S : Calcula y concilia la comisión por periodo\n(sin tocar el dinero)
+  C -> S : Confirma la recepción
+  S -> S : Registra pedido, pago y guía como información\n(sin comisión, sin tocar el dinero y sin cambiar\nel estado por su cuenta)
 end
 
 note over S

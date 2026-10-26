@@ -16,7 +16,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 
 | Parte | Contenido | Estado |
 |---|---|---|
-| 1 | Pagos y envíos (O1 a O8) | pendiente |
+| 1 | Pagos y envíos (O1 a O8) | **Borrador completo** (§1); decisiones en O8 |
 | 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **A1 en borrador** (§2) |
 | 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario en primera pasada** (§3); sin cambios en la propuesta |
 | 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F7 en borrador** (§0 y §4); falta contrastar pantallas y revisión visual |
@@ -33,6 +33,259 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 - **Procedencia:** cada diagrama cita el código o la spec de donde sale. Nada se infiere sin fuente.
 - **Demo en ejecución:** acceso de solo lectura con las cuentas demo. No se crean pedidos, casos ni
   usuarios en la API desplegada sin autorización expresa.
+
+## 1. Pagos y envíos (Parte 1)
+
+Borrador de trabajo. Lo verificado en código o con fuente va sin marca; lo que es **análisis propio** o
+**propuesta** se indica. Nada de lo propuesto está implementado; cualquier cambio en el front sigue el proceso
+spec driven y cualquier cambio en el backend requiere tu autorización por separado.
+
+### O1. Cómo funciona hoy (demo)
+
+Ver F2, F3 y F6a. En resumen: el comprador elige **un** método de pago de una lista global (`nequi`,
+`daviplata`, `bancolombia`, `efectivo`); el front envía el carrito con **una sola** preferencia de pago; el
+backend crea **un pedido por artesano**; el pedido muestra "el cobro se coordina fuera de la plataforma"; el
+artesano avanza los estados a mano y el comprador confirma la entrega. No hay cobro, comisión, guía de envío
+ni integración con transportadoras (no existen esos endpoints en el Swagger).
+
+### O2. Propuesta frente al demo
+
+| Tema | La propuesta dice | El demo hace |
+|---|---|---|
+| Cobro | Pagos online con Wompi desde la Fase 1 | Sin cobro; preferencia informativa |
+| Comisión | 5-8 % (financiero) y 6 % (prototipo) | No se calcula ni se muestra |
+| Liberación del pago | 3 a 5 días tras confirmar la entrega (FAQ del prototipo) | No existe |
+| Medio de pago del artesano | Elige cómo cobrar al registrarse (prototipo) | El perfil guarda **un** `paymentMethod`; el checkout lo ignora |
+| Envío nacional | Estado del envío en el panel del productor | Estados manuales, sin guía |
+| Envío internacional | Flujo de seis etapas con courier | Solo el catálogo de estados y un DTO de solo lectura; sin creación |
+
+### O3. Dos modelos de cobro (y uno mixto)
+
+- **Modelo A, por la plataforma:** la plataforma cobra, retiene y libera al artesano tras la entrega,
+  descontando su comisión.
+- **Modelo B, directo:** el comprador paga al artesano; la plataforma registra el pedido y su estado, **sin
+  comisión y sin tocar el dinero**.
+
+| Criterio | Modelo A (por la plataforma) | Modelo B (directo) |
+|---|---|---|
+| Flujo del dinero | Comprador a plataforma a artesano | Comprador a artesano |
+| Comisión | Se descuenta sola al liberar el pago | **Ninguna** (decidido por el usuario): en B la plataforma no cobra comisión al artesano ni al comprador |
+| Costo de pasarela | 2,65 % + COP 700 + IVA por pago (Wompi), unos 3,7 % de una venta de USD 50 | Ninguno para la plataforma |
+| Ingreso para la plataforma | Comisión del 6 % menos la pasarela: ~2,3 % de la venta (ver 3.6) | **Ninguno por venta**; B funciona como canal de captación y no como fuente de ingresos |
+| Disputas y devoluciones | La plataforma puede retener y mediar (soporte tendría herramientas) | Solo conversación entre las partes; soporte media sin poder |
+| Confianza del comprador | Alta: paga a la plataforma y recibe protección | Menor: paga directamente a un tercero sin intermediario (análisis propio) |
+| Regulación en Colombia | **Requiere concepto legal**: retener fondos de terceros se acerca a actividades reguladas (Decreto 1692 de 2020; concepto del Banco de la República) | Bajo riesgo: no toca dinero de terceros |
+| Operación técnica | Integrar pasarela, webhooks, conciliación y pagos a terceros (Wompi ofrece una API de dispersión) | Registrar pedido, medio de pago y estado como información; sin integración obligatoria |
+| Carga para el artesano | Menor: no gestiona cobro; ve su saldo | Mayor: cobra y concilia por su cuenta |
+| Encaje con roles | Soporte y auditor verían pagos y liberaciones | Auditor vería solo pedidos y estados (no hay comisión que auditar) |
+
+**Decisiones del usuario (26-oct-2026):**
+
+1. El artesano elige el modelo **por artesano**, no por producto.
+2. **Se empieza por el modelo B** (directo).
+3. En el modelo B **no hay comisión** de la plataforma, ni para el artesano ni para el comprador.
+4. **La primera financiación es el patrocinio**, con o sin comisión; las demás fuentes (comisión en A,
+   suscripción, destacados, cargos) son posibilidades de ingreso, no el plan base.
+5. En el modelo B **el estado de la compra lo manejan el comprador y el artesano entre sí**; la plataforma
+   lo registra, no lo decide ni lo automatiza.
+6. **La simulación vive en el backend.**
+7. **El piloto usa Servientrega.**
+8. **No hay abogado consultor todavía**, pero se reconoce que hace falta y que su participación y costo deben
+   contemplarse (O10).
+
+**Recomendación preliminar sobre lo que sigue (análisis propio, sujeta a concepto legal):**
+
+1. **Diseñar A desde ya**, con un concepto legal en marcha, para activarlo cuando esté resuelto.
+2. **Ingresos:** el plan base es el **patrocinio** (decisión del usuario). Como posibilidades, no compromisos:
+   comisión en A (donde la pasarela consume ~60 % del 6 %, con opciones como comisión mayor, trasladar el
+   costo de la pasarela al comprador o un cargo fijo por pedido), suscripción o destacados para artesanos.
+3. **Cambiar el relato del plan de negocio**: la comisión del 6 % "por venta completada" deja de ser universal.
+
+### O3b. El artesano elige su modelo
+
+| Nivel de la elección | Ventajas | Problemas |
+|---|---|---|
+| **Por artesano** (recomendado) | Una decisión en su perfil; coincide con "un pedido por artesano"; el carrito, la comisión y los estados siguen siendo por artesano | Un artesano no puede mezclar modelos |
+| Por producto | Máxima flexibilidad | Un pedido tendría líneas con modelos distintos; obliga a dividir pedidos por modelo, a duplicar estados de pago y a explicar comisiones mixtas |
+
+Recomendación: **por artesano**. Regla de transición a definir: cambiar de modelo afecta solo a pedidos nuevos;
+los pedidos en curso conservan el modelo con el que se crearon. Un artesano sin medios de pago configurados no
+debe poder publicar en el modelo elegido.
+
+Datos que faltan hoy (candidatos a `BR`, sin autorizar): un campo de **modelo** (`direct` o `platform`) y una
+lista de **medios aceptados** por artesano (hoy solo hay un `paymentMethod`).
+
+### O3c. El checkout respeta lo que acepta cada artesano
+
+Reglas candidatas (IDs provisionales; se convierten en spec cuando se decida implementarlas):
+
+| ID | Regla propuesta |
+|---|---|
+| PAY-001 | El checkout agrupa el carrito por artesano y muestra, por cada grupo, **solo los medios que ese artesano acepta** |
+| PAY-002 | Cada grupo exige elegir un medio de pago antes de confirmar |
+| PAY-003 | Cada grupo muestra el modelo del artesano (directo o por la plataforma) y qué significa para el pago y el envío |
+| PAY-004 | Un artesano sin medios aceptados no puede vender; sus productos no se pueden comprar |
+| PAY-005 | El pedido guarda el medio elegido **por pedido** (no uno solo para todo el carrito) |
+
+Hoy: la lista es global y se envía un solo valor (`CHK-001`), y el perfil del artesano guarda un solo
+`paymentMethod`. Cambia el contrato de `POST /orders` (una preferencia por artesano) y el de perfil de
+artesano: ambos son cambios de backend a proponer como BR.
+
+### O3d. Efectivo: contra entrega por transportadora (decidido)
+
+Decisión del usuario: en el modelo B el efectivo se maneja como **pago contra entrega con las opciones que ofrecen
+Servientrega u otras transportadoras colombianas**, y no como un pago que la plataforma procese.
+
+| Dato | Resultado | Fuente |
+|---|---|---|
+| Servientrega, "Contraentrega E-Commerce" | Para personas naturales y micropymes: la empresa **recauda el valor del producto al entregar** y lo consigna en la cuenta que indique el cliente; el flete se paga en el centro de soluciones remitente | servientrega.com |
+| Condiciones del servicio | Se presta **entre ciudades capitales o cabeceras de regional**, en centros de soluciones autorizados; el pago puede ser en efectivo o con datáfono. Si el destinatario no reclama el envío, vuelve al origen y el remitente paga **doble flete** | servientrega.com, preguntas frecuentes |
+| Comisión por recaudo | Según una guía de terceros (no oficial, sin verificar con cada empresa): Servientrega 4 % con mínimo de COP 3.500, Interrapidísimo 5 %, Envía entre 2,4 % y 3,5 %, Coordinadora no la publica | rastreoguias.com.co (secundaria) |
+| Otras transportadoras | Interrapidísimo ("Pago en Casa"), Coordinadora (incluye recaudo anticipado por enlace) y Envía también ofrecen recaudo | sitios de cada empresa y guías de terceros |
+
+Lo que implica (análisis propio):
+
+- La **comisión del recaudo la cobra la transportadora al artesano**, no la plataforma; encaja con "B sin
+  comisión".
+- El artesano necesita **su propio contrato o cuenta** con la transportadora; la plataforma no lo gestiona.
+- **Riesgo principal:** rechazo o ausencia del comprador (el paquete vuelve y se paga el flete de regreso). Debe
+  verse en el pedido como novedad, no como entrega.
+- **Límite de cobertura:** al prestarse entre capitales y cabeceras de regional, algunos destinos de artesanos
+  (por ejemplo Uribia o Mompox) pueden no tener el servicio; el artesano debe confirmarlo con su transportadora.
+- La plataforma debe mostrar al comprador desde el checkout el total que pagará en la puerta (producto más
+  flete), para evitar rechazos.
+
+Reglas candidatas adicionales (IDs provisionales):
+
+| ID | Regla propuesta |
+|---|---|
+| PAY-006 | `contraentrega` es un medio de pago que el artesano puede activar en el modelo B, junto con transferencias y billeteras |
+| PAY-007 | El checkout muestra el total a pagar en la puerta y quién asume flete y comisión de recaudo, antes de confirmar |
+| PAY-008 | Un pedido contra entrega no marcado como entregado por la transportadora ni confirmado por el comprador se trata como novedad, no como venta cerrada |
+
+### O4. Qué información de envío se recibe y cómo
+
+Ver 3.6. En resumen: Servientrega publica una API (con webhooks y creación de guías) cuyas credenciales entrega
+la empresa a clientes con contrato; también existe el rastreo SOAP `EstadoGuias` (requiere ID de cliente) y
+agregadores como AfterShip que normalizan estados. **Para recibir estados reales hace falta un contrato o un
+agregador**; para el demo basta con simularlos.
+
+### O5. Mapa de estados de envío a estados del pedido (propuesto)
+
+Estados normalizados de un agregador (AfterShip) frente a los estados del pedido del demo:
+
+| Estado de la transportadora | Efecto propuesto en el pedido | Observación |
+|---|---|---|
+| `Pending`, `InfoReceived` | Sin cambio (guía creada) | El pedido sigue En preparación |
+| `InTransit`, `OutForDelivery` | **Enviado** | Hoy lo marca el artesano a mano |
+| `Delivered` | Habilita **Entregado** | Decisión: lo confirma el comprador (como hoy) o se confirma solo tras N días |
+| `AttemptFail`, `Exception`, `Expired`, `AvailableForPickup` | **Novedad**: alerta a soporte | **No existe** un estado de novedad ni de devolución en el pedido; habría que crearlo (cambio de backend) |
+
+**Aplicación según el modelo:** en el modelo B (el de arranque) el estado del pedido lo manejan el comprador y
+el artesano; los eventos de Servientrega son **informativos** (número de guía y seguimiento visibles) y no
+cambian el estado por sí solos. La traducción automática de la tabla queda como opción para el modelo A.
+
+En el modelo A, la **liberación del pago** se dispara con el pedido en **Entregado** (más el plazo de 3 a 5 días
+que ya anuncia la propuesta). El front sigue comparando estados por `id` o `isTerminal`, no por nombre.
+
+### O6. Proceso simulado para el demo (propuesto)
+
+Objetivo: mostrar el flujo completo sin integrar nada real. La lista siguiente es el **catálogo completo**
+(modelos A y B); el alcance de arranque, solo modelo B, está más abajo.
+
+1. **Pasarela simulada** con tres resultados (aprobado, rechazado, pendiente) para el modelo A.
+2. **Guía simulada** al marcar un pedido como enviado (número de guía y transportadora ficticios).
+3. **Avance de estados** por un "simulador" (acción de soporte o temporizador) que reproduce los estados
+   normalizados de O5, incluida una novedad.
+4. **Comisión y desglose** visibles para el comprador, el artesano y el auditor.
+5. **Liberación simulada** del pago al marcar el pedido como entregado.
+
+Dónde vive la simulación (decidido):
+
+| Opción | Ventaja | Inconveniente |
+|---|---|---|
+| **A. En el front**, con adaptadores simulados detrás de interfaces (como el puerto de autenticación) | No toca el backend; se puede hacer ya | Los datos no se comparten entre usuarios ni sobreviven al navegador; el auditor no vería nada |
+| **B. En el backend**, con endpoints simulados | Datos reales entre roles y el auditor los ve | Requiere autorizar cambios y despliegue del backend |
+
+**Decisión del usuario: la simulación vive en el backend** (opción B de la tabla). Así los cuatro roles ven los
+mismos datos y el auditor puede consultarlos. Alcance para el arranque (modelo B):
+
+1. Guía simulada de **Servientrega** (número y estados informativos) al registrar el envío.
+2. Pago contra entrega simulado: recaudo pendiente, recaudado o rechazado por el comprador.
+3. Estados del pedido movidos por comprador y artesano, como en producción; el simulador solo aporta los
+   eventos informativos de la guía.
+4. La pasarela, la comisión y la liberación del pago (modelo A) **no se simulan por ahora**.
+
+Casos límite a cubrir: comprador ausente o que rechaza el paquete, devolución y disputa con soporte.
+
+**Condición:** es un cambio de backend. Antes de tocarlo hace falta una `BR` por cada cambio y tu autorización
+para editar, compilar y desplegar, que valen por separado. El front se adaptaría cuando el contrato exista.
+
+### O7. Impacto (inventario, sin implementar)
+
+| Área | Cambio | Autorización |
+|---|---|---|
+| Backend | Modelo y medios aceptados por artesano; preferencia de pago por pedido; estado de pago; estados de novedad y devolución; endpoints de pago y guía (simulados o reales); cálculo de comisión **solo para el modelo A** | BR por cambio, y editar, compilar y desplegar por separado |
+| Front | Perfil del artesano (modelo y medios), checkout por grupo, detalle del pedido con pago y guía, vista del auditor con comisión (solo modelo A) | Feature con spec, plan y tareas |
+| Propuesta | Modelo de ingresos, costos de Azure sin servicios retirados, sección de pagos y envíos con las dos opciones | Con tu aprobación |
+| Legal | Concepto sobre recaudo para terceros y términos y política de comisiones | Tu decisión; los textos legales son puntos pendientes |
+
+### O8. Decisiones que te tocan
+
+1. ~~¿Por artesano o por producto?~~ **Resuelto: por artesano.**
+2. ~~¿Empezamos por B?~~ **Resuelto: se empieza por B, sin comisión.**
+3. ~~¿Qué hacer con el efectivo?~~ **Resuelto: contra entrega por transportadora en el modelo B (ver O3d).**
+4. ~~¿Cómo se financia la plataforma?~~ **Resuelto: patrocinio primero; el resto son posibilidades.**
+5. ~~¿Dónde vive la simulación?~~ **Resuelto: en el backend** (requiere BR y autorización).
+6. ~~¿Quién confirma la entrega?~~ **Resuelto en B: comprador y artesano entre sí**, sin automatismo.
+7. ~~¿Transportadora del piloto?~~ **Resuelto: Servientrega.** Falta decidir el tipo de contrato o cuenta (cliente crédito, contraentrega e-commerce) y quién lo contrata: cada artesano o la plataforma.
+8. ~~¿Quién consulta al abogado?~~ **Resuelto en principio:** hace falta un abogado y se presupuesta (O10). Falta elegir quién y cuándo.
+9. **Nueva:** ¿los pedidos contra entrega cuentan como venta cerrada al recaudarse o al confirmar el comprador? (relacionado con `PAY-008`).
+
+### O9. Envíos fuera del país: posibles, **no ejecutados**
+
+Decisión del usuario: los envíos internacionales se plantean **como posibilidad futura**, con un esquema básico
+de funcionamiento, y se aclara que **hoy no se ejecutan**. Esto aplica a todo el sitio: la sección de la
+propuesta debe llevar un rótulo visible de "fase futura, no ejecutada".
+
+**Qué existe hoy:** solo el catálogo de cinco estados (Preparación, Trámites de exportación, En tránsito,
+Aduana EE. UU., Entregado) y un DTO de solo lectura con `courier`, `trackingNumber` y la referencia del
+certificado de origen. **No hay endpoints ni pantallas para crear o avanzar un envío internacional.**
+
+**Cómo podría funcionar (esquema básico, ya revisado frente a fuentes):**
+
+| Etapa | Qué pasa | Estado de la verificación |
+|---|---|---|
+| 1. Pedido internacional | El comprador en EE. UU. ve precio, plazo estimado y paga en línea | Pago internacional: pendiente de diseño (Wompi acepta tarjetas internacionales sin costo adicional) |
+| 2. Preparación | El artesano produce, empaca y emite la factura comercial | Del flujo de la propuesta |
+| 3. Trámites de exportación | RUT con actividad de exportador, declaración de exportación y **prueba de origen** | La DIAN indica autocertificación para el acuerdo con EE. UU.; el resto, por verificar |
+| 4. Envío internacional | Courier (DHL, FedEx) o correo postal | Tarifas sin verificar |
+| 5. Aduana de EE. UU. | Desde el 29-ago-2025 ya no hay exención de "de minimis"; por courier se exige entrada ante CBP y por correo postal se pagan aranceles según la tasa IEEPA | Verificado con CBP |
+| 6. Entrega | Última milla dentro de EE. UU. | Del flujo de la propuesta |
+
+**Restricciones de producto:** algunos materiales exigen permisos (por ejemplo las semillas del "Collar de
+semillas Wayúu", riesgo alto por APHIS); el piloto se limitaría a productos de riesgo bajo o medio.
+
+**Condiciones para activarlo (todas pendientes):** decisión comercial, concepto aduanero y legal, contrato con un
+courier con gestión aduanera, cotizaciones vigentes, flujo de pago internacional y, en el demo, estados y
+pantallas que hoy no existen. Hasta entonces, no se ofrece en la plataforma ni se simula.
+
+### O10. Asesoría legal: qué se necesita y qué costo prever
+
+Hoy **no hay abogado consultor**. Se deja constancia de que hace falta y de que su participación y costo deben
+entrar en el plan (análisis propio sobre los puntos que ya aparecen en este documento):
+
+| Tema | Cuándo se necesita | Origen |
+|---|---|---|
+| Términos y condiciones y política de tratamiento de datos | **Antes de un piloto con usuarios reales**, incluso en el modelo B | Punto `pendiente` de los términos de uso del front |
+| Responsabilidades de la plataforma en un modelo directo (disputas, devoluciones, reclamos de consumidores) | Antes del piloto | Modelo B |
+| Concepto sobre recaudo y liberación de fondos de terceros | Antes de activar el modelo A | Decreto 1692 de 2020 y concepto del Banco de la República (3.6) |
+| Acuerdos con artesanos y con patrocinadores | Al firmar | Patrocinio como primera fuente de financiación |
+| Exportación y aduanas | Solo si se activan los envíos internacionales (O9) | Concepto aduanero |
+
+**Costo:** no hay cifra verificada. Se propone pedir cotización a dos o tres firmas o abogados independientes por
+concepto cerrado (no por horas abiertas) y reflejar el monto como rubro de costos del plan de negocio. Hasta
+recibirlas, el rubro queda como **"por cotizar"**, sin inventar un número.
 
 ## 2. Autenticación (Parte 2)
 
@@ -468,7 +721,7 @@ también está publicado en el catálogo del demo; sirve de ejemplo en el plan d
 | `financial` (tabla y simulador) | **Actualizar y unificar** | Dos modelos, servicios retirados, ingreso que ignora la pasarela |
 | `technical` | **Actualizar** | Angular 21 frente a 22 y PWA sin verificar |
 | `architecture` (diagrama y fases) | **Actualizar** | Mostrar demo hoy y producción prevista (B5); retirar B2C, Media Services y CDN Akamai |
-| `international-shipping` | **Conservar y corregir** | De lo más sólido, pero con certificado de origen y recargos por corregir y tarifas por fechar |
+| `international-shipping` | **Conservar, corregir y rotular como "fase futura, no ejecutada"** | Es de lo más sólido, pero con certificado de origen y recargos por corregir y tarifas por fechar; ver O9 |
 | `backoffice-evaluation` | **Resumir** | Desactualizada (ver 3.5) |
 | `database-design` y ER v1-v5 | **Actualizar a la v6 vigente** y mover las anteriores a histórico | Son 6 iteraciones; solo la última es útil |
 | `contrato-api` | **Actualizar** | Prefijo y autenticación distintos del demo |
