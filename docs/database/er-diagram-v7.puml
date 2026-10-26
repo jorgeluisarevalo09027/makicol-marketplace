@@ -1,0 +1,229 @@
+@startuml Makicol_ER_v7
+!theme plain
+title Makicol Marketplace - Modelo de datos v7 (derivado de las entidades del backend, oct-2026)
+left to right direction
+skinparam nodesep 20
+skinparam ranksep 40
+skinparam packageStyle rectangle
+skinparam defaultFontName Arial
+
+note as nota
+  FUENTE: Makicol.Domain/Entities y migraciones EF Core del backend (29 tablas, sin esquema ni prefijo "Mk").
+  Paquete verde = existe en el demo. Paquete gris punteado = PROPUESTA para el piloto, NO existe.
+  Los catalogos de estado (*Status y *StatusTransition) son datos, no nombres fijos en codigo.
+end note
+
+package "Demo hoy" #E4EFE6 {
+
+  package "Identidad" {
+    entity "User" as user {
+      * Id : guid <<PK>>
+      --
+      Name, Email <<unique>>, PasswordHash
+      Role : buyer | artisan | support | auditor
+      RegistrationDate : date
+      Language : text
+      CreatedAt, UpdatedAt, UpdatedBy
+    }
+    entity "RefreshToken" as rt {
+      * Id : guid <<PK>>
+      UserId <<FK>>, Token, ExpiresAt, IsRevoked
+    }
+    entity "BuyerProfile" as bp {
+      * UserId <<PK, FK>>
+      City, ShippingAddress, Timezone
+    }
+    entity "ArtisanProfile" as ap {
+      * UserId <<PK, FK>>
+      Region, City, CraftType, Bio, StartYear
+      Materials : json
+      PaymentMethod : text (uno solo)
+      Timezone, AvatarUrl, CoverUrl
+      VerificationStatusId <<FK>>
+    }
+    entity "SupportAgent" as sa {
+      * UserId <<PK, FK>>
+      Level : L1...
+    }
+    entity "ArtisanVerificationStatus" as avs {
+      * Id : int <<PK>>
+      Name, DisplayOrder, IsTerminal, AllowsPublishing
+    }
+    entity "ArtisanVerificationStatusTransition" as avst {
+      FromStatusId, ToStatusId <<PK, FK>>
+      AllowedRole
+    }
+  }
+
+  package "Catalogo" {
+    entity "Product" as prod {
+      * Id : guid <<PK>>
+      ArtisanId <<FK>>, Name, Category, Region, Price
+      Description, ImageUrl, SoldCount
+      Stock : int? (null = bajo pedido)
+      IsActive : bool
+    }
+    entity "ProductImage" as pi {
+      * Id <<PK>>
+      ProductId <<FK>>, Url, SortOrder
+    }
+    entity "Review" as rev {
+      * Id <<PK>>
+      AuthorId <<FK>>, ProductId <<FK>>
+      Rating, Comment, PostedOn : date
+    }
+    entity "WishlistItem" as wl {
+      BuyerId, ProductId <<PK, FK>>
+      AddedOn : date
+    }
+  }
+
+  package "Pedidos" {
+    entity "Order" as ord {
+      * Id : guid <<PK>>
+      BuyerId <<FK>>, ArtisanId <<FK>> (un artesano por pedido)
+      PlacedAt, Total, StatusId <<FK>>
+      OriginTimezone
+      PaymentMethodPreference : informativa
+      CheckoutGroupId : agrupa los pedidos de un carrito
+    }
+    entity "OrderItem" as oi {
+      * Id <<PK>>
+      OrderId <<FK>>, ProductId <<FK>>, Quantity, UnitPrice
+    }
+    entity "OrderStatus" as os {
+      * Id : int <<PK>>
+      Name, DisplayOrder, IsTerminal
+    }
+    entity "OrderStatusTransition" as ost {
+      FromStatusId, ToStatusId <<PK, FK>>
+      AllowedRole : buyer | artisan | system
+    }
+    entity "InternationalShipment" as is_ {
+      * Id <<PK>>
+      OrderId <<FK, unico>>, StatusId <<FK>>
+      Courier, TrackingNumber, CertificateOfOriginRef
+      (solo lectura: no hay endpoints para crearlo)
+    }
+    entity "InternationalShipmentStatus" as iss {
+      * Id : int <<PK>>
+      Name, DisplayOrder, IsTerminal
+    }
+    entity "InternationalShipmentStatusTransition" as isst {
+      FromStatusId, ToStatusId <<PK, FK>>
+      AllowedRole
+    }
+  }
+
+  package "Soporte" {
+    entity "SupportCase" as sc {
+      * Id : guid <<PK>>
+      RequesterId <<FK>>, RequesterRole, Category, Subject
+      StatusId <<FK>>, Priority
+      RelatedOrderId <<FK?>>, AssignedAgentId <<FK?>>
+    }
+    entity "SupportMessage" as sm {
+      * Id <<PK>>
+      CaseId <<FK>>, AuthorId <<FK>>, AuthorRole, Body, SentAt
+    }
+    entity "SupportCaseStatus" as scs {
+      * Id : int <<PK>>
+      Name, DisplayOrder, IsTerminal
+    }
+    entity "SupportCaseStatusTransition" as scst {
+      FromStatusId, ToStatusId <<PK, FK>>
+      AllowedRole
+    }
+    entity "FaqItem" as faq {
+      * Id <<PK>>
+      Question, Answer, Category, TargetRole
+    }
+  }
+
+  package "Contenido editorial" {
+    entity "Story" as story {
+      * Id : guid <<PK>>
+      Title, Region, Summary, CoverImageId
+      Content : json (arbol de bloques, nunca HTML)
+      SchemaVersion, AuthorId
+    }
+    entity "StoryImage" as simg {
+      * Id <<PK>>
+      StoryId <<FK>>, Url, Width, Height, ContentType, SizeBytes
+    }
+  }
+
+  package "Auditoria" {
+    entity "ActivityLog" as al {
+      * Id <<PK>>
+      EntityType, EntityId (referencia polimorfica, sin FK)
+      Action, UserId, OccurredAt, Changes : json
+    }
+    entity "MonthlyMetric" as mm {
+      * Month : date <<PK>>
+      Gmv, CompletedOrders, TotalCases
+    }
+  }
+}
+
+package "Propuesta para el piloto (NO existe)" #F2F2F2 {
+  entity "Shipment (nacional)" as ship #FFFFFF {
+    * Id <<PK>>
+    OrderId <<FK>>
+    Carrier : Servientrega
+    GuideNumber, LabelUrl
+    StatusId <<FK>>
+    CodAmount : valor a recaudar
+  }
+  entity "ShipmentStatus" as shs #FFFFFF {
+    * Id : int <<PK>>
+    Name, IsTerminal
+    (p. ej. Novedad, Recaudado, Devolucion, Liquidado)
+  }
+  entity "ShipmentEvent" as she #FFFFFF {
+    * Id <<PK>>
+    ShipmentId <<FK>>, StatusId, OccurredAt, Source
+  }
+  entity "ArtisanPaymentMethod" as apm #FFFFFF {
+    * Id <<PK>>
+    ArtisanId <<FK>>
+    Kind : directo (modelo B) | plataforma (modelo A)
+    Detail
+  }
+}
+
+user ||--o| bp
+user ||--o| ap
+user ||--o| sa
+user ||--o{ rt
+ap }o--|| avs
+avs ||--o{ avst
+ap ||--o{ prod
+prod ||--o{ pi
+prod ||--o{ rev
+user ||--o{ rev
+user ||--o{ wl
+prod ||--o{ wl
+user ||--o{ ord : comprador
+ap ||--o{ ord : artesano
+ord }o--|| os
+os ||--o{ ost
+ord ||--o{ oi
+prod ||--o{ oi
+ord ||--o| is_
+is_ }o--|| iss
+iss ||--o{ isst
+user ||--o{ sc : solicita
+sc }o--|| scs
+scs ||--o{ scst
+sc ||--o{ sm
+sa ||--o{ sc : asignado
+ord ||--o{ sc : relacionado
+story ||--o{ simg
+
+ord ||..o{ ship
+ship }o..|| shs
+ship ||..o{ she
+ap ||..o{ apm
+@enduml
+

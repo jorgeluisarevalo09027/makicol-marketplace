@@ -64,7 +64,7 @@ interface Entidad {
           <div style="background:#fff; border-left:4px solid #003893; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-bottom:14px;">
             <h4 style="color:#1F2A22; font-weight:800; font-size:0.9rem; margin:0 0 8px;">🔧 Enfoque híbrido de esta vista</h4>
             <p style="color:#57685c; font-size:0.85rem; line-height:1.6; margin:0;">
-              El diagrama se mantiene como fuente formal en <strong>PlantUML</strong> (<code style="background:#F2F6F4; padding:2px 6px; border-radius:4px; font-size:0.8rem;">docs/database/er-diagram.puml</code>),
+              El diagrama se mantiene como fuente formal en <strong>PlantUML</strong> (<code style="background:#F2F6F4; padding:2px 6px; border-radius:4px; font-size:0.8rem;">docs/database/er-diagram-v7.puml</code>),
               versionable y fácil de comparar entre iteraciones. Esta página muestra el render más reciente y un desglose interactivo
               pensado para revisar y corregir en vivo durante la presentación, sin depender de regenerar imágenes en cada ajuste menor.
             </p>
@@ -120,7 +120,12 @@ interface Entidad {
           </div>
 
           <div style="background:#fff; border-left:4px solid #C8102E; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-top:14px;">
-            <h4 style="color:#1F2A22; font-weight:800; font-size:0.9rem; margin:0 0 8px;">🧱 v6: coexistencia aislada con Feria Artesanal</h4>
+            <h4 style="color:#1F2A22; font-weight:800; font-size:0.9rem; margin:0 0 8px;">🧱 v6: coexistencia aislada con Feria Artesanal (diseño que el backend no adoptó)</h4>
+            <p style="color:#856404; background:#FDF3D6; border-radius:8px; padding:8px 12px; font-size:0.82rem; line-height:1.5; margin:0 0 10px;">
+              <strong>v7 (oct-2026):</strong> el diagrama de abajo se derivó de las entidades del backend. El servicio del demo usa tablas sin
+              esquema <code>makicol</code> ni prefijo <code>Mk</code> (por ejemplo <code>User</code>, <code>Order</code>) y sin las tablas de
+              Feria Artesanal. Las fichas de entidades que siguen conservan los nombres del diseño v6 y por eso llevan el prefijo <code>Mk</code>.
+            </p>
             <p style="color:#57685c; font-size:0.85rem; line-height:1.6; margin:0 0 8px;">
               Para evitar costos duplicados en Azure, Makicol se despliega inicialmente en la <strong>misma base de datos y el mismo
               App Service</strong> que el proyecto Feria Artesanal (API .NET 8 + Azure SQL ya publicados). Para que ambos convivan sin
@@ -141,7 +146,7 @@ interface Entidad {
         <!-- Diagrama -->
         <section>
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-            <span style="color:#295440; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">📐 Diagrama entidad-relación (v6)</span>
+            <span style="color:#295440; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">📐 Diagrama entidad-relación (v7: demo hoy y propuesta del piloto)</span>
             <button (click)="abrirModal()"
                     style="display:inline-flex; align-items:center; gap:6px; background:#295440; color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:0.8rem; font-weight:700; cursor:pointer;">
               <span class="material-symbols-outlined" style="font-size:1.1rem;">fullscreen</span>
@@ -149,7 +154,7 @@ interface Entidad {
             </button>
           </div>
           <div style="background:#fff; border-radius:14px; padding:16px; box-shadow:0 2px 16px rgba(41,84,64,0.08); overflow-x:auto; text-align:center;">
-            <img src="/assets/makicol-er-diagram-v6.svg" alt="Diagrama entidad-relación Makicol v6, esquema makicol con prefijo Mk" style="max-width:100%; height:auto;">
+            <img src="/assets/makicol-er-diagram-v7.svg" alt="Diagrama entidad-relación Makicol v7: 29 tablas del demo y propuesta de envíos y medios de pago" style="max-width:100%; height:auto;">
           </div>
         </section>
 
@@ -253,8 +258,8 @@ interface Entidad {
              (window:touchend)="terminarArrastre()"
              style="flex:1; overflow:hidden; display:flex; align-items:center; justify-content:center; cursor:grab;"
              [style.cursor]="arrastrando() ? 'grabbing' : 'grab'">
-          <img src="/assets/makicol-er-diagram-v6.svg"
-               alt="Diagrama entidad-relación Makicol v6 ampliado"
+          <img src="/assets/makicol-er-diagram-v7.svg"
+               alt="Diagrama entidad-relación Makicol v7 ampliado"
                (dblclick)="zoomReset()"
                style="max-width:none; user-select:none; -webkit-user-drag:none;"
                [style.transform]="'translate(' + panX() + 'px, ' + panY() + 'px) scale(' + zoom() + ')'"

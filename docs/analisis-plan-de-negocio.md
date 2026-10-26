@@ -1068,7 +1068,7 @@ mercado o de patrocinadores.
 | Contenido editorial | No aparece | Existen las **historias** (editor de soporte) |
 | Envío internacional | Entidad completa con estados | Solo existe el catálogo de estados; no hay endpoints para crearlo (ver 3.6) |
 
-Decisión propuesta: **regenerar el ER (v7) desde las entidades reales** del backend, con una capa "demo hoy"
+Decisión (aplicada, ver C13): **ER v7 generado desde las entidades reales** del backend, con una capa "demo hoy"
 y otra "producción prevista" (pagos, comisión, medios de pago por artesano, envío). Es el diagrama que más
 se beneficia de pasar a PlantUML o Mermaid (ya existe `er-diagram.puml`).
 
@@ -1190,7 +1190,7 @@ auditoría remiten a 3.2.
 | C10 | `architecture/scalability-phases` | Condensar la Fase 3 (IA, app, Etsy, Cosmos DB, OpenAI) en una línea de visión | #15 | Hecho |
 | C11 | `international-shipping` | Rotular "fase futura, no ejecutada"; corregir certificado de origen (autocertificación), fechar tarifas y marcar el recargo del 15 % como sin verificar | #17 a #19, #21 | Hecho |
 | C12 | `backoffice-evaluation` | Resumir en una sección: el demo ya separa por rol | 3.5 | Hecho |
-| C13 | `database-design` | Corregir verificación automática y pedido multi-artesano; pasar a ER v7 desde el backend; mover v1 a v5 a histórico | 3.7 | Parcial: falta ER v7 |
+| C13 | `database-design` | Corregir verificación automática y pedido multi-artesano; pasar a ER v7 desde el backend; mover v1 a v5 a histórico | 3.7 | Hecho (ER v7 en `docs/database/er-diagram-v7.puml`) |
 | C14 | `contrato-api` | Reemplazar la tabla manual por el Swagger del demo; conservar solo las reglas de diseño | 3.7 | Hecho |
 | C15 | `marketplace/` y assets | Retirar el prototipo tras rescatar 3.3; eliminar `logo-corazon.png` y `makicol-logo-header1.svg` | 3.3, 3.7 | Hecho |
 | C16 | Equipo | Añadir la sección de equipo | #22 | Pendiente: faltan datos del equipo |
