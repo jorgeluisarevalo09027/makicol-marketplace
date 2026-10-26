@@ -1,0 +1,69 @@
+@startuml a1-autenticacion-demo
+title Autenticación actual del demo (JWT propio con refresh token)
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequence {
+  ParticipantBackgroundColor #EAF1FC
+  ParticipantBorderColor #003893
+  LifeLineBorderColor #8a9099
+  ArrowColor #1F2A22
+  NoteBackgroundColor #FDF6E3
+  NoteBorderColor #B08900
+}
+
+actor "Usuario\n(cualquier rol)" as U
+participant "Front Angular\nAuthStore + authInterceptor" as F
+participant "API .NET\n/api/auth" as A
+database "Base de datos\nUsers, RefreshTokens,\nActivityLog" as D
+
+== Registro (solo comprador o artesano) ==
+U -> F : Completa el formulario
+F -> A : POST /auth/register
+A -> A : Valida: correo, contraseña >= 8,\nrol buyer|artisan
+A -> D : Crea usuario (hash BCrypt) y perfil\nArtesano nace como "Pendiente"
+A --> F : accessToken (30 min) + refreshToken (7 días)
+F -> F : Guarda la sesión en localStorage\n(makicol.session)
+note right of A
+  Correo ya registrado -> 409
+  Soporte y auditor NO se registran aquí
+  (el registro público solo admite buyer y artisan)
+end note
+
+== Inicio de sesión ==
+U -> F : Correo y contraseña
+F -> A : POST /auth/login (límite por IP)
+A -> D : Busca el usuario y verifica BCrypt
+alt credenciales válidas
+  A -> D : Guarda refresh token y registra "login"
+  A --> F : accessToken + refreshToken + usuario (rol)
+  F -> U : Redirige a la home del rol\n(o al returnUrl seguro)
+else inválidas
+  A -> D : Registra "login_failed"
+  A --> F : 401
+  F -> U : "Correo o contraseña incorrectos."
+end
+
+== Petición protegida y renovación ==
+F -> A : GET/POST ... con Authorization: Bearer <accessToken>
+alt token vigente
+  A --> F : 200
+else 401 (token vencido)
+  F -> A : POST /auth/refresh (una sola vez, compartido)
+  alt refresh válido
+    A -> D : Revoca el refresh usado y emite uno nuevo
+    A --> F : nuevos tokens
+    F -> A : Reintenta la petición original
+  else refresh vencido, revocado o inexistente
+    A --> F : 401
+    F -> F : Cierra la sesión
+    F -> U : Vuelve a /login
+  end
+end
+
+== Cierre de sesión ==
+U -> F : Salir
+F -> F : Borra la sesión local
+F -> A : POST /auth/logout (si falla, se ignora)
+A -> D : Revoca el refresh token (idempotente)
+@enduml
