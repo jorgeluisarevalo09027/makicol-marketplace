@@ -19,7 +19,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 | 1 | Pagos y envíos (O1 a O8) | pendiente |
 | 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **A1 en borrador** (§2) |
 | 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario en primera pasada** (§3); sin cambios en la propuesta |
-| 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F5 en borrador** (§0 y §4); F6 y F7 pendientes |
+| 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F7 en borrador** (§0 y §4); falta contrastar pantallas y revisión visual |
 
 ## 0. Convenciones de los diagramas
 
@@ -233,6 +233,119 @@ flowchart LR
 - **El resumen** compara con el mes anterior (GMV, pedidos y casos) y acumula 12 meses.
 - **Pendiente para el plan:** la comisión del 6% y la liberación de pagos (Parte 1) aparecerían aquí en
   producción; hoy el demo no calcula comisión.
+
+### F6. Flujos transversales (de extremo a extremo)
+
+Convención: **demo hoy** = verificado en código, specs o datos del demo; **PROPUESTO** = aún no existe.
+
+#### F6a. Compra completa (demo hoy)
+
+Fuente PlantUML: [`diagramas/f6a-compra-completa-demo.puml`](diagramas/f6a-compra-completa-demo.puml)
+
+![Compra completa en el demo](diagramas/f6a-compra-completa-demo.svg)
+
+Lo que no sale en el diagrama pero conviene saber: el stock se valida y descuenta **sin transacción ni control
+de concurrencia** (BR-1 del front), por lo que una sobreventa es posible; el carrito mitiga parte del riesgo
+al revalidar precio y stock. Las reseñas se asocian a productos de pedidos entregados (regla del backend
+según el seed).
+
+#### F6b. Incidencia: del caso al cierre (demo hoy)
+
+Fuentes: `StatusSeeder.cs` (transiciones de casos), `case-detail-page` de soporte, rutas `ayuda` y `mis-casos`
+de comprador y artesano.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor R as Comprador o artesano
+  participant S as Plataforma
+  actor P as Soporte
+  R->>S: Abre un caso (categoría, prioridad y pedido relacionado opcional)
+  S-->>R: Caso Abierto, sin agente
+  P->>S: Asigna o reasigna agente
+  P->>S: Responde en el hilo y marca En proceso
+  R->>S: Responde desde Mis casos
+  P->>S: Marca Resuelto
+  P->>S: Cierra el caso
+  S-->>R: El solicitante ya no puede responder
+  P-->>S: Puede reabrir (Cerrado a Abierto)
+```
+
+Nota: el backend permite escribir en casos cerrados y la prioridad es texto libre (BR-4); el front deshabilita
+el envío en estados terminales.
+
+#### F6c. Alta y verificación de un artesano (demo hoy)
+
+Fuentes: `RegisterHandler`, `verification-banner`, `artisan-verifications-page`, datos del seed (Luis Castillo
+sigue Pendiente).
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor A as Artesano
+  participant S as Plataforma
+  actor P as Soporte
+  A->>S: Registro (región y oficio obligatorios)
+  S-->>A: Sesión con verificación Pendiente
+  S-->>A: Banner: podrás publicar cuando lo apruebe el equipo
+  P->>S: Revisa Verificaciones (filtro por estado)
+  alt Aprueba
+    P->>S: Verificado
+    S-->>A: Puede crear y publicar productos
+  else Rechaza
+    P->>S: Rechazado
+    S-->>A: Banner: abre un caso desde Ayuda
+  end
+```
+
+Nota: el backend solo aplica el bloqueo de publicación al **crear** productos, no al editar, reactivar ni
+comprar (BR-3).
+
+#### F6d. Identidad y sesión
+
+- **Demo hoy:** ver A1 (JWT propio de 30 minutos con refresh de 7 días).
+- **PROPUESTO para producción:** proveedor externo (Auth0 u otro, ver Parte 2). El diseño detallado queda para A4 a A6.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as Usuario
+  participant F as Front Angular
+  participant I as Proveedor de identidad
+  participant A as API .NET
+  U->>F: Iniciar sesión
+  F->>I: Redirección con PKCE
+  I-->>F: Código de autorización
+  F->>I: Canje por tokens
+  I-->>F: Token de acceso (y renovación gestionada por el proveedor)
+  F->>A: Petición con Bearer
+  A->>A: Valida firma con la clave pública del proveedor
+  A->>A: Vincula la identidad externa con el usuario Makicol y su rol
+  A-->>F: Respuesta
+```
+
+#### F6e. Pago y envío según el modelo del artesano (PROPUESTO)
+
+Fuente PlantUML: [`diagramas/f6e-pago-y-envio-modelos.puml`](diagramas/f6e-pago-y-envio-modelos.puml)
+
+![Pago y envío según el modelo del artesano](diagramas/f6e-pago-y-envio-modelos.svg)
+
+Es el diseño de trabajo de la Parte 1; **ningún paso está integrado hoy**. El modelo A depende del concepto
+legal sobre retener fondos de terceros y de contratar la API de la transportadora (ver 3.6).
+
+### F7. El "por qué" de cada flujo (resumen)
+
+| Flujo | Problema que resuelve | Decisión de producto que lo explica | Qué se simplificó en el demo |
+|---|---|---|---|
+| Comprador (F2) | Comprar artesanías sin fricción de entrada | Explorar sin cuenta; sesión solo al comprar; carrito que se revalida | No hay cobro ni envío integrados; dirección y notas no se envían (CHK-004) |
+| Artesano (F3) | Vender con confianza para el comprador | Verificación por soporte antes de publicar | El estado de envío es manual; el cobro se coordina fuera |
+| Soporte (F4) | Un solo punto de ayuda y de control del catálogo | Estados con roles; verificación e historias a cargo de soporte | Prioridad como texto libre; casos cerrados admiten escritura en el backend |
+| Auditor (F5) | Transparencia para aliados e inversionistas | Rol de solo lectura con métricas y trazabilidad | Sin comisión ni liberación de pagos que mostrar |
+| Compra completa (F6a) | Que las cuatro partes vean lo mismo del pedido | Un pedido por artesano; el comprador cierra el ciclo | Sin transacción de stock (BR-1) |
+| Incidencia (F6b) | Resolver problemas con trazabilidad | Hilo único por caso, con pedido relacionado | Sin prioridades cerradas ni SLA |
+| Alta de artesano (F6c) | Proteger la reputación del catálogo | Aprobación manual de soporte | Bloqueo solo al crear productos (BR-3) |
+| Identidad (F6d) | Seguridad real en producción | Proveedor de identidad externo y estandarizado | JWT propio y sesión en `localStorage` |
+| Pago y envío (F6e) | Confianza en el cobro y seguimiento del envío | El artesano elige directo o por la plataforma | Todo propuesto, nada integrado |
 
 ## Acceso al demo en ejecución
 

@@ -1,0 +1,52 @@
+@startuml f6e-pago-y-envio-modelos
+title PROPUESTO (no existe en el demo): pago y envío según el modelo del artesano
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequence {
+  ArrowColor #1F2A22
+  LifeLineBorderColor #8a8f99
+  NoteBackgroundColor #FDF6E3
+  NoteBorderColor #B08900
+}
+
+actor "Comprador" as C #EAF1FC
+participant "Plataforma\n(front + API)" as S #EAF8ED
+actor "Artesano" as A #FBF3E9
+participant "Pasarela\n(p. ej. Wompi)" as G #FFFFFF
+participant "Transportadora\n(p. ej. Servientrega)" as T #FFFFFF
+
+== Compra: la plataforma muestra solo los medios que acepta cada artesano ==
+C -> S : Carrito con productos de uno o varios artesanos
+S --> C : Por cada artesano: su modelo\n(directo o por la plataforma) y sus medios de pago
+C -> S : Elige un medio por cada artesano del carrito
+
+alt MODELO A: por la plataforma (recaudo y liberación)
+  S -> G : Crea el cobro del pedido
+  G --> C : Checkout del medio elegido
+  G --> S : Webhook: pago aprobado, rechazado o pendiente
+  S -> S : Pedido "Recibido" solo con pago aprobado
+  A -> S : Prepara el pedido
+  S -> T : Crea la guía de envío (simulada en el demo)
+  T --> S : Estados de la guía (webhook o consulta)
+  S -> S : Mapa de estados: Enviado y Entregado
+  C -> S : Confirma la entrega (o evento Delivered + plazo)
+  S -> G : Liberación al artesano: venta menos comisión\n(API de pagos a terceros, a los 3-5 días)
+  note over S, G
+    Requiere concepto legal: la plataforma
+    retendría fondos de terceros (Decreto 1692 de 2020).
+  end note
+else MODELO B: directo (registrar y conciliar)
+  S --> C : Datos de pago del artesano (medio elegido)
+  C -> A : Paga directamente (Nequi, Daviplata, transferencia...)
+  A -> S : Marca "pago recibido" y prepara el pedido
+  A -> T : Despacha por su cuenta
+  A -> S : Registra la guía y avanza los estados
+  S -> S : Calcula y concilia la comisión por periodo\n(sin tocar el dinero)
+end
+
+note over S
+  En el demo de hoy: solo existe una preferencia de pago
+  informativa y estados manuales. Nada de esto está integrado.
+end note
+@enduml

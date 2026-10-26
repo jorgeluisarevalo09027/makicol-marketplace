@@ -1,0 +1,65 @@
+@startuml f6a-compra-completa-demo
+title Compra de extremo a extremo en el demo (hoy)
+
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequence {
+  ArrowColor #1F2A22
+  LifeLineBorderColor #8a8f99
+  NoteBackgroundColor #FDF6E3
+  NoteBorderColor #B08900
+}
+skinparam participant {
+  BackgroundColor<<comprador>> #EAF1FC
+  BorderColor<<comprador>> #003893
+  BackgroundColor<<artesano>> #FBF3E9
+  BorderColor<<artesano>> #8a6040
+  BackgroundColor<<soporte>> #F1EAFB
+  BorderColor<<soporte>> #6d3fae
+  BackgroundColor<<auditor>> #EEF0F3
+  BorderColor<<auditor>> #4b5563
+  BackgroundColor<<sistema>> #EAF8ED
+  BorderColor<<sistema>> #1EA03B
+}
+
+actor "Comprador" as C <<comprador>>
+participant "Front + API" as S <<sistema>>
+actor "Artesano" as A <<artesano>>
+actor "Soporte" as P <<soporte>>
+actor "Auditor" as U <<auditor>>
+
+== Elegir y pagar ==
+C -> S : Agrega productos al carrito
+S --> C : Revalida precio y stock al abrir carrito y pago
+C -> S : Elige un método de pago (obligatorio)
+C -> S : POST /orders (carrito completo + preferencia de pago)
+S -> S : Valida stock y lo descuenta\nDivide el carrito: un pedido por artesano
+S --> C : checkoutGroupId y pedidos en estado "Recibido"
+note over C, S
+  No hay cobro: el método de pago es solo una preferencia.
+  El pago y la entrega se coordinan fuera de la plataforma.
+end note
+
+== Preparar y enviar ==
+S --> A : Pedido nuevo en su panel
+A -> S : PATCH estado: "En preparación"
+A -> S : PATCH estado: "Enviado"
+note right of A
+  Envío nacional: sin guía ni transportadora
+  integrada. Solo el estado manual.
+end note
+
+== Cerrar la venta ==
+C -> S : Confirma la entrega (estado "Entregado")
+C -> S : POST reseña del producto
+alt Cancelación (solo en "Recibido")
+  C -> S : Cancela el pedido (estado "Cancelado")
+end
+
+== Problemas y control ==
+opt Hay un problema con el pedido
+  C -> S : Abre un caso (pedido relacionado)
+  P -> S : Asigna, responde y cambia el estado del caso
+end
+U -> S : Consulta ventas, entregas y casos\n(solo lectura)
+@enduml
