@@ -79,7 +79,7 @@ export class NavbarComponent {
   navLinks = [
     { href: 'hero', label: 'Inicio', icon: '🏠' },
     { href: 'financiero', label: 'Módulo Financiero', icon: '💰' },
-    { href: 'tecnico', label: 'Análisis Técnico', icon: '⚡' },
+    { href: 'tecnico', label: 'Plataforma técnica', icon: '⚡' },
     { href: 'arquitectura', label: 'Arquitectura', icon: '🏗️' },
   ];
 
