@@ -12,11 +12,6 @@ import { RouterLink } from '@angular/router';
       <!-- Background layers — warm artisanal dark -->
       <div class="absolute inset-0" style="background: linear-gradient(135deg, #0d1a17 0%, #111e1b 50%, #0d1a17 100%);"></div>
 
-      <!-- Arena texture overlay — sutil calidez artesanal -->
-      <div class="absolute inset-0 opacity-[0.03]"
-           style="background-image: url('/assets/fondo-arena.png'); background-size: 220px 220px;">
-      </div>
-
       <!-- Artisanal warm glow overlay -->
       <div class="absolute inset-0 opacity-40"
            style="background-image: radial-gradient(circle at 18% 50%, rgba(46,204,113,0.18) 0%, transparent 50%), radial-gradient(circle at 82% 18%, rgba(218,175,55,0.14) 0%, transparent 50%), radial-gradient(circle at 55% 85%, rgba(41,84,64,0.10) 0%, transparent 40%);">
@@ -36,19 +31,6 @@ import { RouterLink } from '@angular/router';
       </div>
       <div class="absolute top-1/2 right-1/3 w-64 h-64 rounded-full opacity-6 animate-pulse-slow"
            style="background: radial-gradient(circle, #295440, transparent); filter: blur(80px); animation-delay: 3s;">
-      </div>
-
-      <!-- Wayúu corner decoration — patrón geométrico artesanal (top-left) -->
-      <img src="/assets/decoracion-esquina.png"
-           alt=""
-           aria-hidden="true"
-           class="absolute top-0 left-0 w-52 sm:w-72 pointer-events-none select-none animate-float-deco"
-           style="opacity: 0.22; filter: saturate(1.6) brightness(0.85); transform-origin: top left;">
-
-      <!-- Artisan products image — right side, desktop only -->
-      <div class="absolute right-0 bottom-0 hidden xl:block pointer-events-none select-none"
-           style="width: 380px; opacity: 0.14; filter: saturate(1.4) brightness(1.1) drop-shadow(0 20px 40px rgba(0,0,0,0.8));">
-        <img src="/assets/artesanias.png" alt="" aria-hidden="true" class="w-full">
       </div>
 
       <!-- Main content -->
@@ -77,7 +59,8 @@ import { RouterLink } from '@angular/router';
         <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto mb-10 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
           Propuesta técnica y financiera para una plataforma de comercio electrónico multicategoría que conecta
           artesanos y emprendedores de todo Colombia con compradores en todo el país,
-          con <span class="text-sky-400 font-semibold">pagos online, catálogo digital y videos cortos</span> tipo reels.
+          con <span class="text-sky-400 font-semibold">catálogo digital y pedidos coordinados entre comprador y artesano</span>.
+          Los pagos en línea y los videos cortos son posibilidades futuras, no parte del piloto.
         </p>
 
         <!-- Metric cards -->
@@ -109,27 +92,28 @@ import { RouterLink } from '@angular/router';
           </button>
         </div>
 
-        <!-- Botón puente al Marketplace prototipo -->
-        <div class="animate-fade-in" style="animation-delay:0.5s;">
-          <a routerLink="/marketplace"
-             class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5"
-             style="background:linear-gradient(135deg,#FFCD00,#C8102E); color:#fff; box-shadow:0 4px 24px rgba(218,175,55,0.40); text-decoration:none;">
-            <span style="font-size:1.2rem;">🛒</span>
-            Ver Prototipo del Marketplace
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-            </svg>
-          </a>
-          <p style="color:rgba(255,255,255,0.45); font-size:0.75rem; margin-top:8px; text-align:center;">
-            Catálogo · Pagos · Pedidos · Registro · Búsqueda
-          </p>
-        </div>
+        @if (demoUrl) {
+          <div class="animate-fade-in" style="animation-delay:0.5s;">
+            <a [href]="demoUrl" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5"
+               style="background:linear-gradient(135deg,#FFCD00,#C8102E); color:#fff; box-shadow:0 4px 24px rgba(218,175,55,0.40); text-decoration:none;">
+              <span style="font-size:1.2rem;">🛒</span>
+              Ver el demo del Marketplace
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </a>
+            <p style="color:rgba(255,255,255,0.45); font-size:0.75rem; margin-top:8px; text-align:center;">
+              Catálogo · Pedidos · Registro · Soporte · Auditoría
+            </p>
+          </div>
+        }
 
         <!-- Botón puente al informe de envíos internacionales -->
         <div class="animate-fade-in" style="animation-delay:0.55s; margin-top:14px; display:flex; flex-direction:column; align-items:center; gap:8px;">
           <a routerLink="/envios-internacionales"
              style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
-            🌎 Ver investigación: Envíos internacionales (piloto Zona Caribe)
+            🌎 Ver investigación: Envíos internacionales (fase futura, no ejecutada)
           </a>
           <a routerLink="/evaluacion-backoffice"
              style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
@@ -137,11 +121,11 @@ import { RouterLink } from '@angular/router';
           </a>
           <a routerLink="/base-de-datos"
              style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
-            🗄️ Ver diseño de base de datos (trabajo en progreso)
+            🗄️ Ver diseño de base de datos
           </a>
           <a routerLink="/contrato-api"
              style="display:inline-flex; align-items:center; gap:8px; color:#a8b8ae; font-size:0.85rem; font-weight:600; text-decoration:underline;">
-            🔌 Ver contrato de API /api/makicol (servicio compartido)
+            🔌 Ver contrato de API del demo
           </a>
         </div>
 
@@ -174,15 +158,17 @@ import { RouterLink } from '@angular/router';
 export class HeroComponent {
   private platformId = inject(PLATFORM_ID);
 
+  demoUrl = '';
+
   metrics = [
-    { icon: '🎨', value: '500+', label: 'Productores artesanales' },
-    { icon: '👥', value: '50,000', label: 'Visitantes proyectados al año' },
-    { icon: '📈', value: '3 Fases', label: 'Plan de escalabilidad' },
+    { icon: '👥', value: '4 roles', label: 'Comprador, artesano, soporte y auditor' },
+    { icon: '🤝', value: 'Sin comisión', label: 'Piloto en el modelo B' },
+    { icon: '🏛️', value: 'Patrocinio', label: 'Primera fuente de financiación' },
   ];
 
   modules = [
     { id: 'financiero', name: 'Modelo Financiero', icon: '💰', bg: 'rgba(16,185,129,0.1)', color: '#34d399', border: 'rgba(16,185,129,0.3)' },
-    { id: 'tecnico', name: 'PWA Marketplace', icon: '⚡', bg: 'rgba(99,102,241,0.1)', color: '#a5b4fc', border: 'rgba(99,102,241,0.3)' },
+    { id: 'tecnico', name: 'Plataforma técnica', icon: '⚡', bg: 'rgba(99,102,241,0.1)', color: '#a5b4fc', border: 'rgba(99,102,241,0.3)' },
     { id: 'arquitectura', name: 'Arquitectura Cloud', icon: '🏗️', bg: 'rgba(245,158,11,0.1)', color: '#fcd34d', border: 'rgba(245,158,11,0.3)' },
   ];
 

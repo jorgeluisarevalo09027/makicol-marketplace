@@ -1123,16 +1123,16 @@ es una **posibilidad**, no el plan base.
 |---|---|---|---|
 | Migración de autenticación a Auth0 | Única | 3,9 a 10,5 millones | A8: 70 a 110 h |
 | Módulo de envíos (guía, rastreo, recaudo simulado en backend) | Única | 6,6 a 19,0 millones | Estimación propia: 120 a 200 h a COP 55.000 a 95.000 |
-| Infraestructura Azure | Recurrente | 5,0 a 9,9 millones al año | Tabla de la propuesta: USD 131 a 260 al mes; **incluye servicios retirados, hay que recalcular** |
+| Infraestructura Azure | Recurrente | 4,7 a 9,6 millones al año | Tabla corregida de la propuesta (sin Media Services ni CDN Akamai, Front Door a USD 35): USD 124 a 253 al mes para 50 a 200 artesanos; precios de App Service y SQL sin verificar |
 | Auth0 Essentials (si el MFA lo exige) | Recurrente | 0 a 1,2 millones al año | USD 35 al mes |
 | Servientrega (contrato, guías, recaudo) | Por definir | Sin cotización | O11 |
 | Asesoría legal (Términos, datos personales, modelo A) | Por definir | Sin cotización | O10 |
-| **Total cuantificable** | | **15,5 a 40,6 millones** | Más Servientrega y asesoría legal |
+| **Total cuantificable** | | **15,2 a 40,3 millones** | Más Servientrega y asesoría legal |
 
 Lectura:
 
 - El desarrollo se valora a costo de reposición. Si el equipo lo aporta en especie, la **necesidad de caja** baja
-  a infraestructura, licencias, asesoría legal y logística (~COP 5 a 11 millones más lo no cotizado).
+  a infraestructura, licencias, asesoría legal y logística (~COP 4,7 a 10,8 millones más lo no cotizado).
 - El patrocinio de USD 1.800 de la propuesta cubriría solo la infraestructura; no el desarrollo del piloto.
 - En el modelo B no entra comisión: el equilibrio depende solo del patrocinio y de las posibilidades de la tabla
   de ingresos.
@@ -1141,7 +1141,7 @@ Lectura:
 
 - Meta de patrocinio del primer año y quién la gestiona (sin cifra de referencia).
 - Si el desarrollo se aporta en especie o se paga.
-- Recalcular la infraestructura sin Media Services ni CDN Akamai y con Front Door a USD 35.
+- Verificar con la calculadora de Azure los precios de App Service y SQL (la tabla ya no incluye servicios retirados).
 - Cotizar Servientrega, Auth0 (MFA por rol) y al abogado.
 
 ### B5. Arquitectura: demo hoy y producción prevista
@@ -1171,30 +1171,30 @@ Lectura:
   ejecutada.
 - Cualquier cambio de backend requiere autorización expresa y separada (editar, compilar, desplegar).
 
-### B6. Lista de cambios propuestos a la propuesta (sin aplicar)
+### B6. Cambios a la propuesta: lista y estado
 
-Nada de esto está ejecutado. Cada cambio espera tu aprobación (columna **OK**). Los números de auditoría
-remiten a 3.2.
+Aprobados y aplicados el 26-oct-2026 en el sitio de la propuesta (columna **OK** con el estado). Los números de
+auditoría remiten a 3.2.
 
 | ID | Pieza | Cambio propuesto | Auditoría | OK |
 |---|---|---|---|---|
-| C1 | `hero` | Quitar "500+ productores" y "50.000 visitantes" o presentarlos como metas con su base | #1, #2 | |
-| C2 | `hero` | Sustituir el botón al prototipo por el enlace al demo desplegado | 3.3 | |
-| C3 | `hero` | Corregir las tres imágenes inexistentes (`fondo-arena`, `decoracion-esquina`, `artesanias`) | 3.7 | |
-| C4 | `hero`, fases | Cambiar la promesa de pagos en línea y reels: pagos "en diseño" (modelo B primero) y reels como visión | #13, #14 | |
-| C5 | `financial` | Poner el patrocinio como primera fuente, marcado como objetivo sin acuerdo; la comisión pasa a posibilidad | #3, #6, B1 | |
-| C6 | `financial` | Retirar "ingreso de ~USD 600/mes" y "autofinanciación desde el mes 8" (o respaldarlos con curva) | #4, #5 | |
-| C7 | `financial` | Unificar tabla y simulador en un modelo; retirar Media Services y CDN Akamai; Front Door a USD 35 | #7 a #11 | |
-| C8 | `technical` | Angular 22; PWA y Wompi SDK solo como opciones, no como existentes | 3.5 | |
-| C9 | `architecture` | Sustituir el diagrama por B5 (demo hoy y producción prevista); quitar Azure AD B2C y mostrar Auth0 como propuesta | #12, #16, B5 | |
-| C10 | `architecture/scalability-phases` | Condensar la Fase 3 (IA, app, Etsy, Cosmos DB, OpenAI) en una línea de visión | #15 | |
-| C11 | `international-shipping` | Rotular "fase futura, no ejecutada"; corregir certificado de origen (autocertificación), fechar tarifas y marcar el recargo del 15 % como sin verificar | #17 a #19, #21 | |
-| C12 | `backoffice-evaluation` | Resumir en una sección: el demo ya separa por rol | 3.5 | |
-| C13 | `database-design` | Corregir verificación automática y pedido multi-artesano; pasar a ER v7 desde el backend; mover v1 a v5 a histórico | 3.7 | |
-| C14 | `contrato-api` | Reemplazar la tabla manual por el Swagger del demo; conservar solo las reglas de diseño | 3.7 | |
-| C15 | `marketplace/` y assets | Retirar el prototipo tras rescatar 3.3; eliminar `logo-corazon.png` y `makicol-logo-header1.svg` | 3.3, 3.7 | |
-| C16 | Equipo | Añadir la sección de equipo | #22 | |
-| C17 | `.gitignore` | Añadir `.nx` | 3.7 | |
+| C1 | `hero` | Quitar "500+ productores" y "50.000 visitantes" o presentarlos como metas con su base | #1, #2 | Hecho |
+| C2 | `hero` | Sustituir el botón al prototipo por el enlace al demo desplegado | 3.3 | Parcial: falta la URL del demo |
+| C3 | `hero` | Corregir las tres imágenes inexistentes (`fondo-arena`, `decoracion-esquina`, `artesanias`) | 3.7 | Hecho |
+| C4 | `hero`, fases | Cambiar la promesa de pagos en línea y reels: pagos "en diseño" (modelo B primero) y reels como visión | #13, #14 | Hecho |
+| C5 | `financial` | Poner el patrocinio como primera fuente, marcado como objetivo sin acuerdo; la comisión pasa a posibilidad | #3, #6, B1 | Hecho |
+| C6 | `financial` | Retirar "ingreso de ~USD 600/mes" y "autofinanciación desde el mes 8" (o respaldarlos con curva) | #4, #5 | Hecho |
+| C7 | `financial` | Unificar tabla y simulador en un modelo; retirar Media Services y CDN Akamai; Front Door a USD 35 | #7 a #11 | Hecho |
+| C8 | `technical` | Angular 22; PWA y Wompi SDK solo como opciones, no como existentes | 3.5 | Hecho |
+| C9 | `architecture` | Sustituir el diagrama por B5 (demo hoy y producción prevista); quitar Azure AD B2C y mostrar Auth0 como propuesta | #12, #16, B5 | Hecho |
+| C10 | `architecture/scalability-phases` | Condensar la Fase 3 (IA, app, Etsy, Cosmos DB, OpenAI) en una línea de visión | #15 | Hecho |
+| C11 | `international-shipping` | Rotular "fase futura, no ejecutada"; corregir certificado de origen (autocertificación), fechar tarifas y marcar el recargo del 15 % como sin verificar | #17 a #19, #21 | Hecho |
+| C12 | `backoffice-evaluation` | Resumir en una sección: el demo ya separa por rol | 3.5 | Hecho |
+| C13 | `database-design` | Corregir verificación automática y pedido multi-artesano; pasar a ER v7 desde el backend; mover v1 a v5 a histórico | 3.7 | Parcial: falta ER v7 |
+| C14 | `contrato-api` | Reemplazar la tabla manual por el Swagger del demo; conservar solo las reglas de diseño | 3.7 | Hecho |
+| C15 | `marketplace/` y assets | Retirar el prototipo tras rescatar 3.3; eliminar `logo-corazon.png` y `makicol-logo-header1.svg` | 3.3, 3.7 | Hecho |
+| C16 | Equipo | Añadir la sección de equipo | #22 | Pendiente: faltan datos del equipo |
+| C17 | `.gitignore` | Añadir `.nx` | 3.7 | Hecho |
 
 **Orden sugerido si apruebas:** primero lo que corrige afirmaciones falsas o engañosas (C1, C4, C6, C9, C11,
 C13), luego lo cosmético y la limpieza (C3, C15, C17), y al final las secciones nuevas (C5, C16). C15 es

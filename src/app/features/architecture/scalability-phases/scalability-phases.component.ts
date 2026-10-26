@@ -23,8 +23,8 @@ interface Phase {
   template: `
     <div class="glass-card rounded-2xl overflow-hidden">
       <div class="px-6 py-5 border-b border-slate-700/50">
-        <h3 class="text-white font-bold text-lg">Plan de Escalabilidad por Fases</h3>
-        <p class="text-slate-400 text-sm mt-0.5">El núcleo de la arquitectura permanece invariante en todas las fases</p>
+        <h3 class="text-white font-bold text-lg">Ruta de crecimiento</h3>
+        <p class="text-slate-400 text-sm mt-0.5">Solo el piloto está definido; las fases siguientes son posibilidades sin fecha ni compromiso</p>
       </div>
 
       <!-- Phase selector tabs -->
@@ -73,7 +73,7 @@ interface Phase {
               <div class="text-center sm:text-right flex-shrink-0">
                 <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Costo Estimado</div>
                 <div class="text-2xl font-bold font-mono" [style.color]="phase.color">{{ phase.estimatedCost }}</div>
-                <div class="text-slate-500 text-xs">USD / mes</div>
+                <div class="text-slate-500 text-xs">USD / mes (infraestructura)</div>
               </div>
             </div>
 
@@ -104,9 +104,9 @@ interface Phase {
               </div>
             </div>
 
-            <!-- Azure services for this phase -->
+            <!-- Services for this phase -->
             <div>
-              <h5 class="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-3">Servicios Azure</h5>
+              <h5 class="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-3">Servicios</h5>
               <div class="flex flex-wrap gap-2">
                 @for (service of phase.services; track service.name) {
                   <div class="flex items-center gap-2 px-3 py-2 rounded-lg border"
@@ -154,93 +154,74 @@ export class ScalabilityPhasesComponent {
   phases: Phase[] = [
     {
       id: 1,
-      label: 'Fase 1 — MVP',
-      title: 'Catálogo Digital + Pagos Online',
-      timeline: 'Ago–Nov 2026 (Lanzamiento MVP)',
+      label: 'Fase 1 — Piloto',
+      title: 'Catálogo y pedidos coordinados',
+      timeline: 'Fecha por definir',
       status: 'current',
-      icon: '�',
+      icon: '🚀',
       color: '#38bdf8',
       bg: 'rgba(14,165,233,0.06)',
       border: 'rgba(14,165,233,0.25)',
-      description: 'El MVP se lanza a nivel nacional. Los 500+ productores registrados en Makicol publican sus artesanías, libros y productos editoriales con pagos online vía PSE y Nequi. La infraestructura Azure se financia con patrocinadores institucionales.',
-      triggerCondition: 'Confirmación de patrocinadores institucionales y aliados de fomento al emprendimiento. Inicio en agosto 2026.',
-      estimatedCost: '$131–$180',
+      description: 'El demo ya cubre catálogo, carrito, pedidos por artesano, soporte y auditoría. El piloto añade autenticación con un proveedor externo (MFA para soporte y auditor) y un módulo de envíos con Servientrega. El pago es directo entre comprador y artesano, sin comisión de la plataforma.',
+      triggerCondition: 'Patrocinio confirmado, migración de autenticación terminada, cotización y contrato de transporte, y asesoría legal para Términos y datos personales.',
+      estimatedCost: '$124–$253',
       features: [
-        { icon: '🔐', name: 'Registro de Productores', detail: 'Portal de alta para artesanos y editores. Perfil con fotos, descripción y región de Colombia.' },
-        { icon: '🎨', name: 'Catálogo de Productos', detail: 'Listado de artesanías, libros y productos editoriales con fotos, precio y stock disponible.' },
-        { icon: '💳', name: 'Pagos Online Colombianos', detail: 'Integración con Wompi (Bancolombia): PSE, tarjeta crédito/débito, Nequi, Daviplata y Efecty en efectivo.' },
-        { icon: '📦', name: 'Gestión de Pedidos', detail: 'Dashboard del productor: pedidos recibidos, estado de envío y historial de ventas.' },
-        { icon: '🔍', name: 'Búsqueda y Filtros', detail: 'Filtrar por categoría (artesanía, libro, arte), región de Colombia y rango de precio.' },
-        { icon: '📱', name: 'PWA Installable', detail: 'Los compradores agregan el marketplace a su pantalla de inicio desde el navegador.' },
+        { icon: '🔐', name: 'Registro de Artesanos', detail: 'Alta con perfil público; soporte verifica a cada artesano antes de publicar.' },
+        { icon: '🎨', name: 'Catálogo de Productos', detail: 'Productos con fotos, precio, stock y región.' },
+        { icon: '📦', name: 'Pedidos por Artesano', detail: 'El carrito se divide en un pedido por artesano; comprador y artesano gestionan el estado.' },
+        { icon: '🚚', name: 'Envíos con Servientrega', detail: 'Guía imprimible y rastreo (propuesto; sin contrato ni cotización todavía).' },
+        { icon: '🛡️', name: 'Autenticación con MFA', detail: 'Proveedor externo propuesto (Auth0); MFA obligatorio para soporte y auditor.' },
+        { icon: '📊', name: 'Soporte y Auditoría', detail: 'Casos de ayuda, verificaciones, historias editoriales e informes (existen en el demo).' },
       ],
       services: [
-        { name: 'App Service B2', tier: 'COMPUTE' },
-        { name: 'SQL Database S1', tier: 'DATA' },
-        { name: 'Blob Storage LRS', tier: 'STORAGE' },
-        { name: 'Azure CDN Standard', tier: 'DELIVERY' },
-        { name: 'Front Door Standard', tier: 'GATEWAY' },
-        { name: 'Wompi API', tier: 'PAGOS' },
+        { name: 'App Service', tier: 'COMPUTE' },
+        { name: 'SQL Database', tier: 'DATA' },
+        { name: 'Blob Storage (por verificar)', tier: 'STORAGE' },
+        { name: 'Auth0 (propuesto)', tier: 'IDENTIDAD' },
+        { name: 'Servientrega (sin contrato)', tier: 'ENVÍOS' },
       ]
     },
     {
       id: 2,
-      label: 'Fase 2 — Reels',
-      title: '+ Videos Cortos 30s (Historias)',
-      timeline: '3–5 meses post-MVP',
+      label: 'Fase 2 — Posibilidades',
+      title: 'Pagos en línea y contenido en video',
+      timeline: 'Sin fecha ni compromiso',
       status: 'planned',
-      icon: '�',
+      icon: '💳',
       color: '#a78bfa',
       bg: 'rgba(139,92,246,0.06)',
       border: 'rgba(139,92,246,0.25)',
-      description: 'Se incorpora el módulo de videos cortos de 30 segundos al estilo de TikTok Shop / Instagram Reels. Los productores artesanales muestran el proceso de fabricación, presentan libros y generan engagement con compradores antes de la compra.',
-      triggerCondition: 'Base de productores activos > 100 y volumen de ventas mensual > $2,000 USD en comisiones.',
-      estimatedCost: '$280–$380',
+      description: 'Si algún artesano lo pide o el patrocinio lo exige, se puede ofrecer el modelo con cobro por la plataforma mediante una pasarela. Exige concepto legal previo. Los videos cortos requieren un servicio de video distinto de Azure Media Services, retirado en 2024.',
+      triggerCondition: 'Demanda comprobada en el piloto, concepto legal favorable y financiación disponible.',
+      estimatedCost: 'Por definir',
       features: [
-        { icon: '📹', name: 'Reels de Producto', detail: 'Videos de 30s que los artesanos graban para mostrar su proceso creativo y producto terminado.' },
-        { icon: '�', name: 'Stories de Libros', detail: 'Presentaciones en video de libros editoriales: el autor leyendo fragmentos o describiendo la obra.' },
-        { icon: '▶️', name: 'Feed de Videos', detail: 'Feed tipo TikTok/Instagram en el marketplace. Los compradores navegan videos de productos.' },
-        { icon: '�', name: 'Interacción en Reels', detail: 'Comentarios, reacciones y botón "Comprar" directo desde el reel, sin salir del video.' },
-        { icon: '📡', name: 'Streaming Adaptativo', detail: 'Azure Media Services con HLS. Calidad automática según conexión del comprador.' },
-        { icon: '📊', name: 'Analytics de Video', detail: 'Reproducciones, tiempo de vista y tasa de conversión de reel a compra por productor.' },
+        { icon: '💳', name: 'Pasarela de pago', detail: 'Modelo A: cobro por la plataforma, con comisión; costo de pasarela y obligaciones legales por evaluar.' },
+        { icon: '🎥', name: 'Videos cortos', detail: 'Videos de proceso y producto; el servicio de video está por elegir.' },
+        { icon: '📱', name: 'PWA', detail: 'Instalación desde el navegador; no está implementada.' },
+        { icon: '🌎', name: 'Envíos internacionales', detail: 'Posibilidad futura con flujo básico; hoy no se ejecutan.' },
       ],
       services: [
-        { name: 'App Service P1v3', tier: 'COMPUTE' },
-        { name: 'SQL Database S3', tier: 'DATA' },
-        { name: 'Azure Media Services', tier: 'VIDEO' },
-        { name: 'Azure CDN Premium', tier: 'DELIVERY' },
-        { name: 'Redis Cache C1', tier: 'CACHE' },
-        { name: 'Blob Storage (500GB+)', tier: 'STORAGE' },
+        { name: 'Pasarela de pago', tier: 'PAGOS' },
+        { name: 'Servicio de video (por elegir)', tier: 'VIDEO' },
       ]
     },
     {
       id: 3,
-      label: 'Fase 3 — IA',
-      title: '+ Recomendaciones IA + App Nativa',
-      timeline: '9–18 meses post-MVP',
+      label: 'Fase 3 — Visión',
+      title: 'Visión a largo plazo',
+      timeline: 'Sin fecha',
       status: 'future',
-      icon: '🤖',
+      icon: '🔭',
       color: '#34d399',
       bg: 'rgba(16,185,129,0.06)',
       border: 'rgba(16,185,129,0.25)',
-      description: 'Motor de recomendación personalizado que sugiere artesanías y libros según el historial del comprador. Búsqueda visual de productos similares. App nativa Android con notificaciones push de nuevos reels y ofertas de productores favoritos.',
-      triggerCondition: 'Base de compradores activos > 5,000 mensuales y marketplace autosuficiente financieramente.',
-      estimatedCost: '$650–$950',
+      description: 'Ideas sin análisis: recomendaciones con IA, aplicación nativa y expansión de categorías. Se evalúan solo si el piloto y la Fase 2 demuestran tracción.',
+      triggerCondition: 'Tracción demostrada y financiación; sin umbrales definidos.',
+      estimatedCost: 'Por definir',
       features: [
-        { icon: '🎯', name: 'Recomendaciones Personalizadas', detail: 'IA sugiere artesanías y libros según historial de compras, búsquedas y videos vistos.' },
-        { icon: '�', name: 'Búsqueda Visual', detail: 'El comprador sube una foto y la IA encuentra artesanías similares en el catálogo.' },
-        { icon: '🔔', name: 'Notificaciones Push (App)', detail: 'App nativa Android con alertas: nuevo reel del artesano favorito, producto disponible, oferta.' },
-        { icon: '📈', name: 'Dashboard de Ventas IA', detail: 'Power BI para productores: predicción de demanda, productos más vistos y análisis de competencia.' },
-        { icon: '🌐', name: 'Expansión de Categorías', detail: 'Apertura a nuevas categorías de emprendimiento más allá de artesanías: moda, alimentos y decoración.' },
-        { icon: '💰', name: 'Marketplace de Exportación', detail: 'Integración con Etsy y Amazon Handmade para exportar artesanías colombianas al mundo.' },
+        { icon: '🎯', name: 'Ideas en evaluación', detail: 'Recomendaciones con IA, aplicación nativa y nuevas categorías.' },
       ],
-      services: [
-        { name: 'App Service P2v3', tier: 'COMPUTE' },
-        { name: 'Azure OpenAI Service', tier: 'IA' },
-        { name: 'Azure AI Search', tier: 'IA' },
-        { name: 'Power BI Embedded', tier: 'ANALYTICS' },
-        { name: 'Azure Cosmos DB', tier: 'NOSQL' },
-        { name: 'Azure Computer Vision', tier: 'IA' },
-      ]
+      services: []
     }
   ];
 }

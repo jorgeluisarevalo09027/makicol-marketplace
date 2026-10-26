@@ -18,7 +18,7 @@ interface AzureService {
       <div class="px-6 py-5 border-b border-slate-700/50 flex items-center justify-between">
         <div>
           <h3 class="text-white font-bold text-lg">Infraestructura Azure — Marketplace</h3>
-          <p class="text-slate-400 text-sm mt-0.5">Costos mensuales estimados por servicio (USD)</p>
+          <p class="text-slate-400 text-sm mt-0.5">Costos mensuales estimados por servicio (USD). Estimaciones propias sin cotización vigente; verificar en la calculadora de Azure.</p>
         </div>
         <div class="flex gap-2">
           <span class="px-2.5 py-1 rounded-lg bg-slate-700/50 text-slate-400 text-xs">Base</span>
@@ -92,7 +92,7 @@ export class CostTableComponent {
       icon: '⚙️',
       baseCost: 55,
       scaledCost: this.users() <= 100 ? 55 : this.users() <= 500 ? 140 : 260,
-      description: 'API marketplace + Angular SSR PWA',
+      description: 'API del marketplace (ASP.NET Core)',
       category: 'compute'
     },
     {
@@ -101,7 +101,7 @@ export class CostTableComponent {
       icon: '🗄️',
       baseCost: 28,
       scaledCost: this.users() <= 100 ? 28 : this.users() <= 500 ? 70 : 180,
-      description: 'Catálogo, pedidos, productores, pagos',
+      description: 'Catálogo, pedidos, artesanos, soporte y auditoría',
       category: 'data'
     },
     {
@@ -114,30 +114,12 @@ export class CostTableComponent {
       category: 'data'
     },
     {
-      name: 'Azure Media Services',
-      tier: 'Standard Encoding',
-      icon: '🎥',
-      baseCost: 8,
-      scaledCost: Math.max(8, Math.round(this.users() * 0.035)),
-      description: 'Videos cortos 30s tipo reels/historias',
-      category: 'data'
-    },
-    {
-      name: 'Azure CDN (Akamai)',
-      tier: 'Standard',
-      icon: '🌐',
-      baseCost: 12,
-      scaledCost: Math.max(12, Math.round(this.users() * 0.045)),
-      description: 'Entrega rápida de imágenes y videos',
-      category: 'delivery'
-    },
-    {
       name: 'Azure Front Door',
       tier: 'Standard',
       icon: '🛡️',
-      baseCost: 22,
-      scaledCost: 22,
-      description: 'WAF + SSL + protección pagos online',
+      baseCost: 35,
+      scaledCost: 35,
+      description: 'SSL y entrega (el WAF administrado exige Premium)',
       category: 'security'
     },
   ]);

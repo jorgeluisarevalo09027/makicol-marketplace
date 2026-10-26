@@ -20,7 +20,7 @@ import { FeatureMatrixComponent } from './feature-matrix/feature-matrix.componen
           iconBg="rgba(46,204,113,0.15)"
           badge="Módulo 02 — Técnico"
           title="PWA Marketplace vs. App Nativa"
-          subtitle="Análisis técnico de la plataforma óptima para el marketplace: acceso de productores artesanales, pagos online y transmisión de videos cortos."/>
+          subtitle="Comparación de opciones de plataforma. Hoy existe una aplicación web; la PWA, los pagos en línea y los videos cortos son opciones futuras, no funcionalidades del demo."/>
 
         <!-- Conclusion banner -->
         <div class="mb-8 p-5 rounded-xl" style="background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.25);">
@@ -29,9 +29,9 @@ import { FeatureMatrixComponent } from './feature-matrix/feature-matrix.componen
             <div>
               <h4 class="text-white font-semibold text-sm mb-1">Conclusión de la Investigación</h4>
               <p class="text-slate-400 text-sm leading-relaxed">
-                Para <span class="text-white font-medium">Makicol Marketplace</span>, la PWA es la opción estratégica:
+                Para <span class="text-white font-medium">Makicol Marketplace</span>, mantener la aplicación web (con PWA como posible mejora) es la opción estratégica:
                 accesible desde cualquier dispositivo sin instalación, ideal para productores artesanales con acceso limitado a datos.
-                La App Nativa se recomienda en <span class="text-indigo-400 font-semibold">Fase 3</span> si la base de compradores supera 5,000 usuarios activos mensuales y se requieren notificaciones push avanzadas.
+                La App Nativa queda como <span class="text-indigo-400 font-semibold">visión</span> si la base de compradores crece y se requieren notificaciones push avanzadas (umbral de 5,000 usuarios activos mensuales: supuesto sin sustento).
               </p>
             </div>
           </div>

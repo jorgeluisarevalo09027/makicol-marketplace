@@ -2,12 +2,11 @@ import { Component, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { SectionHeaderComponent } from '../../shared/section-header/section-header.component';
 import { CostTableComponent } from './cost-table/cost-table.component';
-import { CostSimulatorComponent } from './cost-simulator/cost-simulator.component';
 
 @Component({
   selector: 'app-financial',
   standalone: true,
-  imports: [DecimalPipe, SectionHeaderComponent, CostTableComponent, CostSimulatorComponent],
+  imports: [DecimalPipe, SectionHeaderComponent, CostTableComponent],
   template: `
     <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16 section-primary-tint">
 
@@ -22,21 +21,21 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
           iconBg="rgba(218,175,55,0.15)"
           badge="Módulo 01 — Financiero"
           title="Modelo Financiero del Marketplace"
-          subtitle="Infraestructura Azure + modelo de patrocinadores + ingresos por comisión. El marketplace es sostenible desde el primer año. Costos en USD/mes."/>
+          subtitle="El patrocinio es la primera fuente de financiación; el piloto arranca sin comisión. Costos estimados en USD/mes, pendientes de cotización."/>
 
         <!-- Info bar -->
         <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-lg glass-card">
           <span class="text-2xl">📌</span>
           <p class="text-slate-300 text-sm">
             <span class="text-emerald-400 font-semibold">Modelo de patrocinio:</span>
-            La infraestructura inicial es cubierta por patrocinadores institucionales (Ministerio de Cultura, Banco de la República, entidades de fomento al emprendimiento).
-            Los ingresos recurrentes provienen de <span class="text-white font-medium">comisiones del 5-8% por venta</span> realizada en la plataforma.
+            La financiación inicial se busca con patrocinadores institucionales y privados; <span class="text-white font-medium">aún no hay acuerdo ni carta de ningún patrocinador</span>.
+            Otras entradas (comisión si un artesano adopta el modelo con cobro de la plataforma, suscripciones, destacados) son posibilidades, no el plan base.
           </p>
         </div>
 
         <!-- Users indicator shared between both panels -->
         <div class="flex items-center justify-center gap-4 mb-8">
-          <span class="text-slate-400 text-sm">Productores activos:</span>
+          <span class="text-slate-400 text-sm">Artesanos activos (escenario):</span>
           <span class="text-sky-400 font-bold text-xl font-mono">{{ sharedUsers() | number }}</span>
           <div class="flex gap-2">
             @for (preset of userPresets; track preset.value) {
@@ -52,11 +51,8 @@ import { CostSimulatorComponent } from './cost-simulator/cost-simulator.componen
           </div>
         </div>
 
-        <!-- Main grid: cost table + simulator -->
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <app-cost-table [users]="sharedUsers()"/>
-          <app-cost-simulator/>
-        </div>
+        <!-- Cost table -->
+        <app-cost-table [users]="sharedUsers()"/>
 
         <!-- Bottom insight cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
@@ -79,27 +75,27 @@ export class FinancialComponent {
   sharedUsers = signal(200);
 
   userPresets = [
-    { label: 'MVP · 50', value: 50 },
-    { label: 'Fase 1 · 200', value: 200 },
-    { label: 'Fase 2 · 500', value: 500 },
-    { label: 'Fase 3 · 1,000', value: 1000 },
+    { label: 'Piloto · 50', value: 50 },
+    { label: 'Crecimiento · 200', value: 200 },
+    { label: 'Escala · 500', value: 500 },
+    { label: 'Visión · 1,000', value: 1000 },
   ];
 
   insights = [
     {
       icon: '🤝',
-      title: 'Patrocinadores clave',
-      text: 'Ministerio de Cultura, Banco de la República y aliados de fomento al emprendimiento cubren el costo inicial (~$1,800 USD año 1). El marketplace se autofinancia desde el mes 8 con comisiones.'
+      title: 'Patrocinio como primera fuente',
+      text: 'Objetivo, no hecho: se buscarán entidades de cultura y fomento al emprendimiento. La propuesta anterior estimaba ~USD 1,800 el año 1, cifra sin sustento que solo cubriría infraestructura.'
     },
     {
-      icon: '�',
-      title: 'Ingresos por comisión',
-      text: 'Con 200 productores activos y un promedio de $50 USD en ventas mensuales por productor, la comisión del 6% genera ~$600 USD/mes, superando el costo operativo.'
+      icon: '💳',
+      title: 'La comisión es una posibilidad',
+      text: 'Con cobro por pasarela, el costo de la pasarela absorbe cerca del 60 % de una comisión del 6 %. Por eso el piloto no cobra comisión y no se promete autofinanciación.'
     },
     {
-      icon: '🎥',
-      title: 'Videos cortos (Reels)',
-      text: 'Azure Media Services permite publicar videos de 30s por $0.02/GB procesado. Con 200 reels de 10MB cada uno, el costo adicional es mínimo (~$4/mes).'
+      icon: '🧾',
+      title: 'Costos únicos del piloto',
+      text: 'Además de la infraestructura: migración de autenticación, módulo de envíos, asesoría legal y contrato de transporte. Rangos y supuestos en el análisis del plan de negocio.'
     },
   ];
 }

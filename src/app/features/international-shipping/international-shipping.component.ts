@@ -32,7 +32,6 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
           </a>
           <div style="display:flex; gap:16px;">
             <a routerLink="/propuesta" style="color:#57685c; font-size:0.82rem; text-decoration:none; font-weight:600;">← Volver a la propuesta</a>
-            <a routerLink="/marketplace" style="color:#295440; font-size:0.82rem; text-decoration:none; font-weight:700;">Ver prototipo →</a>
           </div>
         </div>
       </header>
@@ -42,14 +41,14 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <div style="max-width:760px; margin:0 auto;">
           <div style="display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:20px; background:#E3EBE7; margin-bottom:20px;">
             <span style="width:8px; height:8px; border-radius:50%; background:#295440;"></span>
-            <span style="color:#295440; font-size:0.82rem; font-weight:700;">Investigación y propuesta — Expansión internacional</span>
+            <span style="color:#295440; font-size:0.82rem; font-weight:700;">Fase futura, no ejecutada — hoy no se realizan envíos internacionales</span>
           </div>
           <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:900; font-size:2.2rem; line-height:1.2; margin:0 0 14px;">
-            Envíos internacionales<br><span style="color:#295440;">Piloto Zona Caribe</span>
+            Envíos internacionales<br><span style="color:#295440;">Posibilidad futura (Zona Caribe)</span>
           </h1>
           <p style="color:#57685c; font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
             Hallazgos regulatorios, costos reales y un flujo de implementación concreto para llevar las
-            artesanías de Makicol a compradores en Estados Unidos, comenzando con un piloto de bajo riesgo.
+            artesanías de Makicol a compradores en Estados Unidos. Es una investigación para una posible fase futura; las cifras y plazos deben revalidarse antes de cualquier decisión.
           </p>
         </div>
       </section>
@@ -104,7 +103,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
               Certificado de Origen TLC Colombia–EE. UU.
             </h2>
             <p style="color:#57685c; font-size:0.9rem; margin:0;">
-              El documento que permite que las artesanías de Makicol entren a EE. UU. pagando 0% de arancel, en vez del arancel general (5-15%).
+              La prueba de origen que permitiría entrar a EE. UU. con preferencia arancelaria bajo el acuerdo comercial, en vez del arancel general. Según la DIAN, para el acuerdo con EE. UU. es una autocertificación.
             </p>
           </div>
 
@@ -143,7 +142,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
             </table>
           </div>
           <p style="color:#8a6040; font-size:0.78rem; margin-top:10px;">
-            El certificado tiene vigencia de <strong>4 años</strong> y es reutilizable para envíos posteriores del mismo producto.
+            La vigencia de la prueba de origen <strong>no se ha confirmado</strong>; antes figuraba un plazo de 4 años sin fuente.
           </p>
         </section>
 
@@ -155,7 +154,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
               Tarifas y tiempos por servicio (Colombia → EE. UU.)
             </h2>
             <p style="color:#57685c; font-size:0.9rem; margin:0;">
-              Comparativa de courier internacional para un paquete tipo (~1 kg), base para dimensionar el costo real del piloto.
+              Comparativa de courier internacional para un paquete tipo (~1 kg). <strong>Tarifas sin fecha ni cotización vigente:</strong> deben cotizarse de nuevo antes de usarlas.
             </p>
           </div>
 
@@ -180,9 +179,9 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
           </div>
           <div class="is-card" style="border-left-color:#DAAF37;">
             <p style="color:#3d4a41; font-size:0.86rem; line-height:1.6; margin:0;">
-              ⚠️ Desde el fin del de minimis, varios operadores aplican un <strong>recargo adicional (~15%)</strong>
-              sobre el valor declarado para procesar la formalidad aduanera de paquetes pequeños. El precio de la etiqueta de envío
-              <strong>no es el costo total real</strong> — hay que sumar arancel (0% con Certificado de Origen) + gestión aduanera + este recargo.
+              ⚠️ Desde el fin del de minimis, los operadores pueden cobrar cargos aduaneros adicionales. Un recargo de ~15% se mencionó en fuentes de terceros,
+              pero <strong>no apareció en fuentes oficiales: está sin verificar</strong>. El precio de la etiqueta de envío
+              <strong>no es el costo total real</strong> — hay que sumar arancel (si no aplica la preferencia) + gestión aduanera + cargos del operador.
             </p>
           </div>
         </section>
@@ -195,7 +194,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
               Flujo de la compra internacional
             </h2>
             <p style="color:#57685c; font-size:0.9rem; margin:0;">
-              Fase 1 recomendada para el piloto: envío directo por pedido, sin bodega ni tercero informal en EE. UU.
+              Propuesta para una posible fase futura: envío directo por pedido, sin bodega ni tercero informal en EE. UU. No está implementada.
             </p>
           </div>
           <app-shipping-flow-diagram/>
@@ -206,7 +205,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
           <div style="margin-bottom:20px;">
             <span style="color:#6d3fae; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">🧶 Revisión de producto</span>
             <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
-              ¿Qué productos del catálogo son aptos para el piloto?
+              ¿Qué productos serían aptos en una fase internacional futura?
             </h2>
             <p style="color:#57685c; font-size:0.9rem; margin:0;">
               Evaluación de materiales contra las restricciones de importación agrícola de EE. UU. (APHIS/USDA).
@@ -239,11 +238,11 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <!-- Sección: checklist de requisitos -->
         <section>
           <div style="margin-bottom:20px;">
-            <span style="color:#1EA03B; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">✅ Antes de lanzar el piloto</span>
+            <span style="color:#1EA03B; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">✅ Antes de una eventual fase internacional</span>
             <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               Checklist de requisitos
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">Lo que debe estar listo antes del primer envío internacional.</p>
+            <p style="color:#57685c; font-size:0.9rem; margin:0;">Lo que debería estar listo antes de un primer envío internacional (hoy no se ejecutan).</p>
           </div>
 
           <div class="is-grid-2">
@@ -268,11 +267,6 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
                       background:#F2F6F4; border:1.5px solid #C6D7CD; color:#295440;">
               ← Volver a la propuesta ejecutiva
             </a>
-            <a routerLink="/marketplace"
-               style="padding:12px 24px; border-radius:10px; font-weight:800; font-size:0.88rem; text-decoration:none;
-                      background:linear-gradient(135deg,#FFCD00,#C8102E); color:#fff;">
-              Ver prototipo del marketplace →
-            </a>
           </div>
         </div>
       </footer>
@@ -283,22 +277,18 @@ export class InternationalShippingComponent {
   datosRegulatorios = [
     { icon: '📅', valor: '29 ago. 2025', label: 'Fin permanente del "de minimis" en EE. UU.' },
     { icon: '💵', valor: 'USD 0', label: 'Umbral libre de trámite aduanero (ya no existe)' },
-    { icon: '📈', valor: '~15%', label: 'Recargo típico aplicado a paquetes pequeños' },
+    { icon: '📈', valor: '~15% (sin verificar)', label: 'Recargo citado por terceros; no figura en fuentes oficiales' },
   ];
 
   pasosCertificado = [
-    { num: 1, titulo: 'Verificar la regla de origen', detalle: 'Con el código arancelario (HTS/NANDINA) del producto, confirmar el criterio de origen aplicable (producido en Colombia, cambio de clasificación, o valor de contenido regional 35-45%).' },
-    { num: 2, titulo: 'Registrarse en la VUCE', detalle: 'Crear usuario en vuce.gov.co con el RUT vigente y la firma electrónica (certificado digital emitido por Certicámara). Gratis, una sola vez.' },
-    { num: 3, titulo: 'Diligenciar la solicitud', detalle: 'Descripción comercial, código HTS, criterio de origen, valor FOB y datos del comprador en el módulo de Certificados de Origen.' },
-    { num: 4, titulo: 'Anexar soportes', detalle: 'Factura comercial, packing list y la declaración jurada de origen del productor.' },
-    { num: 5, titulo: 'Recibir el certificado firmado', detalle: 'Con sello oficial y número de serie. 1-3 días hábiles según el emisor elegido.' },
-    { num: 6, titulo: 'Enviarlo al broker/comprador', detalle: 'Debe acompañar el envío o llegar al customs broker en EE. UU. antes del despacho aduanero, para aplicar el arancel 0%.' },
+    { num: 1, titulo: 'Verificar la regla de origen', detalle: 'Con el código arancelario del producto, confirmar el criterio de origen aplicable en el acuerdo.' },
+    { num: 2, titulo: 'Autocertificar el origen', detalle: 'La emite el productor, el exportador o el importador, sin intervención de la DIAN y sin formulario obligatorio, con los datos que exige el acuerdo (confirmar con un asesor aduanero).' },
+    { num: 3, titulo: 'Conservar los soportes', detalle: 'Factura comercial, packing list y los soportes que acrediten el origen.' },
+    { num: 4, titulo: 'Entregarlo al comprador o al agente de aduanas', detalle: 'Debe estar disponible antes del despacho en EE. UU. para reclamar la preferencia arancelaria.' },
   ];
 
   opcionesCertificado = [
-    { emisor: 'DIAN (portal MUISCA)', costo: 'Gratuito', tiempo: '1-3 días hábiles', idealPara: 'Cualquier exportador registrado; es la vía oficial y sin costo' },
-    { emisor: 'Cámara de Comercio autorizada', costo: 'COP 25.000 – 80.000', tiempo: '1-2 días hábiles', idealPara: 'Cuando se necesita respuesta rápida vía VUCE' },
-    { emisor: 'Exportador Autorizado (autoemisión)', costo: 'Gratuito', tiempo: 'Inmediato', idealPara: 'Volumen recurrente — requiere certificación previa ante la DIAN' },
+    { emisor: 'Productor, exportador o importador (autocertificación)', costo: 'Sin costo de emisión (fuente: DIAN)', tiempo: 'Inmediato', idealPara: 'Acuerdo con EE. UU.; los costos de asesoría no están cotizados' },
   ];
 
   tarifas = [
@@ -322,8 +312,8 @@ export class InternationalShippingComponent {
 
   checklist = [
     { texto: 'RUT con actividad de exportador habilitada ante la DIAN' },
-    { texto: 'Registro y firma electrónica activos en la VUCE (vuce.gov.co)' },
-    { texto: 'Certificado de Origen TLC vigente para cada línea de producto del piloto' },
+    { texto: 'Confirmar con un asesor aduanero si se requiere algún registro adicional (VUCE u otro)' },
+    { texto: 'Prueba de origen (autocertificación) para cada línea de producto' },
     { texto: 'Verificación de permisos ICA/CITES para materiales sensibles (semillas, cuero, metales)' },
     { texto: 'Acuerdo comercial con courier internacional (DHL/FedEx) que incluya gestión aduanera' },
     { texto: 'Plantilla de factura comercial y packing list con descripción y valor reales' },

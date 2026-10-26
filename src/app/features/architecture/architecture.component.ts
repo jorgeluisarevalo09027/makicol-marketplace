@@ -20,7 +20,7 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
           iconBg="rgba(255,255,255,0.15)"
           badge="Módulo 03 — Arquitectura"
           title="Arquitectura Cloud del Marketplace"
-          subtitle="Topología Azure para Makicol Marketplace: capa de pagos (Wompi/PSE/Efecty), media para reels y CDN para el catálogo de artesanos."
+          subtitle="Qué existe hoy en el demo y qué se propone para el piloto: identidad externa con MFA, módulo de envíos y una ruta de crecimiento."
           [onDark]="true"/>
 
         <!-- Architecture principle banner -->
@@ -58,7 +58,7 @@ import { ScalabilityPhasesComponent } from './scalability-phases/scalability-pha
           Artesanías y emprendimiento colombiano · Vende y compra en todo el país
         </p>
         <p style="color:rgba(255,255,255,0.38); font-size:0.72rem; margin-top:6px;">
-          Propuesta Ejecutiva v1.0 · Angular 21 + Azure Cloud
+          Propuesta Ejecutiva · Angular 22 + Azure Cloud
         </p>
       </div>
     </footer>
@@ -72,14 +72,14 @@ export class ArchitectureComponent {
       text: 'Cualquier artesano o emprendedor de Colombia puede registrarse y vender desde el día 1 sin instalar nada, solo con un navegador.'
     },
     {
-      icon: '�',
-      title: 'Pagos Seguros Colombianos',
-      text: 'Wompi (Bancolombia) integrado desde Fase 1: PSE, Nequi, Daviplata, tarjeta y Efecty en efectivo. La capa de pagos es independiente de la infraestructura.'
+      icon: '🤝',
+      title: 'Pago directo entre comprador y artesano',
+      text: 'El piloto no cobra ni retiene dinero: comprador y artesano acuerdan el pago y gestionan el estado del pedido. Una pasarela (p. ej. Wompi) es una posibilidad futura.'
     },
     {
       icon: '💸',
-      title: 'Autosostenible con Patrocinadores',
-      text: 'Año 1 cubierto por inversión inicial y aliados estratégicos. Desde el mes 8, las comisiones de venta superan el costo operativo de Azure.'
+      title: 'Financiado con patrocinio',
+      text: 'El patrocinio es la primera fuente de financiación y aún no hay acuerdo firmado. No se promete autofinanciación ni comisión en el piloto.'
     },
   ];
 }
