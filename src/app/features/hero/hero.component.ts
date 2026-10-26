@@ -36,12 +36,6 @@ import { RouterLink } from '@angular/router';
       <!-- Main content -->
       <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
-        <!-- Status badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/25 mb-8 animate-fade-in">
-          <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-          <span class="text-sky-300 text-sm font-medium">Propuesta Ejecutiva — Makicol Marketplace</span>
-        </div>
-
         <!-- Main title -->
         <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-tight mb-6 animate-fade-in" style="animation-delay: 0.1s;">
           Marketplace Digital
