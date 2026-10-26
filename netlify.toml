@@ -3,7 +3,9 @@
   publish = "dist/makicol-marketplace/browser"
 
 [build.environment]
-  NODE_VERSION = "22"
+  # Alineado con el entorno local (Node 24 / npm 11) que genera el package-lock.json.
+  # Con Node 22 (npm 10) el lock generado por npm 11 fallaba al instalar ('edgesOut').
+  NODE_VERSION = "24"
 
 [[redirects]]
   from = "/*"
