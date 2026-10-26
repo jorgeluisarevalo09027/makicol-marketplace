@@ -92,7 +92,7 @@ export class CostTableComponent {
       icon: '⚙️',
       baseCost: 55,
       scaledCost: this.users() <= 100 ? 55 : this.users() <= 500 ? 140 : 260,
-      description: 'API del marketplace (ASP.NET Core)',
+      description: 'Backend: API del marketplace (ASP.NET Core .NET)',
       category: 'compute'
     },
     {
@@ -114,13 +114,13 @@ export class CostTableComponent {
       category: 'data'
     },
     {
-      name: 'Azure Front Door',
-      tier: 'Standard',
-      icon: '🛡️',
-      baseCost: 35,
-      scaledCost: 35,
-      description: 'SSL y entrega (el WAF administrado exige Premium)',
-      category: 'security'
+      name: 'Azure Static Web Apps',
+      tier: this.users() <= 100 ? 'Free' : 'Standard',
+      icon: '🌐',
+      baseCost: this.users() <= 100 ? 0 : 9,
+      scaledCost: this.users() <= 100 ? 0 : 9,
+      description: 'Hosting del front Angular: SSL, CDN y distribución global incluidos',
+      category: 'delivery'
     },
   ]);
 

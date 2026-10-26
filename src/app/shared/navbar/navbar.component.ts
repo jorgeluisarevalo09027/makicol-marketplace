@@ -1,49 +1,41 @@
 import { Component, HostListener, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
+/**
+ * Navbar del recorrido. Navegación por narrativa (no por módulo técnico).
+ * Estilo artesanal cálido: surface claro siempre, sombra al hacer scroll.
+ */
 @Component({
   selector: 'app-navbar',
   standalone: true,
   template: `
-    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-         [class]="navClasses()">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
+    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" [class]="navClasses()">
+      <div style="max-width:1100px; margin:0 auto; padding:0 1.25rem;">
+        <div class="flex items-center justify-between" style="height:4rem;">
 
           <!-- Logo -->
-          <div class="flex items-center gap-3">
-            <img src="/assets/makicol-icono-base.svg" alt="Makicol"
-                 class="w-9 h-9 flex-shrink-0" style="object-fit:contain;">
-            <div class="leading-none">
-              <span class="font-bold text-sm tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif; color:#fff;">Makicol</span>
-              <span class="font-normal text-sm" style="font-family:'Plus Jakarta Sans',sans-serif; color: #FFCD00;"> Marketplace</span>
-              <p class="text-slate-400 text-[10px] font-medium tracking-widest uppercase">Propuesta Ejecutiva</p>
-            </div>
-          </div>
+          <button class="flex items-center gap-3" (click)="scrollTo('hero')" style="background:none; border:none; cursor:pointer;">
+            <img src="/assets/makicol-icono-base.svg" alt="Makicol" style="width:2.1rem; height:2.1rem; object-fit:contain;">
+            <span class="leading-none" style="text-align:left;">
+              <span style="font-family:var(--font-brand); font-weight:800; color:var(--mk-green-deep); font-size:0.95rem;">Makicol</span>
+              <span style="font-family:var(--font-brand); font-weight:400; color:var(--mk-green); font-size:0.95rem;"> Marketplace</span>
+              <span style="display:block; color:var(--mk-ink-faint); font-size:0.6rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase;">Propuesta ejecutiva</span>
+            </span>
+          </button>
 
           <!-- Desktop Nav -->
-          <div class="hidden md:flex items-center gap-1">
+          <div class="hidden md:flex items-center" style="gap:0.25rem;">
             @for (link of navLinks; track link.href) {
-              <button
-                class="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/60 text-sm font-medium transition-all duration-200 flex items-center gap-2"
-                (click)="scrollTo(link.href)">
-                <span>{{ link.icon }}</span>
-                {{ link.label }}
-              </button>
+              <button class="mk-navlink" (click)="scrollTo(link.href)">{{ link.label }}</button>
             }
           </div>
 
           <!-- Badge -->
-          <div class="hidden md:flex items-center gap-2">
-            <span class="px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-                  style="background: rgba(255,255,255,0.15); border: 1px solid rgba(218,175,55,0.60); color: #FFCD00;">
-              Makicol · 2026
-            </span>
-          </div>
+          <span class="hidden md:inline-flex mk-badge mk-badge--today" style="font-size:0.7rem;">Makicol · 2026</span>
 
-          <!-- Mobile Menu Button -->
-          <button class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/60 transition-colors" (click)="toggleMenu()">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <!-- Mobile toggle -->
+          <button class="md:hidden" (click)="toggleMenu()" style="background:none; border:none; cursor:pointer; padding:0.5rem; color:var(--mk-ink);">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               @if (menuOpen()) {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
               } @else {
@@ -53,22 +45,24 @@ import { isPlatformBrowser } from '@angular/common';
           </button>
         </div>
 
-        <!-- Mobile Menu -->
         @if (menuOpen()) {
-          <div class="md:hidden border-t border-slate-700/50 py-3 space-y-1 animate-fade-in">
+          <div class="md:hidden animate-fade-in" style="border-top:1px solid var(--mk-sand); padding:0.75rem 0; display:flex; flex-direction:column; gap:0.25rem;">
             @for (link of navLinks; track link.href) {
-              <button
-                class="w-full text-left px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700/50 text-sm font-medium transition-all duration-200 flex items-center gap-3"
-                (click)="scrollTo(link.href)">
-                <span class="text-base">{{ link.icon }}</span>
-                {{ link.label }}
-              </button>
+              <button class="mk-navlink" style="text-align:left; width:100%;" (click)="scrollTo(link.href)">{{ link.label }}</button>
             }
           </div>
         }
       </div>
     </nav>
-  `
+  `,
+  styles: [`
+    .mk-navlink {
+      padding: 0.5rem 0.9rem; border-radius: 0.6rem; border: none; background: none;
+      color: var(--mk-ink-soft); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      font-family: var(--font-body); transition: color 0.2s, background 0.2s;
+    }
+    .mk-navlink:hover { color: var(--mk-green-deep); background: var(--mk-green-tint); }
+  `]
 })
 export class NavbarComponent {
   private platformId = inject(PLATFORM_ID);
@@ -76,27 +70,24 @@ export class NavbarComponent {
   scrolled = signal(false);
   menuOpen = signal(false);
 
+  // Navegación por narrativa (coincide con los id de sección del recorrido).
   navLinks = [
-    { href: 'hero', label: 'Inicio', icon: '🏠' },
-    { href: 'financiero', label: 'Módulo Financiero', icon: '💰' },
-    { href: 'tecnico', label: 'Plataforma técnica', icon: '⚡' },
-    { href: 'arquitectura', label: 'Arquitectura', icon: '🏗️' },
+    { href: 'mercado', label: 'Mercado' },
+    { href: 'equipo', label: 'Equipo' },
+    { href: 'producto', label: 'Producto' },
+    { href: 'modelo', label: 'Modelo' },
+    { href: 'plan', label: 'Plan' },
+    { href: 'detalles', label: 'Detalles' },
   ];
 
-  navClasses = computed(() =>
-    this.scrolled() ? 'nav-scrolled' : 'bg-transparent'
-  );
+  navClasses = computed(() => this.scrolled() ? 'nav-scrolled' : 'mk-bg-paper');
 
   @HostListener('window:scroll')
   onScroll() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.scrolled.set(window.scrollY > 30);
-    }
+    if (isPlatformBrowser(this.platformId)) this.scrolled.set(window.scrollY > 30);
   }
 
-  toggleMenu() {
-    this.menuOpen.update(v => !v);
-  }
+  toggleMenu() { this.menuOpen.update(v => !v); }
 
   scrollTo(sectionId: string) {
     if (isPlatformBrowser(this.platformId)) {

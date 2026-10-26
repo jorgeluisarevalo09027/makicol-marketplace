@@ -1,52 +1,62 @@
 import { Component } from '@angular/core';
-import { SectionHeaderComponent } from '../../shared/section-header/section-header.component';
+import { RouterLink } from '@angular/router';
 import { ComparisonCardsComponent } from './comparison-cards/comparison-cards.component';
 import { FeatureMatrixComponent } from './feature-matrix/feature-matrix.component';
 
+/**
+ * Apéndice (§13): comparación PWA vs. app nativa. Accesible desde "Detalles profundos".
+ * Es una evaluación técnica (estado objetivo), no una función del demo.
+ */
 @Component({
   selector: 'app-technical',
   standalone: true,
-  imports: [SectionHeaderComponent, ComparisonCardsComponent, FeatureMatrixComponent],
+  imports: [RouterLink, ComparisonCardsComponent, FeatureMatrixComponent],
   template: `
-    <section id="tecnico" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16">
+    <div style="min-height:100vh; background:var(--mk-paper);">
 
-      <div class="absolute inset-0"
-           style="background: radial-gradient(ellipse at 85% 40%, rgba(46,204,113,0.10) 0%, transparent 60%), radial-gradient(ellipse at 15% 60%, rgba(218,175,55,0.07) 0%, transparent 55%);">
-      </div>
+      <header style="background:var(--mk-surface); border-bottom:1px solid var(--mk-sand); position:sticky; top:0; z-index:40;">
+        <div style="max-width:1100px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+          <a routerLink="/propuesta" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+            <img src="/assets/makicol-icono-base.svg" alt="Makicol" style="width:32px; height:32px; object-fit:contain;">
+            <span style="color:var(--mk-green-deep); font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.9rem;">Makicol · Propuesta Ejecutiva</span>
+          </a>
+          <a routerLink="/propuesta" style="color:var(--mk-ink-soft); font-size:0.82rem; text-decoration:none; font-weight:600;">← Volver a la propuesta</a>
+        </div>
+      </header>
 
-      <div class="relative max-w-7xl mx-auto">
-        <app-section-header
-          icon="⚡"
-          iconBg="rgba(46,204,113,0.15)"
-          badge="Módulo 02 — Técnico"
-          title="PWA Marketplace vs. App Nativa"
-          subtitle="Comparación de opciones de plataforma. Hoy existe una aplicación web; la PWA, los pagos en línea y los videos cortos son opciones futuras, no funcionalidades del demo."/>
+      <section style="padding:56px 20px 32px; text-align:center; background:var(--mk-paper-alt);">
+        <div style="max-width:760px; margin:0 auto;">
+          <span class="mk-badge mk-badge--target" style="font-size:0.75rem;">Apéndice · evaluación</span>
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:2.1rem; line-height:1.2; margin:14px 0;">
+            Aplicación web vs. app nativa
+          </h1>
+          <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
+            Comparación de opciones de plataforma. Hoy existe una aplicación web; la PWA, los pagos en línea y
+            los videos cortos son opciones futuras, no funciones del demo.
+          </p>
+        </div>
+      </section>
 
-        <!-- Conclusion banner -->
-        <div class="mb-8 p-5 rounded-xl" style="background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.25);">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl" style="background:rgba(46,204,113,0.18);">🔬</div>
-            <div>
-              <h4 class="text-white font-semibold text-sm mb-1">Conclusión de la Investigación</h4>
-              <p class="text-slate-400 text-sm leading-relaxed">
-                Para <span class="text-white font-medium">Makicol Marketplace</span>, mantener la aplicación web (con PWA como posible mejora) es la opción estratégica:
-                accesible desde cualquier dispositivo sin instalación, ideal para productores artesanales con acceso limitado a datos.
-                La App Nativa queda como <span class="text-indigo-400 font-semibold">visión</span> si la base de compradores crece y se requieren notificaciones push avanzadas (umbral de 5,000 usuarios activos mensuales: supuesto sin sustento).
-              </p>
-            </div>
-          </div>
+      <div style="max-width:1100px; margin:0 auto; padding:0 20px 56px;">
+
+        <div class="mk-card mk-card--accent" style="margin:24px 0;">
+          <h4 style="color:var(--mk-green-deep); font-weight:800; font-size:0.95rem; margin:0 0 8px;">Conclusión de la evaluación</h4>
+          <p style="color:var(--mk-ink-soft); font-size:0.9rem; line-height:1.6; margin:0;">
+            Para Makicol, mantener la aplicación web (con PWA como posible mejora) es lo estratégico: accesible
+            desde cualquier dispositivo sin instalación, ideal para productores con acceso limitado a datos.
+            La app nativa queda como visión si la base de compradores crece y se necesitan notificaciones push
+            (umbral de 5.000 usuarios activos mensuales: supuesto sin sustento).
+          </p>
         </div>
 
-        <!-- Comparison Cards -->
-        <div class="mb-8">
-          <app-comparison-cards/>
-        </div>
-
-        <!-- Feature Matrix -->
+        <div style="margin-bottom:24px;"><app-comparison-cards/></div>
         <app-feature-matrix/>
+
+        <div style="text-align:center; margin-top:40px;">
+          <a routerLink="/propuesta" class="mk-btn" style="text-decoration:none;">← Volver a la propuesta</a>
+        </div>
       </div>
-    </section>
-    <hr class="section-divider mx-auto max-w-4xl">
-  `
+    </div>
+  `,
 })
 export class TechnicalComponent {}

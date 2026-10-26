@@ -30,5 +30,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/api-contract/api-contract.component').then(m => m.ApiContractComponent),
   },
+  // Apéndice: evaluación de plataforma (PWA vs. app nativa).
+  {
+    path: 'plataforma-tecnica',
+    loadComponent: () =>
+      import('./features/technical/technical.component').then(m => m.TechnicalComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

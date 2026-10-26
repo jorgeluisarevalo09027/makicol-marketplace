@@ -8,10 +8,10 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
   imports: [RouterLink, ShippingFlowDiagramComponent],
   styles: [`
     .is-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
-    .is-table th { padding:11px 14px; text-align:left; font-size:0.72rem; color:#57685c; text-transform:uppercase; letter-spacing:0.04em; background:#F2F6F4; }
-    .is-table td { padding:12px 14px; border-bottom:1px solid #EFE9DD; color:#1F2A22; vertical-align:top; }
-    .is-card { background:#fff; border-left:4px solid #FFCD00; border-radius:14px; padding:22px; box-shadow:0 2px 16px rgba(41,84,64,0.08); }
-    .is-kpi { background:#fff; border-radius:12px; border:1px solid #EFE9DD; padding:18px; text-align:center; }
+    .is-table th { padding:11px 14px; text-align:left; font-size:0.72rem; color:var(--mk-ink-soft); text-transform:uppercase; letter-spacing:0.04em; background:var(--mk-paper-alt); }
+    .is-table td { padding:12px 14px; border-bottom:1px solid var(--mk-sand); color:var(--mk-ink); vertical-align:top; }
+    .is-card { background:#fff; border-left:4px solid var(--mk-gold); border-radius:14px; padding:22px; box-shadow:0 2px 16px rgba(41,84,64,0.08); }
+    .is-kpi { background:#fff; border-radius:12px; border:1px solid var(--mk-sand); padding:18px; text-align:center; }
     .is-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
     .is-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     @media (max-width:800px) {
@@ -21,32 +21,32 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
     }
   `],
   template: `
-    <div style="min-height:100vh; background:#FDFBF3;">
+    <div style="min-height:100vh; background:var(--mk-paper);">
 
       <!-- Header simple con navegación de regreso -->
-      <header style="background:#fff; border-bottom:1px solid #EFE9DD; position:sticky; top:0; z-index:40;">
+      <header style="background:#fff; border-bottom:1px solid var(--mk-sand); position:sticky; top:0; z-index:40;">
         <div style="max-width:1100px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
           <a routerLink="/propuesta" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
             <img src="/assets/makicol-icono-base.svg" alt="Makicol" style="width:32px; height:32px; object-fit:contain;">
-            <span style="color:#295440; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.9rem;">Makicol · Propuesta Ejecutiva</span>
+            <span style="color:var(--mk-green-deep); font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.9rem;">Makicol · Propuesta Ejecutiva</span>
           </a>
           <div style="display:flex; gap:16px;">
-            <a routerLink="/propuesta" style="color:#57685c; font-size:0.82rem; text-decoration:none; font-weight:600;">← Volver a la propuesta</a>
+            <a routerLink="/propuesta" style="color:var(--mk-ink-soft); font-size:0.82rem; text-decoration:none; font-weight:600;">← Volver a la propuesta</a>
           </div>
         </div>
       </header>
 
       <!-- Hero de la sección -->
-      <section style="padding:56px 20px 40px; text-align:center; background:linear-gradient(180deg,#F2F6F4,#FDFBF3);">
+      <section style="padding:56px 20px 40px; text-align:center; background:linear-gradient(180deg,var(--mk-paper-alt),var(--mk-paper));">
         <div style="max-width:760px; margin:0 auto;">
           <div style="display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:20px; background:#E3EBE7; margin-bottom:20px;">
-            <span style="width:8px; height:8px; border-radius:50%; background:#295440;"></span>
-            <span style="color:#295440; font-size:0.82rem; font-weight:700;">Fase futura, no ejecutada — hoy no se realizan envíos internacionales</span>
+            <span style="width:8px; height:8px; border-radius:50%; background:var(--mk-green-deep);"></span>
+            <span style="color:var(--mk-green-deep); font-size:0.82rem; font-weight:700;">Fase futura, no ejecutada — hoy no se realizan envíos internacionales</span>
           </div>
-          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:900; font-size:2.2rem; line-height:1.2; margin:0 0 14px;">
-            Envíos internacionales<br><span style="color:#295440;">Posibilidad futura (Zona Caribe)</span>
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:2.2rem; line-height:1.2; margin:0 0 14px;">
+            Envíos internacionales<br><span style="color:var(--mk-green-deep);">Posibilidad futura (Zona Caribe)</span>
           </h1>
-          <p style="color:#57685c; font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
+          <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
             Hallazgos regulatorios, costos reales y un flujo de implementación concreto para llevar las
             artesanías de Makicol a compradores en Estados Unidos. Es una investigación para una posible fase futura; las cifras y plazos deben revalidarse antes de cualquier decisión.
           </p>
@@ -59,10 +59,10 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <section>
           <div style="margin-bottom:20px;">
             <span style="color:#C8102E; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">⚠️ Hallazgo crítico</span>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               El fin del "de minimis" cambia todo el cálculo
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">
+            <p style="color:var(--mk-ink-soft); font-size:0.9rem; margin:0;">
               Desde el 29 de agosto de 2025, EE. UU. eliminó de forma permanente la exención que dejaba entrar sin trámite ni arancel los paquetes ≤ USD 800.
             </p>
           </div>
@@ -71,12 +71,12 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
             <div style="display:flex; align-items:flex-start; gap:14px;">
               <span style="font-size:1.6rem; flex-shrink:0;">🛃</span>
               <div>
-                <h4 style="color:#1F2A22; font-weight:800; font-size:0.92rem; margin:0 0 8px;">Qué significa para Makicol</h4>
+                <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.92rem; margin:0 0 8px;">Qué significa para Makicol</h4>
                 <p style="color:#3d4a41; font-size:0.88rem; line-height:1.6; margin:0 0 8px;">
                   <strong>Todo paquete que entre a EE. UU. — sin importar su valor — requiere hoy una entrada aduanera
                   formal o informal ante CBP</strong>, con arancel aplicable. Ya no existe la opción de enviar como "paquete pequeño informal".
                 </p>
-                <p style="color:#57685c; font-size:0.88rem; line-height:1.6; margin:0;">
+                <p style="color:var(--mk-ink-soft); font-size:0.88rem; line-height:1.6; margin:0;">
                   Por eso el punto más riesgoso de un flujo con "un tercero recibiendo paquetes informalmente en EE. UU." no es la logística —
                   es que ese tercero se convierte, legalmente, en el <em>Importer of Record</em> ante CBP, sin estar habilitado para eso.
                 </p>
@@ -88,8 +88,8 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
             @for (dato of datosRegulatorios; track dato.label) {
               <div class="is-kpi">
                 <div style="font-size:1.7rem; margin-bottom:6px;">{{ dato.icon }}</div>
-                <div style="color:#1F2A22; font-weight:800; font-size:1.1rem; margin-bottom:2px;">{{ dato.valor }}</div>
-                <div style="color:#57685c; font-size:0.76rem;">{{ dato.label }}</div>
+                <div style="color:var(--mk-ink); font-weight:800; font-size:1.1rem; margin-bottom:2px;">{{ dato.valor }}</div>
+                <div style="color:var(--mk-ink-soft); font-size:0.76rem;">{{ dato.label }}</div>
               </div>
             }
           </div>
@@ -98,24 +98,24 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <!-- Sección: Certificado de Origen -->
         <section>
           <div style="margin-bottom:20px;">
-            <span style="color:#295440; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">📜 Trámite clave</span>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
+            <span style="color:var(--mk-green-deep); font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">📜 Trámite clave</span>
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               Certificado de Origen TLC Colombia–EE. UU.
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">
+            <p style="color:var(--mk-ink-soft); font-size:0.9rem; margin:0;">
               La prueba de origen que permitiría entrar a EE. UU. con preferencia arancelaria bajo el acuerdo comercial, en vez del arancel general. Según la DIAN, para el acuerdo con EE. UU. es una autocertificación.
             </p>
           </div>
 
           <div class="is-card" style="margin-bottom:20px;">
-            <h4 style="color:#295440; font-weight:800; font-size:0.9rem; margin:0 0 16px;">Paso a paso del trámite</h4>
+            <h4 style="color:var(--mk-green-deep); font-weight:800; font-size:0.9rem; margin:0 0 16px;">Paso a paso del trámite</h4>
             <div style="display:flex; flex-direction:column; gap:14px;">
               @for (paso of pasosCertificado; track paso.num) {
                 <div style="display:flex; align-items:flex-start; gap:12px;">
-                  <span style="width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; flex-shrink:0; background:#E3EBE7; color:#295440;">{{ paso.num }}</span>
+                  <span style="width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; flex-shrink:0; background:#E3EBE7; color:var(--mk-green-deep);">{{ paso.num }}</span>
                   <div>
-                    <p style="color:#1F2A22; font-weight:700; font-size:0.86rem; margin:0 0 2px;">{{ paso.titulo }}</p>
-                    <p style="color:#57685c; font-size:0.8rem; line-height:1.5; margin:0;">{{ paso.detalle }}</p>
+                    <p style="color:var(--mk-ink); font-weight:700; font-size:0.86rem; margin:0 0 2px;">{{ paso.titulo }}</p>
+                    <p style="color:var(--mk-ink-soft); font-size:0.8rem; line-height:1.5; margin:0;">{{ paso.detalle }}</p>
                   </div>
                 </div>
               }
@@ -135,7 +135,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
                     <td style="font-weight:700;">{{ op.emisor }}</td>
                     <td>{{ op.costo }}</td>
                     <td>{{ op.tiempo }}</td>
-                    <td style="color:#57685c;">{{ op.idealPara }}</td>
+                    <td style="color:var(--mk-ink-soft);">{{ op.idealPara }}</td>
                   </tr>
                 }
               </tbody>
@@ -150,10 +150,10 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <section>
           <div style="margin-bottom:20px;">
             <span style="color:#003893; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">🚚 Costos reales</span>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               Tarifas y tiempos por servicio (Colombia → EE. UU.)
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">
+            <p style="color:var(--mk-ink-soft); font-size:0.9rem; margin:0;">
               Comparativa de courier internacional para un paquete tipo (~1 kg). <strong>Tarifas sin fecha ni cotización vigente:</strong> deben cotizarse de nuevo antes de usarlas.
             </p>
           </div>
@@ -177,7 +177,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
               </tbody>
             </table>
           </div>
-          <div class="is-card" style="border-left-color:#DAAF37;">
+          <div class="is-card" style="border-left-color:var(--mk-gold);">
             <p style="color:#3d4a41; font-size:0.86rem; line-height:1.6; margin:0;">
               ⚠️ Desde el fin del de minimis, los operadores pueden cobrar cargos aduaneros adicionales. Un recargo de ~15% se mencionó en fuentes de terceros,
               pero <strong>no apareció en fuentes oficiales: está sin verificar</strong>. El precio de la etiqueta de envío
@@ -190,10 +190,10 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <section>
           <div style="margin-bottom:20px;">
             <span style="color:#B08900; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">🔄 Propuesta de implementación</span>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               Flujo de la compra internacional
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">
+            <p style="color:var(--mk-ink-soft); font-size:0.9rem; margin:0;">
               Propuesta para una posible fase futura: envío directo por pedido, sin bodega ni tercero informal en EE. UU. No está implementada.
             </p>
           </div>
@@ -204,10 +204,10 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <section>
           <div style="margin-bottom:20px;">
             <span style="color:#6d3fae; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">🧶 Revisión de producto</span>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               ¿Qué productos serían aptos en una fase internacional futura?
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">
+            <p style="color:var(--mk-ink-soft); font-size:0.9rem; margin:0;">
               Evaluación de materiales contra las restricciones de importación agrícola de EE. UU. (APHIS/USDA).
             </p>
           </div>
@@ -221,13 +221,13 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
                 @for (p of catalogoEvaluado; track p.producto) {
                   <tr>
                     <td style="font-weight:700;">{{ p.producto }}</td>
-                    <td style="color:#57685c;">{{ p.materiales }}</td>
+                    <td style="color:var(--mk-ink-soft);">{{ p.materiales }}</td>
                     <td style="text-align:center;">
                       <span style="padding:3px 12px; border-radius:20px; font-size:0.74rem; font-weight:800;" [style.background]="p.riesgoBg" [style.color]="p.riesgoColor">
                         {{ p.riesgo }}
                       </span>
                     </td>
-                    <td style="color:#57685c; font-size:0.8rem;">{{ p.observacion }}</td>
+                    <td style="color:var(--mk-ink-soft); font-size:0.8rem;">{{ p.observacion }}</td>
                   </tr>
                 }
               </tbody>
@@ -239,15 +239,15 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
         <section>
           <div style="margin-bottom:20px;">
             <span style="color:#1EA03B; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">✅ Antes de una eventual fase internacional</span>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:#1F2A22; font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.4rem; margin:6px 0 8px;">
               Checklist de requisitos
             </h2>
-            <p style="color:#57685c; font-size:0.9rem; margin:0;">Lo que debería estar listo antes de un primer envío internacional (hoy no se ejecutan).</p>
+            <p style="color:var(--mk-ink-soft); font-size:0.9rem; margin:0;">Lo que debería estar listo antes de un primer envío internacional (hoy no se ejecutan).</p>
           </div>
 
           <div class="is-grid-2">
             @for (item of checklist; track item.texto) {
-              <div style="background:#fff; border-radius:12px; border:1px solid #EFE9DD; padding:14px 16px; display:flex; align-items:flex-start; gap:10px;">
+              <div style="background:#fff; border-radius:12px; border:1px solid var(--mk-sand); padding:14px 16px; display:flex; align-items:flex-start; gap:10px;">
                 <span style="font-size:1.1rem; flex-shrink:0;">☑️</span>
                 <p style="color:#3d4a41; font-size:0.85rem; line-height:1.5; margin:0;">{{ item.texto }}</p>
               </div>
@@ -258,13 +258,13 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
       </div>
 
       <!-- Footer CTA -->
-      <footer style="padding:48px 20px; text-align:center; border-top:3px solid #DAAF37; background:#fff;">
+      <footer style="padding:48px 20px; text-align:center; border-top:3px solid var(--mk-gold); background:#fff;">
         <p style="color:#8a6040; font-size:0.85rem; margin:0 0 20px;">¿Listos para revisar el siguiente paso?</p>
         <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
           <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
             <a routerLink="/propuesta"
                style="padding:12px 24px; border-radius:10px; font-weight:700; font-size:0.88rem; text-decoration:none;
-                      background:#F2F6F4; border:1.5px solid #C6D7CD; color:#295440;">
+                      background:var(--mk-paper-alt); border:1.5px solid var(--mk-sand); color:var(--mk-green-deep);">
               ← Volver a la propuesta ejecutiva
             </a>
           </div>

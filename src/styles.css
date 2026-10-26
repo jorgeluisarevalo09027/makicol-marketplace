@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 /* ================================================
-   TIPOGRAFÍA DE MARCA — MAKICOL MARKETPLACE
-   Plus Jakarta Sans (wordmark / títulos) + Montserrat (UI / cuerpo)
-   Fuentes variables self-hosted, ver public/assets/fonts
+   MAKICOL MARKETPLACE — SISTEMA DE DISEÑO
+   Dirección: artesanal cálido y editorial (ver docs/plan-de-negocio/06-sistema-de-diseno.md)
+   Tipografía: Plus Jakarta Sans (títulos) + Montserrat (cuerpo), self-hosted.
    ================================================ */
+
 @font-face {
   font-family: 'Plus Jakarta Sans';
   src: url('/assets/fonts/plus-jakarta-sans/PlusJakartaSans-VariableFont_wght.ttf') format('truetype-variations');
@@ -34,71 +35,59 @@
   font-display: swap;
 }
 
-/* ================================================
-   PALETA DE MARCA — MAKICOL MARKETPLACE
-   ================================================ */
-@theme {
-  /* Amarillo Makicol reemplaza amber */
-  --color-amber-400: #ffd633;
-  --color-amber-500: #FFCD00;
-  --color-amber-600: #e0b400;
-
-  /* Verde Makicol reemplaza sky (acentos frescos) */
-  --color-sky-50:  #eafbf0;
-  --color-sky-100: #d1f5dd;
-  --color-sky-200: #a3ebbc;
-  --color-sky-300: #6fdd99;
-  --color-sky-400: #2ECC71;
-  --color-sky-500: #1EA03B;
-  --color-sky-600: #188a32;
-  --color-sky-700: #146e29;
-  --color-sky-800: #115821;
-  --color-sky-900: #0d431a;
-  --color-sky-950: #072a10;
-}
-
 :root {
-  /* Superficies */
-  --makicol-bg:          #FDFBF3;  /* fondo general de página */
-  --makicol-surface:     #FFFFFF;  /* headers, tarjetas, navbar */
-  --makicol-dark:        #1F2A22;  /* ancla oscura: footer, secciones dark */
+  /* ----- Superficies (base papel) ----- */
+  --mk-paper:        #FBF8F0;  /* fondo general */
+  --mk-paper-alt:    #F4EFE3;  /* banda de sección alterna */
+  --mk-surface:      #FFFFFF;  /* tarjetas, navbar, paneles */
 
-  /* PRIMARIO — dos versiones a propósito, NO son intercambiables:
-     - title-text (#295440, más abajo): SOLO texto, iconos y bordes finos. Es el color
-       real del wordmark "Makicol" — perfecto para tipografía, demasiado pesado para fondos.
-     - primary (#2C7350): versión más clara y vívida, pensada para USARSE COMO FONDO
-       (botones, pills activas, paneles, banners, secciones). Mismo tono de verde,
-       menos denso, mejor legibilidad de texto blanco encima. */
-  --makicol-primary-50:   #F2F6F4;  /* fondo de sección alterna, casi imperceptible */
-  --makicol-primary-100:  #E3EBE7;  /* fondo de badges/chips suaves, hover de filas */
-  --makicol-primary-200:  #C6D7CD;  /* bordes suaves, dividers, pill inactiva hover */
-  --makicol-primary-300:  #9FBBAC;  /* decorativos suaves, iconos secundarios */
-  --makicol-primary-400:  #6E9682;  /* texto terciario con tinte de marca */
-  --makicol-primary-500:  #4E8C6C;  /* links, acentos medios */
-  --makicol-primary:      #2C7350;  /* FONDO — botones, pills activas, paneles, secciones */
-  --makicol-primary-900:  #16301F;  /* hover de botones oscuros, máximo contraste */
-  --makicol-primary-soft: rgba(44,115,80,0.08);
+  /* ----- Texto ----- */
+  --mk-ink:          #23312A;  /* principal */
+  --mk-ink-soft:     #5A6B60;  /* secundario */
+  --mk-ink-faint:    #7E8D83;  /* terciario */
 
-  /* SECUNDARIO — color del wordmark "Marketplace" */
-  --makicol-teal-text:   #339496;
+  /* ----- Verde Makicol (primario) ----- */
+  --mk-green:        #2C7350;  /* fondos de botón/pill/banner */
+  --mk-green-deep:   #1C4D36;  /* hover, títulos, texto sobre claro */
+  --mk-green-tint:   #E7F0EA;  /* fondos suaves, chips, hover de fila */
 
-  /* ACENTOS — dosis pequeñas, igual que las letras C-O-L del logo. NUNCA como fondo grande. */
-  --makicol-yellow:      #FFCD00;  /* CTA principal */
-  --makicol-blue:        #003893;  /* acento puntual / badges */
-  --makicol-red:         #C8102E;  /* acento puntual / alertas */
-  --makicol-gold:        #DAAF37;  /* bordes y separadores decorativos */
+  /* ----- Acentos cálidos ----- */
+  --mk-terracotta:      #C46A4B;
+  --mk-terracotta-tint: #F6E7DF;
+  --mk-gold:            #C9A227;  /* bordes/divisores/detalles */
+  --mk-sand:            #E8DEC6;  /* bordes suaves sobre papel */
 
-  /* Estados */
-  --makicol-green:       #2ECC71;
-  --makicol-green-dark:  #1EA03B;
-  --makicol-green-pale:  #F5F999;
+  /* ----- Acentos puntuales (solo detalles) ----- */
+  --mk-blue:         #2F5C9E;
+  --mk-red:          #B23A48;
 
-  /* Texto */
-  --makicol-title-text:  #295440;
-  --makicol-text:        #1F2A22;
+  /* ----- Marcas de estado de contenido (regla 9) ----- */
+  --mk-today-bg:     var(--mk-green-tint);
+  --mk-today-fg:     var(--mk-green-deep);
+  --mk-target-bg:    var(--mk-terracotta-tint);
+  --mk-target-fg:    #8A5A2B;
 
+  /* ----- Tipografía ----- */
   --font-brand: 'Plus Jakarta Sans', sans-serif;
   --font-body:  'Montserrat', sans-serif;
+
+  /* ----- Alias de compatibilidad (componentes aún sin migrar) -----
+     Se mantienen para que hero/financial/navbar/apéndices no se rompan
+     mientras el Bloque B los migra. Se retiran cuando ya no se usen. */
+  --makicol-bg:          var(--mk-paper);
+  --makicol-surface:     var(--mk-surface);
+  --makicol-dark:        var(--mk-green-deep);
+  --makicol-primary:     var(--mk-green);
+  --makicol-primary-50:  var(--mk-paper-alt);
+  --makicol-primary-900: var(--mk-green-deep);
+  --makicol-title-text:  var(--mk-green-deep);
+  --makicol-text:        var(--mk-ink);
+  --makicol-yellow:      var(--mk-gold);
+  --makicol-gold:        var(--mk-gold);
+  --makicol-green:       var(--mk-green);
+  --makicol-blue:        var(--mk-blue);
+  --makicol-red:         var(--mk-red);
+  --makicol-teal-text:   #339496;
 }
 
 @layer base {
@@ -108,170 +97,161 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Texto accesible/SEO: visualmente oculto pero legible por buscadores y lectores
-     de pantalla. Se usa junto al logo-imagen para que el nombre "Makicol Marketplace"
-     exista como texto real en el HTML sin duplicarse visualmente sobre el logo. */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
   body {
-    background-color: var(--makicol-bg);
-    color: var(--makicol-text);
+    background-color: var(--mk-paper);
+    color: var(--mk-ink);
     font-family: var(--font-body);
     overflow-x: hidden;
   }
 
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #e8e2c8; }
-  ::-webkit-scrollbar-thumb { background: var(--makicol-primary); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--makicol-dark); }
+  h1, h2, h3, h4, .font-brand { font-family: var(--font-brand); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--mk-paper-alt); }
+  ::-webkit-scrollbar-thumb { background: var(--mk-green); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--mk-green-deep); }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulseSlow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
+@layer components {
+  /* ----- Sección editorial ----- */
+  .mk-section { padding: 5.5rem 1.25rem; }
+  .mk-section-inner { max-width: 1100px; margin: 0 auto; }
+  .mk-bg-paper     { background-color: var(--mk-paper); }
+  .mk-bg-paper-alt { background-color: var(--mk-paper-alt); }
+  .mk-bg-green     { background-color: var(--mk-green); color: #fff; }
+  .mk-bg-green-deep{ background-color: var(--mk-green-deep); color: #fff; }
 
-@keyframes floatDeco {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50%       { transform: translateY(-8px) rotate(1deg); }
+  /* ----- Etiqueta sobre el título (eyebrow) ----- */
+  .mk-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--mk-green);
+    padding: 0.35rem 0.85rem; border-radius: 999px;
+    background: var(--mk-green-tint);
+  }
+  .mk-eyebrow--target { color: var(--mk-target-fg); background: var(--mk-target-bg); }
+
+  /* ----- Títulos ----- */
+  .mk-title {
+    font-family: var(--font-brand); font-weight: 800; color: var(--mk-ink);
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem); line-height: 1.15; margin: 0.75rem 0;
+  }
+  .mk-subtitle {
+    color: var(--mk-ink-soft); font-size: clamp(1rem, 1.6vw, 1.15rem);
+    line-height: 1.7; max-width: 60ch;
+  }
+
+  /* ----- Tarjeta ----- */
+  .mk-card {
+    background: var(--mk-surface); border: 1px solid var(--mk-sand);
+    border-radius: 16px; padding: 1.5rem;
+    box-shadow: 0 2px 14px rgba(35, 49, 42, 0.06);
+  }
+  .mk-card--accent { border-left: 4px solid var(--mk-gold); }
+
+  /* ----- Badges de estado ----- */
+  .mk-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.68rem; font-weight: 800; padding: 0.15rem 0.6rem; border-radius: 999px;
+  }
+  .mk-badge--today  { background: var(--mk-today-bg);  color: var(--mk-today-fg); }
+  .mk-badge--target { background: var(--mk-target-bg); color: var(--mk-target-fg); }
+
+  /* ----- Botones ----- */
+  .mk-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--mk-green); color: #fff; font-weight: 700;
+    padding: 0.85rem 1.6rem; border-radius: 12px; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .mk-btn:hover { background: var(--mk-green-deep); transform: translateY(-1px); }
+  .mk-btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: transparent; color: var(--mk-green-deep); font-weight: 700;
+    padding: 0.85rem 1.6rem; border-radius: 12px; border: 1.5px solid var(--mk-green);
+    cursor: pointer; transition: background 0.2s, transform 0.2s;
+  }
+  .mk-btn-ghost:hover { background: var(--mk-green-tint); transform: translateY(-1px); }
+
+  /* ----- Separador dorado discreto ----- */
+  .mk-divider {
+    height: 2px; border: none; max-width: 520px; margin: 0 auto; display: block;
+    background: linear-gradient(90deg, transparent, var(--mk-gold) 35%, var(--mk-gold) 65%, transparent);
+    opacity: 0.5;
+  }
 }
 
 @layer utilities {
-  /* Tarjeta de marca — borde dorado Makicol */
+  .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+
+  /* ================================================
+     COMPATIBILIDAD — utilidades del sistema anterior.
+     Se conservan para que los componentes aún no migrados
+     (hero, financial, navbar, apéndices) sigan funcionando.
+     Reescritas con la paleta nueva. Se retiran al migrar cada uno.
+     ================================================ */
   .glass-card {
-    background: #ffffff;
-    border-left: 4px solid var(--makicol-gold);
-    border-right: none;
-    border-top: none;
-    border-bottom: none;
-    box-shadow: 0 2px 12px rgba(41, 84, 64, 0.08), 0 1px 4px rgba(0,0,0,0.05);
+    background: var(--mk-surface); border: 1px solid var(--mk-sand);
+    border-left: 4px solid var(--mk-gold);
+    border-radius: 14px;
+    box-shadow: 0 2px 14px rgba(35, 49, 42, 0.06);
   }
-
-  /* Backgrounds de sección */
-  .section-white   { background-color: var(--makicol-surface); }
-  .section-beige   { background-color: var(--makicol-bg); }
-  .section-borgona { background-color: var(--makicol-primary); }
-  .section-navy    { background-color: var(--makicol-dark); }
-  /* Tinte suave del verde primario — variedad sin recurrir a bloque sólido */
-  .section-primary-tint { background-color: var(--makicol-primary-50); }
-
-  /* Dark card — for hero section (dark background) */
   .glass-card-dark {
-    background: rgba(10, 20, 15, 0.72);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(218, 175, 55, 0.35);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.40);
+    background: var(--mk-surface); border: 1px solid var(--mk-sand);
+    border-radius: 14px; box-shadow: 0 2px 14px rgba(35, 49, 42, 0.06);
   }
+  .section-white        { background-color: var(--mk-surface); }
+  .section-beige        { background-color: var(--mk-paper); }
+  .section-borgona      { background-color: var(--mk-green); }
+  .section-navy         { background-color: var(--mk-green-deep); }
+  .section-primary-tint { background-color: var(--mk-paper-alt); }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--makicol-yellow) 0%, var(--makicol-green) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-family: var(--font-brand);
-    font-weight: 800;
+    color: var(--mk-green-deep);
+    font-family: var(--font-brand); font-weight: 800;
   }
+  .brand-title    { font-family: var(--font-brand); font-weight: 700; color: var(--mk-green-deep); }
+  .brand-subtitle { font-family: var(--font-brand); font-weight: 400; color: var(--mk-green); }
+  .glow-gold      { box-shadow: 0 0 0 transparent; }
 
-  /* Wordmark: "Makicol" en Plus Jakarta Sans Bold + verde título */
-  .brand-title {
-    font-family: var(--font-brand);
-    font-weight: 700;
-    color: var(--makicol-title-text);
-  }
-
-  /* Wordmark: "Marketplace" en Plus Jakarta Sans Regular + teal */
-  .brand-subtitle {
-    font-family: var(--font-brand);
-    font-weight: 400;
-    color: var(--makicol-teal-text);
-  }
-
-  .glow-gold {
-    box-shadow: 0 0 24px rgba(218, 175, 55, 0.35);
-  }
-
-  /* Separador dorado */
   .section-divider {
-    background: linear-gradient(90deg, transparent, var(--makicol-gold) 30%, var(--makicol-gold) 70%, transparent);
-    height: 2px;
-    border: none;
-    opacity: 0.55;
-    max-width: 600px;
-    margin: 0 auto;
-    display: block;
+    background: linear-gradient(90deg, transparent, var(--mk-gold) 30%, var(--mk-gold) 70%, transparent);
+    height: 2px; border: none; opacity: 0.5; max-width: 520px; margin: 0 auto; display: block;
   }
 
   .range-thumb::-webkit-slider-thumb {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--makicol-yellow);
-    cursor: pointer;
-    border: 2px solid var(--makicol-blue);
+    appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--mk-gold); cursor: pointer; border: 2px solid var(--mk-green);
   }
-
-  .range-thumb::-webkit-slider-runnable-track {
-    background: #e8e2c8;
-    border-radius: 4px;
-    height: 6px;
-  }
-
+  .range-thumb::-webkit-slider-runnable-track { background: var(--mk-sand); border-radius: 4px; height: 6px; }
   .range-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 6px;
-    border-radius: 4px;
-    background: #e8e2c8;
-    outline: none;
-    cursor: pointer;
+    -webkit-appearance: none; appearance: none; height: 6px; border-radius: 4px;
+    background: var(--mk-sand); outline: none; cursor: pointer;
   }
 
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-  }
+  .animate-pulse-slow { animation: none; }
+  .animate-float-deco { animation: none; }
 
-  .animate-pulse-slow {
-    animation: pulseSlow 3s ease-in-out infinite;
-  }
+  /* Normaliza textos "slate/white" de los componentes viejos a la tinta de marca,
+     para que se lean bien sobre papel sin los parches :not(#hero) anteriores. */
+  .text-white  { color: var(--mk-ink); }
+  .text-slate-300 { color: #3a4a3f; }
+  .text-slate-400 { color: var(--mk-ink-soft); }
+  .text-slate-500 { color: var(--mk-ink-faint); }
 
-  .animate-float-deco {
-    animation: floatDeco 6s ease-in-out infinite;
-  }
-
-  /* ===== TEXTO EN SECCIONES CLARAS (blanco y beige) ===== */
-  /* Excluye hero (oscuro) y arquitectura (verde — sus glass-cards son blancas) */
-  section:not(#hero):not(#arquitectura) .text-white   { color: var(--makicol-text); }
-  section:not(#hero):not(#arquitectura) .text-slate-300 { color: #3a4a3f; }
-  section:not(#hero):not(#arquitectura) .text-slate-400 { color: #57685c; }
-  section:not(#hero):not(#arquitectura) .text-slate-500 { color: #6e7f73; }
-
-  /* Arquitectura (fondo verde Makicol): texto claro en la sección, oscuro DENTRO de las tarjetas */
-  #arquitectura .glass-card .text-white   { color: var(--makicol-text); }
-  #arquitectura .glass-card .text-slate-300 { color: #3a4a3f; }
-  #arquitectura .glass-card .text-slate-400 { color: #57685c; }
-  #arquitectura .glass-card .text-slate-500 { color: #6e7f73; }
-
-  /* ===== NAVBAR SCROLLED — verde Makicol ===== */
   .nav-scrolled {
-    background-color: var(--makicol-primary);
-    border-bottom: 1px solid rgba(218, 175, 55, 0.35);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    background-color: var(--mk-surface);
+    border-bottom: 1px solid var(--mk-sand);
+    box-shadow: 0 2px 16px rgba(35, 49, 42, 0.08);
   }
 }

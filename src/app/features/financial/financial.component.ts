@@ -16,12 +16,15 @@ import { CostTableComponent } from './cost-table/cost-table.component';
       </div>
 
       <div class="relative max-w-7xl mx-auto">
+        <div style="text-align:center; margin-bottom:1.5rem;">
+          <span class="mk-eyebrow mk-eyebrow--target">A dónde vamos · Plan financiero</span>
+        </div>
         <app-section-header
           icon="💰"
-          iconBg="rgba(218,175,55,0.15)"
-          badge="Módulo 01 — Financiero"
-          title="Modelo Financiero del Marketplace"
-          subtitle="El patrocinio es la primera fuente de financiación; el piloto arranca sin comisión. Costos estimados en USD/mes, pendientes de cotización."/>
+          iconBg="rgba(201,162,39,0.15)"
+          badge="Plan financiero"
+          title="Costos, financiación y valor del trabajo"
+          subtitle="El patrocinio es la primera fuente de financiación; el piloto arranca sin comisión. Costos de infraestructura estimados en USD/mes, pendientes de cotización."/>
 
         <!-- Info bar -->
         <div class="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-lg glass-card">
