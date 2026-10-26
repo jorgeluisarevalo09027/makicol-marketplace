@@ -2,6 +2,10 @@
 
 Propuesta ejecutiva del Marketplace Digital Caribe Artesanal (FilSMar / Unimagdalena, Santa Marta).
 
+## Documentos
+
+- [Valoración del trabajo de desarrollo realizado](docs/valoracion-trabajo-realizado.md) — estimación en COP del valor de reposición del backend, frontend y esta propuesta.
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
 
 ## Development server
