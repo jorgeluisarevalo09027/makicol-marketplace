@@ -18,7 +18,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 |---|---|---|
 | 1 | Pagos y envíos (O1 a O8) | **Borrador completo** (§1); decisiones en O8 |
 | 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **Borrador completo** (§2); decisiones en A7 |
-| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario, B1 (ingresos y costos, borrador) y B5 (arquitectura)** (§3); faltan B5b y revisiones sin verificar; sin cambios en la propuesta |
+| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario, B1 (ingresos y costos, borrador) y B5 (arquitectura) y B6 (lista de cambios, a aprobar)** (§3); faltan B5b y revisiones sin verificar; sin cambios en la propuesta |
 | 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F7 en borrador** (§0 y §4); falta contrastar pantallas y revisión visual |
 
 ## 0. Convenciones de los diagramas
