@@ -92,6 +92,11 @@ ni integración con transportadoras (no existen esos endpoints en el Swagger).
 7. **El piloto usa Servientrega.**
 8. **No hay abogado consultor todavía**, pero se reconoce que hace falta y que su participación y costo deben
    contemplarse (O10).
+9. **El contrato con Servientrega lo hace la plataforma** en el piloto, para generar los comprobantes de envío
+   (guías) y seguir el rastreo; como mínimo en el plan en que la plataforma controla la compra (ver O11).
+10. Un pedido contra entrega **cuenta como venta cerrada cuando se realiza el recaudo** (ver O12).
+11. **La migración de autenticación se hace antes del piloto**, y **el MFA es obligatorio para soporte y
+    auditor** (ver A8).
 
 **Recomendación preliminar sobre lo que sigue (análisis propio, sujeta a concepto legal):**
 
@@ -161,7 +166,7 @@ Reglas candidatas adicionales (IDs provisionales):
 |---|---|
 | PAY-006 | `contraentrega` es un medio de pago que el artesano puede activar en el modelo B, junto con transferencias y billeteras |
 | PAY-007 | El checkout muestra el total a pagar en la puerta y quién asume flete y comisión de recaudo, antes de confirmar |
-| PAY-008 | Un pedido contra entrega no marcado como entregado por la transportadora ni confirmado por el comprador se trata como novedad, no como venta cerrada |
+| PAY-008 | Un pedido contra entrega **cuenta como venta cerrada cuando la transportadora registra el recaudo**; mientras tanto es un pedido en curso, y una novedad o devolución nunca lo cierra (decidido; ver O12) |
 
 ### O4. Qué información de envío se recibe y cómo
 
@@ -238,9 +243,9 @@ para editar, compilar y desplegar, que valen por separado. El front se adaptarí
 4. ~~¿Cómo se financia la plataforma?~~ **Resuelto: patrocinio primero; el resto son posibilidades.**
 5. ~~¿Dónde vive la simulación?~~ **Resuelto: en el backend** (requiere BR y autorización).
 6. ~~¿Quién confirma la entrega?~~ **Resuelto en B: comprador y artesano entre sí**, sin automatismo.
-7. ~~¿Transportadora del piloto?~~ **Resuelto: Servientrega.** Falta decidir el tipo de contrato o cuenta (cliente crédito, contraentrega e-commerce) y quién lo contrata: cada artesano o la plataforma.
+7. ~~¿Transportadora del piloto?~~ **Resuelto: Servientrega, contratada por la plataforma.** Sin contrato todavía: falta cotizar y confirmar con Servientrega lo que permite (O11).
 8. ~~¿Quién consulta al abogado?~~ **Resuelto en principio:** hace falta un abogado y se presupuesta (O10). Falta elegir quién y cuándo.
-9. **Nueva:** ¿los pedidos contra entrega cuentan como venta cerrada al recaudarse o al confirmar el comprador? (relacionado con `PAY-008`).
+9. ~~¿Cuándo es venta cerrada un pedido contra entrega?~~ **Resuelto: al realizarse el recaudo.** Falta decidir los casos de O12 que aún están abiertos.
 
 ### O9. Envíos fuera del país: posibles, **no ejecutados**
 
@@ -286,6 +291,116 @@ entrar en el plan (análisis propio sobre los puntos que ya aparecen en este doc
 **Costo:** no hay cifra verificada. Se propone pedir cotización a dos o tres firmas o abogados independientes por
 concepto cerrado (no por horas abiertas) y reflejar el monto como rubro de costos del plan de negocio. Hasta
 recibirlas, el rubro queda como **"por cotizar"**, sin inventar un número.
+
+### O11. Servientrega para el piloto: planteamiento (sujeto a cambios)
+
+> **Aclaración:** todo lo de esta sección es un planteamiento **basado en información disponible en línea** (consulta
+> del 26-oct-2026). **No hay contrato ni cotización de Servientrega** y las condiciones pueden cambiar o
+> variar al negociar. Se confirma con un asesor comercial antes de comprometer nada.
+
+**Decisión del usuario:** la plataforma contrata con Servientrega para poder generar los comprobantes de envío
+(guías) y seguir el rastreo de los pedidos, **al menos en el plan de pago en el que la plataforma controla la
+compra** (interpreto que es el modelo A; en el modelo B el uso queda como opción por decidir).
+
+**Lo que muestra la información pública:**
+
+| Capacidad | Información encontrada | Fuente y reserva |
+|---|---|---|
+| Contraentrega para micropymes | "Contraentrega E-Commerce": recauda al entregar y consigna en la cuenta certificada; el flete se paga en origen. Existe un portal propio de contraentrega e-commerce | servientrega.com |
+| Pago al recibir | Efectivo o datáfono según la zona | servientrega.com; un intermediario dice **solo efectivo** (contradicción por verificar) |
+| Crédito | "Credicontado": crédito por 15 días calendario | portal de contraentrega e-commerce |
+| Generar guía e imprimir | Web service `GeneracionGuias.asmx` con `GenerarGuiaStickerTiendasVirtuales` (genera el adhesivo de la guía y lo envía por correo) y datos de recaudo | web.servientrega.com (documentación técnica; requiere usuario, clave y código de facturación del contrato) |
+| API de integración y webhooks | Documentación pública con Swagger, integraciones para Shopify y WooCommerce y un campo `valor_recaudar`; las claves las entrega Servientrega | servientregaapi.com. **Los ejemplos usan ciudades de Panamá:** hay que confirmar que aplica a Colombia |
+| Rastreo | Estados de guía por servicio web (ver 3.6) o por agregadores como AfterShip | Requiere ID de cliente |
+| Cobertura de contraentrega | Entre ciudades capitales o cabeceras de regional, en centros autorizados | servientrega.com, preguntas frecuentes |
+| Devolución por no reclamar | Servientrega indica **doble flete** para el remitente en la modalidad de reclamo en oficina; un intermediario dice que la devolución tras 2 o 3 intentos no tiene costo | Información contradictoria; confirmar |
+| Recaudo a través de un intermediario | mipaquete.com publica 4,3 % y 5,5 % del valor recaudado con mínimo COP 5.000, pagos los jueves y costos de transferencia (COP 2.000 a 8.500) | Resumen de búsqueda (**no pude abrir la página**); dos porcentajes distintos sin explicar; verificar |
+
+**Caminos posibles para el piloto (análisis propio):**
+
+| Camino | Ventaja | Inconveniente |
+|---|---|---|
+| 1. Contrato directo (cliente crédito o contraentrega e-commerce) con acceso a la integración | Control total de guías, rastreo y recaudo; tarifa negociable | Requiere visita comercial, contrato y posibles mínimos; plazo incierto |
+| 2. A través de un agregador (por ejemplo mipaquete o Envía) con transportadora Servientrega | Sin contrato propio; rápido de empezar; guía y rastreo ya resueltos | Costo por recaudo más alto; dependencia de un tercero; el dinero pasa por él |
+| 3. Cada artesano contrata por su cuenta | La plataforma no maneja dinero ni contrato | Contradice la decisión; sin comprobantes ni rastreo propios |
+
+Propuesta de trabajo: **solicitar cotización a Servientrega (camino 1) y, en paralelo, evaluar un agregador
+(camino 2) como plan de respaldo**, y simular las guías y el rastreo en el backend mientras tanto (O6).
+
+**Flujo propuesto con contrato de la plataforma:**
+
+1. El pedido contra entrega queda confirmado; la plataforma conoce el valor a recaudar (producto y flete).
+2. La plataforma **genera la guía** con el recaudo y entrega al artesano el **comprobante en PDF** para imprimir.
+3. El artesano empaca y entrega el paquete o programa la recolección.
+4. La plataforma **sigue el rastreo** y lo muestra a comprador, artesano, soporte y auditor.
+5. Servientrega entrega y cobra; el recaudo queda registrado (**venta cerrada**, O12).
+6. Servientrega gira el recaudo a la cuenta de la plataforma y esta lo liquida al artesano.
+
+**Preguntas para el asesor de Servientrega:** acceso a la API para un cliente de nuestro tamaño; formato de la
+guía (adhesivo o carta); webhooks o consulta del rastreo; comisión por recaudo y mínimo; calendario de giros;
+informe de recaudos para conciliar; valor máximo por envío; datáfono; cobertura por municipio; costo de
+devolución e intentos de entrega; seguro y valor declarado; mínimos de volumen; plazo para firmar.
+
+**Tensión con decisiones anteriores (para tu confirmación):** si el contrato es de la plataforma, el recaudo se
+consigna en **su** cuenta y el flete lo paga ella. Entonces:
+
+- La plataforma **toca dinero de terceros**, igual que en el modelo A; el "B sin tocar el dinero" ya no aplica a
+  los pedidos contra entrega con guía de la plataforma. Ver el concepto legal de O10.
+- Hay que **recuperar el flete y la comisión de recaudo** (del artesano, del comprador o del patrocinio), lo que
+  choca con "B sin comisión".
+- La liquidación al artesano pasa a ser un proceso de la plataforma, con conciliación.
+
+### O12. Contra entrega: casos posibles y cómo los trataría el flujo
+
+Decisión del usuario: **la venta se cierra al realizarse el recaudo.** Los casos salen de la información de
+Servientrega y de los intermediarios (**[f]** fuente) o de mi análisis (**[a]**). Estados nuevos propuestos
+(no existen hoy): `Novedad`, `Recaudado`, `Devolución`, `Devuelto` y `Liquidado`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Creado
+    Creado --> Cancelado: cancela antes de despachar
+    Creado --> EnPreparacion
+    EnPreparacion --> GuiaGenerada: guía con valor a recaudar
+    GuiaGenerada --> Enviado: recogida
+    Enviado --> Novedad: ausente, sin dinero o dirección
+    Novedad --> Enviado: nuevo intento
+    Novedad --> Devolucion: intentos agotados o rechazo
+    Enviado --> Recaudado: entrega y pago
+    Enviado --> Siniestro: pérdida o daño
+    Devolucion --> Devuelto: llega al artesano
+    Recaudado --> Liquidado: giro y pago al artesano
+    Siniestro --> [*]: indemnización
+    Devuelto --> [*]
+    Liquidado --> [*]
+```
+
+| # | Caso | Tratamiento propuesto | Origen |
+|---|---|---|---|
+| 1 | Entrega y pago en efectivo o datáfono | `Recaudado`: **venta cerrada**; luego `Liquidado` cuando llega el giro | [f] |
+| 2 | Destinatario ausente | `Novedad` y nuevo intento; el número de intentos depende de la transportadora (2 o 3 según intermediarios) | [f] |
+| 3 | No tiene el dinero o el medio de pago | `Novedad`; nueva entrega o disponible en oficina por un plazo | [f] |
+| 4 | Rechaza el paquete | `Devolución`; venta no cerrada; queda registro en el historial del comprador | [f] |
+| 5 | Intentos agotados | `Devolución` automática al origen | [f] |
+| 6 | Llega dañado o no coincide | El comprador lo rechaza en la puerta; soporte abre caso; al pagar se acepta el producto, así que **el reclamo posterior es más difícil** | [f] y [a] |
+| 7 | Dirección incompleta o municipio sin cobertura | El checkout debe **bloquear contra entrega** si el destino no tiene el servicio y pedir la dirección completa | [f] y [a] |
+| 8 | Valor de la guía distinto del pedido | Verificar el valor antes de imprimir; si el recaudo difiere, `Novedad` y conciliación por soporte | [f] y [a] |
+| 9 | El giro del recaudo tarda | `Recaudado` pero `no liquidado`; la liquidación sigue el calendario de giros del contrato | [f] |
+| 10 | Pérdida o siniestro | `Siniestro`; indemnización según el valor declarado, por eso se declara el valor del pedido | [f] |
+| 11 | Devolución al origen | `Devuelto`: se repone el stock; el costo (doble flete o gratis) depende de las condiciones del contrato | [f] contradictoria |
+| 12 | Compras falsas o sin intención de pagar | Validar la intención (confirmación por teléfono o WhatsApp), límite de valor, historial de rechazos | [f] y [a] |
+| 13 | Entrega a un tercero (vecino, portería) | Se cobra igual; el comprador debe indicar quién recibe | [a] |
+| 14 | Cancelación tras generar la guía | Solo antes de la recogida; después es devolución | [a] |
+| 15 | El artesano no despacha a tiempo | Recordatorio y, pasado un plazo, soporte contacta y puede cancelar | [a] |
+| 16 | Cambio del flete o del precio tras la compra | Prohibido: el total mostrado en el checkout es el que se cobra | [f] |
+
+Reglas candidatas adicionales (IDs provisionales): `PAY-009` el checkout bloquea contra entrega en destinos sin
+cobertura; `PAY-010` el valor de la guía debe coincidir con el total del pedido; `PAY-011` solo el recaudo
+cierra la venta; `PAY-012` una devolución repone el stock; `PAY-013` el historial de rechazos del comprador es
+visible para el artesano y soporte (esto toca datos personales: requiere criterio jurídico).
+
+**Pendiente por decidir:** quién asume el flete de ida y de regreso en cada caso; el límite de valor por pedido
+contra entrega; si se exige confirmación previa del comprador; el plazo máximo para despachar.
 
 ## 2. Autenticación (Parte 2)
 
@@ -407,17 +522,60 @@ al mes por 50.000 en Essentials); Entra exige más piezas propias en la migraci�
 
 **Recomendación preliminar (análisis propio, sin decidir):**
 
-1. **No migrar antes del piloto** salvo que un patrocinador lo exija: el piloto es pequeño y el dinero se
-   dedica al producto.
+1. ~~No migrar antes del piloto.~~ **El usuario decidió migrar antes del piloto**; ver A8.
 2. **Registrar las BR** (A6) y mantener el puerto de autenticación para no cerrar opciones.
 3. Si hay que elegir ya: **Auth0** si prima la sencillez de migrar contraseñas y la rapidez; **Entra External
    ID** si prima el costo a escala (50.000 usuarios gratis) y estar en el mismo ecosistema que el despliegue,
    asumiendo más trabajo de migración y un endpoint nuevo.
 4. Antes de comprometer un proveedor: decidir MFA, idiomas y dónde residirán los datos, con apoyo del abogado.
 
-**Decisiones que te tocan (Parte 2):** ¿migrar antes o después del piloto? ¿Auth0 o Entra External ID, o seguir
-con el esquema propio endurecido? ¿MFA obligatoria para soporte y auditor? ¿Cuándo autorizas las BR de
-backend?
+### A8. Cotización y elección para el piloto
+
+Decisiones del usuario: la migración se hace **antes del piloto**; el **MFA es obligatorio para soporte y
+auditor**; se cotizan las opciones y se elige la que mejor encaje con el planteamiento del piloto.
+
+> **Aclaración:** no hay cotizaciones de proveedores de desarrollo ni de licencias a medida. Las horas son
+> **estimaciones propias** y el costo las multiplica por el costo hora de un desarrollador senior empleado
+> (COP 55.000 a 95.000, de `docs/valoracion-trabajo-realizado.md`). Las licencias salen de las páginas de
+> precios consultadas. Se ajusta cuando haya cotización real.
+
+| Opción | Horas estimadas | Desarrollo (COP, rango) | Licencia (verificada) | Qué incluye |
+|---|---|---|---|---|
+| 0. Esquema propio endurecido | 80 a 140 | 4,4 a 13,3 millones | Ninguna | Recuperar clave, verificar correo, MFA, bloqueo, rotación de tokens y pantallas |
+| **1. Auth0** | **70 a 110** | **3,9 a 10,5 millones** | Gratis hasta 25.000 usuarios activos; Essentials USD 35 al mes (USD 385 al año) si hace falta MFA profesional | Adaptador del front, validación de tokens, vinculación de usuarios, importación de hashes, MFA y pruebas |
+| 2. Entra External ID | 100 a 160 | 5,5 a 15,2 millones | Gratis hasta 50.000 usuarios activos; complementos pagos | Lo anterior más Azure Function y endpoint de migración; MFA **sin verificar** en inquilinos externos |
+| 3. Keycloak autoalojado | 120 a 200 | 6,6 a 19,0 millones | Sin licencia; servidor y operación | Despliegue, tema, integración y migración; operación continua |
+
+**Cómo se llega a la elección (criterios del piloto):**
+
+| Criterio del piloto | Auth0 | Entra External ID | Esquema propio | Keycloak |
+|---|---|---|---|---|
+| Poco tiempo y bajo esfuerzo | **Sí** | Medio | No | No |
+| Migrar contraseñas sin que nadie las cambie | **Sí** (hash bcrypt importable) | Con endpoint y función propios | No aplica | Probablemente (sin verificar) |
+| Costo bajo con patrocinio | **Sí** (0 o USD 35 al mes) | **Sí** (0) | Sin licencia, más horas | Servidor |
+| MFA para soporte y auditor | Con Essentials; **verificar si el plan gratuito permite MFA por rol** | **Sin verificar** | Hay que construirlo | Incluido (sin verificar) |
+| Seguridad a cargo de terceros | **Sí** | **Sí** | No | Parcial |
+| Datos en Colombia | No | No | **Sí** | **Sí** |
+| Riesgo al crecer | Salto de precio pasados 25.000 | Bajo | Mantenimiento | Operación |
+
+**Elección propuesta para el piloto: Auth0** (análisis propio, sujeta a las verificaciones de abajo). **Razones:**
+
+1. Es la opción de menor esfuerzo estimado, y permite migrar **antes del piloto**.
+2. Importa los hashes BCrypt: nadie tendría que cambiar su clave y no hace falta un endpoint nuevo en el backend.
+3. El piloto cabe en el plan gratuito (hasta 25.000 usuarios activos); la única licencia probable es Essentials a
+   USD 35 al mes por 500 usuarios, solo si el MFA lo exige.
+4. La seguridad de contraseñas y de MFA queda a cargo de un proveedor especializado.
+
+**Por qué no las otras:** Entra External ID cuesta más horas por la migración en el primer acceso y no pude
+verificar el MFA; es la mejor alternativa si el patrocinador valora Azure o el costo a escala. El esquema propio
+obliga a construir seguridad que ya existe en el mercado. Keycloak añade operación continua.
+
+**Verificar antes de comprometer:** costo real de los hashes (costo 10 u 11) con una cuenta de la base; si el MFA
+por rol cabe en el plan gratuito; si la importación con hashes está disponible en el plan que se contrate;
+residencia de los datos y tratamiento de datos personales con el abogado (O10); cotización real de licencias.
+
+**Decisiones que te tocan (Parte 2):** confirmar Auth0 como elección para el piloto; cuándo autorizas las BR de
+backend; quién hace la verificación del MFA y de los hashes.
 
 ## 4. Flujos por rol (Parte 4)
 
