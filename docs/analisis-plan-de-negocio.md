@@ -360,8 +360,8 @@ también está publicado en el catálogo del demo; sirve de ejemplo en el plan d
 | `database-design` y ER v1-v5 | **Actualizar a la v6 vigente** y mover las anteriores a histórico | Son 6 iteraciones; solo la última es útil |
 | `contrato-api` | **Actualizar** | Prefijo y autenticación distintos del demo |
 | `docs/valoracion-trabajo-realizado.md` y su prompt | **Actualizar** (equipo, métricas y tarifas) | Ver B5b |
-| `public/assets` | **Auditar uso** | Imágenes de 0,3 a 1 MB c/u; varias parecen del prototipo |
-| `.angular`, `.nx`, `dist`, favicons sueltos | **Verificar `.gitignore`** | Artefactos de build que no deben versionarse |
+| `public/assets` | **Retirar con el prototipo** lo que solo él usa; **eliminar** lo que nadie usa (ver 3.7) | Imágenes de 0,3 a 1 MB c/u |
+| `.angular`, `.nx`, `dist`, `node_modules` | **Conservar como está** | `.gitignore` ya los excluye y ninguno está versionado |
 
 ### 3.5 Lectura de `backoffice-evaluation` y `technical`
 
@@ -443,10 +443,54 @@ del ~15 % de los operadores, la vigencia del certificado de origen, el precio de
 migración de usuarios a Auth0, la TRM actual, tarifas de transportadoras nacionales y cualquier cifra de
 mercado o de patrocinadores.
 
+### 3.7 `database-design`, `contrato-api`, assets y artefactos
+
+**`database-design` (ER v6) frente a lo que existe en el backend:**
+
+| Tema | El ER v6 dice | El demo hace |
+|---|---|---|
+| Verificación del artesano | "Hoy la verificación es automática (24 h post-registro)" | Pantalla manual de soporte y un artesano que sigue Pendiente (F3). Este texto es el origen de la duda y debe corregirse |
+| Pedidos | "Un pedido puede incluir productos de varios artesanos" | **Un pedido por artesano**; el backend divide el carrito |
+| Estados de pedido | Recibido, En preparación, Enviado, Entregado | Existe también **Cancelado** (el comprador puede cancelar en Recibido) |
+| Pedido | Sin pago ni agrupación | Tiene `paymentMethodPreference` informativo y `checkoutGroupId` |
+| Producto | Sin stock, región ni imágenes | Tiene stock, región e imágenes (`ProductImage`) |
+| Artesano | Sin ciudad, año de inicio, materiales, avatar ni portada | Los tiene (perfil público) |
+| Contenido editorial | No aparece | Existen las **historias** (editor de soporte) |
+| Envío internacional | Entidad completa con estados | Solo existe el catálogo de estados; no hay endpoints para crearlo (ver 3.6) |
+
+Decisión propuesta: **regenerar el ER (v7) desde las entidades reales** del backend, con una capa "demo hoy"
+y otra "producción prevista" (pagos, comisión, medios de pago por artesano, envío). Es el diagrama que más
+se beneficia de pasar a PlantUML o Mermaid (ya existe `er-diagram.puml`).
+
+**`contrato-api` (`/api/makicol/*`):**
+
+- Se presenta como un servicio que **"feria-artesanal-api" expondrá** bajo el prefijo `/api/makicol`. El demo
+  usa un servicio propio (`makicol-api`) con rutas `/api/...` sin ese prefijo.
+- El Swagger del demo ya publica el contrato real (`/swagger/v1/swagger.json`). Propuesta: **reemplazar la
+  tabla manual por una vista generada desde ese Swagger** (o un enlace a él) para que no se desactualice, y
+  conservar solo las reglas de diseño (fechas ISO, estados como `{ id, name }`, paginación) que sí coinciden.
+
+**Assets (`public/assets`, 32 archivos):**
+
+| Grupo | Uso | Decisión propuesta |
+|---|---|---|
+| `foto1` a `foto8.webp`, `D_NQ_...webp`, `hero_banner_1.jpg`, `artesana-*`/`artesano-*` (avatar y portada), `makicol-logo-header.svg` | Solo el prototipo `marketplace/` | Retirar con el prototipo (las fotos reales ya están en el demo) |
+| `logo-corazon.png` (1 MB), `makicol-logo-header1.svg` | **Ninguna referencia** | Eliminar |
+| `makicol-icono-base.svg`, `fonts/` | Secciones de la propuesta | Conservar |
+| `makicol-er-diagram-v1` a `v6.svg` | Dos referencias en el sitio | Dejar solo la v6 (y la v7 cuando exista); las demás a un histórico fuera del sitio |
+| `fondo-arena.png`, `decoracion-esquina.png`, `artesanias.png` | **El `hero` las usa pero no existen** en `public/assets` | Corregir: imágenes rotas hoy en la portada |
+
+Hallazgo: la portada de la propuesta carga tres imágenes que no están en el repositorio; el sitio desplegado
+muestra esos espacios vacíos (sin verificar visualmente).
+
+**Artefactos del repo:** `.gitignore` excluye `/dist`, `/node_modules` y `/.angular/cache`, y `git ls-files` no
+muestra ninguno versionado. `.nx` no figura en `.gitignore` pero no hay archivos suyos versionados; conviene
+añadirlo.
+
 ## Pendientes inmediatos
 
-0. Verificar lo que aún figura como "sin verificar" en 3.6 y leer `database-design`, el navbar y los
-   assets.
+0. Verificar lo que aún figura como "sin verificar" en 3.6 y revisar el navbar, `technical` en detalle y
+   la imagen real de la portada.
 1. Contrastar las pantallas del demo (reseñas, alta de artesano, listado de verificaciones) con una
    revisión visual tuya o capturas.
 2. Completar A1 con la revisión del controlador completo y los límites de intentos configurados.
