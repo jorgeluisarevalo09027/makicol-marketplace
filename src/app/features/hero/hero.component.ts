@@ -162,8 +162,8 @@ export class HeroComponent {
 
   metrics = [
     { icon: '👥', value: '4 roles', label: 'Comprador, artesano, soporte y auditor' },
-    { icon: '🤝', value: 'Sin comisión', label: 'Piloto en el modelo B' },
-    { icon: '🏛️', value: 'Patrocinio', label: 'Primera fuente de financiación' },
+    { icon: '🤝', value: 'Sin comisión', label: 'Piloto: el pago se coordina directo entre comprador y artesano' },
+    { icon: '🏛️', value: 'Patrocinio', label: 'Primera fuente prevista; aún sin acuerdo' },
   ];
 
   modules = [
