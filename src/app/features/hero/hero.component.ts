@@ -158,7 +158,7 @@ import { RouterLink } from '@angular/router';
 export class HeroComponent {
   private platformId = inject(PLATFORM_ID);
 
-  demoUrl = '';
+  demoUrl = 'https://lively-sky-089458b10.4.azurestaticapps.net/';
 
   metrics = [
     { icon: '👥', value: '4 roles', label: 'Comprador, artesano, soporte y auditor' },

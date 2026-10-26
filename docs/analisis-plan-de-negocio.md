@@ -1156,7 +1156,7 @@ Lectura:
 - `azure-pipelines.yml` restaura, compila y publica el artefacto `drop` con .NET 9; el YAML no tiene paso de
   despliegue (cómo llega a Azure App Service no está documentado en el repo).
 - **Sin verificar en ejecución:** el uso real de Blob Storage (solo consta el paquete `Azure.Storage.Blobs`) y
-  el hosting del front (Static Web Apps, según el historial de git).
+  el hosting del front (Azure Static Web Apps; URL confirmada por el usuario).
 - No existen en el demo: pagos, comisión, guías, rastreo, correo transaccional, recuperar contraseña ni MFA.
 
 **Producción prevista** (`diagramas/b5-arquitectura-produccion-prevista.svg`) — **propuesta, no implementada**:
@@ -1179,7 +1179,7 @@ auditoría remiten a 3.2.
 | ID | Pieza | Cambio propuesto | Auditoría | OK |
 |---|---|---|---|---|
 | C1 | `hero` | Quitar "500+ productores" y "50.000 visitantes" o presentarlos como metas con su base | #1, #2 | Hecho |
-| C2 | `hero` | Sustituir el botón al prototipo por el enlace al demo desplegado | 3.3 | Parcial: falta la URL del demo |
+| C2 | `hero` | Sustituir el botón al prototipo por el enlace al demo desplegado | 3.3 | Hecho (URL del demo publicado) |
 | C3 | `hero` | Corregir las tres imágenes inexistentes (`fondo-arena`, `decoracion-esquina`, `artesanias`) | 3.7 | Hecho |
 | C4 | `hero`, fases | Cambiar la promesa de pagos en línea y reels: pagos "en diseño" (modelo B primero) y reels como visión | #13, #14 | Hecho |
 | C5 | `financial` | Poner el patrocinio como primera fuente, marcado como objetivo sin acuerdo; la comisión pasa a posibilidad | #3, #6, B1 | Hecho |
