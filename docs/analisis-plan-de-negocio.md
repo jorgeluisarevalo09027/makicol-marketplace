@@ -18,7 +18,7 @@ producción. Cuando difieren, se dice de forma explícita ("en el demo es así; 
 |---|---|---|
 | 1 | Pagos y envíos (O1 a O8) | **Borrador completo** (§1); decisiones en O8 |
 | 2 | Autenticación y migración a un proveedor externo (A1 a A7) | **Borrador completo** (§2); decisiones en A7 |
-| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario y diagramas de arquitectura B5** (§3); faltan B1, B5b y revisiones sin verificar; sin cambios en la propuesta |
+| 3 | Plan de negocio y depuración de la propuesta (B1 a B7) | **Inventario, B1 (ingresos y costos, borrador) y B5 (arquitectura)** (§3); faltan B5b y revisiones sin verificar; sin cambios en la propuesta |
 | 4 | Flujos por rol desde el demo (F1 a F7) | **F1 a F7 en borrador** (§0 y §4); falta contrastar pantallas y revisión visual |
 
 ## 0. Convenciones de los diagramas
@@ -1096,6 +1096,53 @@ muestra esos espacios vacíos (sin verificar visualmente).
 **Artefactos del repo:** `.gitignore` excluye `/dist`, `/node_modules` y `/.angular/cache`, y `git ls-files` no
 muestra ninguno versionado. `.nx` no figura en `.gitignore` pero no hay archivos suyos versionados; conviene
 añadirlo.
+
+### B1. Modelo de ingresos y costos del piloto (borrador, análisis propio)
+
+> **Aclaración:** ninguna cifra de esta sección es cotización ni compromiso. Salen de lo ya calculado en A8, de la
+> tabla de costos de la propuesta (con servicios retirados, ver 3.2 #9 y #10) y de la TRM del documento de
+> valoración (COP 3.174,67 por USD, sin verificar). Se reemplazan cuando haya cotizaciones reales.
+
+**Decisiones que lo condicionan (del usuario):** el patrocinio es la **primera fuente** de financiación; el piloto
+arranca en el **modelo B, sin comisión**; cualquier otra entrada (comisión del modelo A, suscripciones, destacados)
+es una **posibilidad**, no el plan base.
+
+**Entradas de dinero:**
+
+| Fuente | Estado | Nota |
+|---|---|---|
+| Patrocinio (institucional o privado) | **Plan base**, sin acuerdo ni carta | La propuesta habla de USD 1.800 el año 1 (~COP 5,7 millones) sin sustento (3.2 #6) |
+| Comisión (modelo A) | Posibilidad | Neto ~2,3 % de la venta tras la pasarela (3.6); exige concepto legal |
+| Suscripción o plan por artesano | Posibilidad | Sin análisis de disposición a pagar |
+| Destacados, publicidad o alianzas | Posibilidad | Sin análisis |
+| Contra entrega (recaudo) | No es ingreso | Una venta cuenta como cerrada al recaudar (O12) |
+
+**Costos del primer año (rangos propios):**
+
+| Concepto | Tipo | COP (rango) | Base |
+|---|---|---|---|
+| Migración de autenticación a Auth0 | Única | 3,9 a 10,5 millones | A8: 70 a 110 h |
+| Módulo de envíos (guía, rastreo, recaudo simulado en backend) | Única | 6,6 a 19,0 millones | Estimación propia: 120 a 200 h a COP 55.000 a 95.000 |
+| Infraestructura Azure | Recurrente | 5,0 a 9,9 millones al año | Tabla de la propuesta: USD 131 a 260 al mes; **incluye servicios retirados, hay que recalcular** |
+| Auth0 Essentials (si el MFA lo exige) | Recurrente | 0 a 1,2 millones al año | USD 35 al mes |
+| Servientrega (contrato, guías, recaudo) | Por definir | Sin cotización | O11 |
+| Asesoría legal (Términos, datos personales, modelo A) | Por definir | Sin cotización | O10 |
+| **Total cuantificable** | | **15,5 a 40,6 millones** | Más Servientrega y asesoría legal |
+
+Lectura:
+
+- El desarrollo se valora a costo de reposición. Si el equipo lo aporta en especie, la **necesidad de caja** baja
+  a infraestructura, licencias, asesoría legal y logística (~COP 5 a 11 millones más lo no cotizado).
+- El patrocinio de USD 1.800 de la propuesta cubriría solo la infraestructura; no el desarrollo del piloto.
+- En el modelo B no entra comisión: el equilibrio depende solo del patrocinio y de las posibilidades de la tabla
+  de ingresos.
+
+**Por decidir y por verificar:**
+
+- Meta de patrocinio del primer año y quién la gestiona (sin cifra de referencia).
+- Si el desarrollo se aporta en especie o se paga.
+- Recalcular la infraestructura sin Media Services ni CDN Akamai y con Front Door a USD 35.
+- Cotizar Servientrega, Auth0 (MFA por rol) y al abogado.
 
 ### B5. Arquitectura: demo hoy y producción prevista
 
