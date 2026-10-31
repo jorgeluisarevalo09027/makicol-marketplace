@@ -1,12 +1,83 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { SectionHeaderComponent } from '../../shared/section-header/section-header.component';
 import { CostTableComponent } from './cost-table/cost-table.component';
+
+/** Fila de desglose de un método de valoración (horas, costos o tiers de agencia). */
+interface MetodoFila {
+  concepto: string;
+  detalle: string;
+  valor: string;
+  destacado?: boolean;
+}
+
+/** Método de valoración del trabajo (A/B/C) con su detalle para el modal. */
+interface Metodo {
+  icon: string;
+  label: string;
+  desc: string;
+  rango: string;
+  titulo: string;
+  idea: string;
+  filas: MetodoFila[];
+  escenarios: { label: string; valor: string }[];
+  cierre: string;
+}
 
 @Component({
   selector: 'app-financial',
   standalone: true,
   imports: [DecimalPipe, SectionHeaderComponent, CostTableComponent],
+  styles: [`
+    /* Modal de detalle por método — tema claro del sitio (papel), coherente con mk-card/deep-dives.
+       No usa las clases oscuras (glass-card/text-white/slate), que el CSS global remapea y rompen el contraste. */
+    .mk-modal-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; justify-content: center; align-items: flex-end;
+      background: rgba(28, 77, 54, 0.45); backdrop-filter: blur(2px);
+      padding: 0; animation: fadeIn 0.2s ease-out;
+    }
+    .mk-modal-panel {
+      background: var(--mk-surface);
+      width: 100%; max-width: 640px; max-height: 92vh;
+      display: flex; flex-direction: column;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -8px 40px rgba(35, 49, 42, 0.25);
+      overflow: hidden;
+    }
+    .mk-modal-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--mk-sand);
+      background: var(--mk-paper-alt);
+    }
+    .mk-modal-close {
+      flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--mk-surface); border: 1px solid var(--mk-sand);
+      color: var(--mk-ink-soft); font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .mk-modal-close:hover { background: var(--mk-green-tint); color: var(--mk-green-deep); }
+    .mk-modal-body { padding: 1.5rem; overflow-y: auto; }
+    .mk-row {
+      display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+      gap: 0.25rem 1rem; padding: 0.7rem 0.85rem; border-radius: 12px;
+      background: var(--mk-paper); border: 1px solid var(--mk-sand);
+    }
+    .mk-row--total {
+      background: var(--mk-green-tint); border-color: rgba(44, 115, 80, 0.3);
+    }
+    .mk-modal-cierre {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      padding: 0.85rem; border-radius: 12px;
+      background: var(--mk-green-tint); border: 1px solid rgba(44, 115, 80, 0.25);
+    }
+    /* En tablet/desktop el modal se centra y es una tarjeta flotante. */
+    @media (min-width: 640px) {
+      .mk-modal-overlay { align-items: center; padding: 1.5rem; }
+      .mk-modal-panel { border-radius: 20px; box-shadow: 0 12px 48px rgba(35, 49, 42, 0.3); }
+    }
+  `],
   template: `
     <section id="financiero" class="relative py-24 px-4 sm:px-6 lg:px-8 scroll-mt-16 section-primary-tint">
 
@@ -95,14 +166,18 @@ import { CostTableComponent } from './cost-table/cost-table.component';
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
             @for (metodo of metodos; track metodo.label) {
-              <div class="glass-card rounded-xl p-4 sm:p-6 flex flex-col gap-2 hover:border-slate-600/60 transition-colors">
+              <button type="button"
+                      (click)="abrirMetodo(metodo)"
+                      class="glass-card rounded-xl p-4 sm:p-6 flex flex-col gap-2 text-left w-full cursor-pointer hover:border-sky-500/50 hover:bg-slate-800/30 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                      [attr.aria-label]="'Ver detalle de ' + metodo.label">
                 <div class="flex items-center gap-2">
                   <span class="text-2xl flex-shrink-0">{{ metodo.icon }}</span>
                   <div class="text-sky-400 text-sm font-semibold">{{ metodo.label }}</div>
                 </div>
                 <div class="text-slate-400 text-xs leading-relaxed flex-1">{{ metodo.desc }}</div>
                 <div class="text-white text-lg sm:text-xl font-bold font-mono mt-1">{{ metodo.rango }}</div>
-              </div>
+                <div class="text-sky-400 text-xs font-semibold mt-1 flex items-center gap-1">Ver el porqué <span aria-hidden="true">→</span></div>
+              </button>
             }
           </div>
 
@@ -150,6 +225,73 @@ import { CostTableComponent } from './cost-table/cost-table.component';
         </div>
         <!-- ===== Fin: Valor del trabajo realizado ===== -->
       </div>
+
+      <!-- ===== Modal de detalle por método ===== -->
+      @if (metodoActivo(); as m) {
+        <div class="mk-modal-overlay" (click)="cerrarMetodo()">
+          <div class="mk-modal-panel" role="dialog" aria-modal="true" [attr.aria-label]="m.titulo"
+               (click)="$event.stopPropagation()">
+
+            <!-- Encabezado del modal: franja clara con el ícono y el título -->
+            <div class="mk-modal-head">
+              <div style="display:flex; align-items:center; gap:0.75rem; min-width:0;">
+                <span style="font-size:2rem; flex-shrink:0;">{{ m.icon }}</span>
+                <div style="min-width:0;">
+                  <div style="color:var(--mk-green); font-size:0.72rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">{{ m.label }}</div>
+                  <h3 style="font-family:var(--font-brand); color:var(--mk-ink); font-weight:800; font-size:1.15rem; line-height:1.2; margin:0.15rem 0 0;">{{ m.titulo }}</h3>
+                </div>
+              </div>
+              <button type="button" (click)="cerrarMetodo()" class="mk-modal-close" aria-label="Cerrar">✕</button>
+            </div>
+
+            <!-- Cuerpo con scroll -->
+            <div class="mk-modal-body">
+              <!-- Idea del método -->
+              <p style="color:var(--mk-ink-soft); font-size:0.9rem; line-height:1.65; margin:0 0 1.25rem;">{{ m.idea }}</p>
+
+              <!-- Desglose -->
+              <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.25rem;">
+                @for (fila of m.filas; track fila.concepto) {
+                  <div class="mk-row" [class.mk-row--total]="fila.destacado">
+                    <div style="flex:1 1 55%; min-width:0;">
+                      <div style="font-size:0.9rem; font-weight:700;" [style.color]="fila.destacado ? 'var(--mk-green-deep)' : 'var(--mk-ink)'">{{ fila.concepto }}</div>
+                      <div style="color:var(--mk-ink-soft); font-size:0.78rem; line-height:1.5;">{{ fila.detalle }}</div>
+                    </div>
+                    <div style="font-family:var(--font-body); font-weight:800; font-size:0.9rem; white-space:nowrap;"
+                         [style.color]="fila.destacado ? 'var(--mk-green-deep)' : 'var(--mk-green)'">{{ fila.valor }}</div>
+                  </div>
+                }
+              </div>
+
+              <!-- Escenarios de tarifa (solo Método A) -->
+              @if (m.escenarios.length) {
+                <div style="margin-bottom:1.25rem;">
+                  <div style="color:var(--mk-ink-faint); font-size:0.72rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.5rem;">Valoración por escenario de tarifa</div>
+                  <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                    @for (esc of m.escenarios; track esc.label) {
+                      <div class="mk-row">
+                        <span style="color:var(--mk-ink-soft); font-size:0.8rem;">{{ esc.label }}</span>
+                        <span style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; white-space:nowrap;">{{ esc.valor }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- Cierre: qué aporta a la triangulación -->
+              <div class="mk-modal-cierre">
+                <span style="font-size:1.1rem; flex-shrink:0;" aria-hidden="true">🎯</span>
+                <p style="color:var(--mk-ink); font-size:0.82rem; line-height:1.55; margin:0;">{{ m.cierre }}</p>
+              </div>
+
+              <!-- Fuente -->
+              <p style="color:var(--mk-ink-faint); font-size:0.72rem; margin:1rem 0 0;">
+                Detalle en <span style="font-family:var(--font-body); color:var(--mk-ink-soft);">docs/valoracion-trabajo-realizado.md</span> §5. Tarifas con fuentes públicas (19-oct-2026).
+              </p>
+            </div>
+          </div>
+        </div>
+      }
     </section>
     <hr class="section-divider mx-auto max-w-4xl">
   `
@@ -182,24 +324,61 @@ export class FinancialComponent {
     },
   ];
 
-  metodos = [
+  metodos: Metodo[] = [
     {
       icon: '🧱',
       label: 'Método A — Reposición bottom-up',
       desc: 'Horas-equivalente × tarifa (caso base freelance senior).',
-      rango: 'COP 44 – 90 M'
+      rango: 'COP 44 – 90 M',
+      titulo: 'Reposición bottom-up (horas-equivalente × tarifa)',
+      idea: 'Se estiman las horas que un equipo senior tardaría en producir este alcance con este nivel de acabado, y se multiplican por la tarifa de mercado. No son horas cronometradas: son equivalentes de reposición.',
+      // Horas-equivalente por componente (documento §5, Método A).
+      filas: [
+        { concepto: 'Backend', detalle: 'Dominio multi-rol, clean architecture, Azure (SQL, Blob), seguridad (JWT, rate limit), seeders, migraciones', valor: '160 – 220 h' },
+        { concepto: 'Frontend', detalle: 'Monorepo con boundaries, 30 componentes de design system, 4 apps de rol + pública, 159 specs, e2e, temas', valor: '260 – 340 h' },
+        { concepto: 'Propuesta / plan de negocio', detalle: 'Modelo financiero interactivo, diseño de BD iterado, sitio de propuesta, prototipo navegable', valor: '90 – 130 h' },
+        { concepto: 'Specs / arquitectura / QA / DevOps', detalle: '~6.900 líneas de specs, docs de arquitectura, pipelines, evaluación de estado', valor: '40 – 60 h' },
+        { concepto: 'Total', detalle: 'Suma de horas-equivalente del alcance', valor: '550 – 750 h', destacado: true },
+      ],
+      // Valoración por escenario de tarifa (documento §5, Método A).
+      escenarios: [
+        { label: 'Empleado senior ($55–95 K/h)', valor: 'COP 30 – 71 M' },
+        { label: 'Freelance senior ($80–120 K/h)', valor: 'COP 44 – 90 M' },
+        { label: 'Agencia ($100–160 K/h)', valor: 'COP 55 – 120 M' },
+      ],
+      cierre: 'El caso base para la triangulación es el freelance senior: COP 44 – 90 M.',
     },
     {
       icon: '👥',
       label: 'Método B — Costo de equipo empleado',
       desc: '3,3 – 4,5 meses-hombre senior + overhead de gestión.',
-      rango: 'COP 36 – 85 M'
+      rango: 'COP 36 – 85 M',
+      titulo: 'Costo de equipo empleado',
+      idea: 'Se traducen las 550 – 750 horas-equivalente a meses-hombre de un desarrollador senior en nómina, con el costo real para el empleador (salario + prestaciones y parafiscales).',
+      filas: [
+        { concepto: 'Esfuerzo', detalle: '550 – 750 h a jornada completa (~168 h/mes)', valor: '3,3 – 4,5 meses-hombre' },
+        { concepto: 'Costo mensual empleador', detalle: 'Salario senior $7–12 M + 29–32 % de prestaciones/parafiscales', valor: 'COP 9 – 15,8 M/mes' },
+        { concepto: 'Subtotal', detalle: 'Meses-hombre × costo mensual', valor: 'COP 30 – 71 M' },
+        { concepto: 'Con overhead de gestión', detalle: 'Un equipo real de 2–3 personas tarda más calendario por coordinación: +~20 %', valor: 'COP 36 – 85 M', destacado: true },
+      ],
+      escenarios: [],
+      cierre: 'Aporta el piso más conservador de la triangulación: COP 36 – 85 M.',
     },
     {
       icon: '🏢',
       label: 'Método C — Benchmark de agencia',
       desc: 'Lo que cobraría una agencia por este alcance con propuesta documentada.',
-      rango: 'COP 70 – 140 M'
+      rango: 'COP 70 – 140 M',
+      titulo: 'Benchmark de mercado (qué cobra una agencia)',
+      idea: 'Se compara el alcance contra lo que cobran las agencias colombianas por proyectos equivalentes, usando los tramos de precio publicados (Granweb, 2026).',
+      filas: [
+        { concepto: 'Tier "producto operativo"', detalle: 'Backend propio, roles, catálogo/pedidos/soporte', valor: 'COP 32 – 60 M' },
+        { concepto: 'Tier "plataforma empresarial"', detalle: 'Mayor madurez técnica (design system, tests, Azure)', valor: 'COP 72 – 140 M+' },
+        { concepto: 'Posición de Makicol', detalle: 'Por madurez técnica queda en la zona alta del rango', valor: 'COP 60 – 120 M' },
+        { concepto: 'Con propuesta de negocio', detalle: 'Suma el plan financiero, ER y contrato de API documentados', valor: 'COP 70 – 140 M', destacado: true },
+      ],
+      escenarios: [],
+      cierre: 'Marca el techo de la triangulación: COP 70 – 140 M.',
     },
   ];
 
@@ -220,4 +399,20 @@ export class FinancialComponent {
       text: '~8.300 LOC Angular, simulador de costos, diseño de BD iterado, sitio navegable.'
     },
   ];
+
+  /** Método cuyo modal de detalle está abierto; null = sin modal. */
+  metodoActivo = signal<Metodo | null>(null);
+
+  abrirMetodo(metodo: Metodo): void {
+    this.metodoActivo.set(metodo);
+  }
+
+  cerrarMetodo(): void {
+    this.metodoActivo.set(null);
+  }
+
+  @HostListener('document:keydown.escape')
+  cerrarConEscape(): void {
+    this.cerrarMetodo();
+  }
 }
