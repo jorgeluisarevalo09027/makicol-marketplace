@@ -38,7 +38,7 @@ import { isPlatformBrowser } from '@angular/common';
         </p>
 
         <!-- Tres claves del proyecto -->
-        <div class="animate-fade-in" style="animation-delay:0.3s; display:grid; grid-template-columns:repeat(3,1fr);
+        <div class="animate-fade-in hero-claves" style="animation-delay:0.3s; display:grid; grid-template-columns:repeat(3,1fr);
                     gap:1rem; max-width:760px; margin:0 auto 2.5rem;">
           @for (c of claves; track c.label) {
             <div class="mk-card" style="text-align:left;">
@@ -68,7 +68,10 @@ import { isPlatformBrowser } from '@angular/common';
         </p>
       </div>
     </section>
-  `
+  `,
+  styles: [`
+    @media (max-width: 760px) { .hero-claves { grid-template-columns: 1fr; } }
+  `]
 })
 export class HeroComponent {
   private platformId = inject(PLATFORM_ID);

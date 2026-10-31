@@ -3,6 +3,15 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-section-header',
   standalone: true,
+  styles: [`
+    /* Filetes dorados: casi invisibles en móvil para no robar ancho al título. */
+    .sh-rule { max-width: 32px; }
+    /* El título fluye en varias líneas en móvil; solo evita el salto desde md hacia arriba. */
+    @media (min-width: 768px) {
+      .sh-rule { max-width: 140px; }
+      .sh-title { white-space: nowrap; }
+    }
+  `],
   template: `
     <div class="text-center mb-12">
 
@@ -22,14 +31,14 @@ import { Component, input } from '@angular/core';
       </div>
 
       <!-- Título flanqueado por líneas doradas — igual que .lp-section-header de la feria -->
-      <div class="flex items-center justify-center gap-4 mb-5">
-        <div class="flex-1 h-0.5" style="max-width:140px; background: linear-gradient(to right, transparent, #FFCD00);"></div>
-        <h2 class="text-3xl sm:text-4xl font-bold leading-tight px-2"
-            style="font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap;"
+      <div class="flex items-center justify-center gap-2 sm:gap-4 mb-5">
+        <div class="sh-rule flex-1 h-0.5" style="background: linear-gradient(to right, transparent, #FFCD00);"></div>
+        <h2 class="sh-title text-3xl sm:text-4xl font-bold leading-tight px-2"
+            style="font-family: 'Plus Jakarta Sans', sans-serif;"
             [style.color]="onDark() ? '#ffffff' : '#295440'">
           {{ title() }}
         </h2>
-        <div class="flex-1 h-0.5" style="max-width:140px; background: linear-gradient(to left, transparent, #FFCD00);"></div>
+        <div class="sh-rule flex-1 h-0.5" style="background: linear-gradient(to left, transparent, #FFCD00);"></div>
       </div>
 
       <!-- Subtítulo -->

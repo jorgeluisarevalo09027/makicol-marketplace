@@ -47,7 +47,7 @@ import { Component } from '@angular/core';
             Métricas de éxito del piloto
           </h3>
           <p style="color:var(--mk-ink-faint); font-size:0.78rem; margin:0 0 1rem;">Los valores objetivo se definen con el equipo (pendiente).</p>
-          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;" class="rm-grid">
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;" class="rm-grid rm-grid-4">
             @for (m of metricas; track m) {
               <div style="display:flex; gap:0.5rem; align-items:flex-start;">
                 <span style="color:var(--mk-green); font-weight:800;">◆</span>
@@ -80,6 +80,10 @@ import { Component } from '@angular/core';
   `,
   styles: [`
     @media (max-width: 820px) { .rm-grid { grid-template-columns: 1fr !important; } }
+    /* La fila de 4 métricas pasa por un escalón de 2 columnas en tablet antes de colapsar.
+       Se declara después de .rm-grid para ganar por orden de origen a igual especificidad. */
+    @media (max-width: 900px) { .rm-grid-4 { grid-template-columns: repeat(2, 1fr) !important; } }
+    @media (max-width: 560px) { .rm-grid-4 { grid-template-columns: 1fr !important; } }
   `]
 })
 export class RoadmapComponent {

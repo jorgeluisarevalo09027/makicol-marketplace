@@ -12,6 +12,11 @@ interface MatrixRow {
 @Component({
   selector: 'app-feature-matrix',
   standalone: true,
+  styles: [`
+    /* Patrón de international-shipping: scroll horizontal con ancho mínimo en móvil. */
+    .fm-scroll { overflow-x: auto; }
+    @media (max-width: 600px) { .fm-grid { min-width: 600px; } }
+  `],
   template: `
     <div class="glass-card rounded-2xl overflow-hidden">
       <!-- Header -->
@@ -45,8 +50,11 @@ interface MatrixRow {
         </div>
       </div>
 
+      <!-- Scroll horizontal en móvil: la matriz conserva un ancho mínimo legible
+           en vez de aplastar las tres columnas. -->
+      <div class="fm-scroll">
       <!-- Table header -->
-      <div class="grid grid-cols-12 px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-800/40">
+      <div class="fm-grid grid grid-cols-12 px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-800/40">
         <div class="col-span-4">Característica</div>
         <div class="col-span-4 text-center flex items-center justify-center gap-2">
           <span class="text-lg">🌐</span> PWA
@@ -59,14 +67,14 @@ interface MatrixRow {
       <!-- Category groups -->
       @for (category of visibleCategories(); track category) {
         <!-- Category separator -->
-        <div class="px-6 py-2.5 bg-slate-800/20 border-b border-t border-slate-700/40">
+        <div class="fm-grid px-6 py-2.5 bg-slate-800/20 border-b border-t border-slate-700/40">
           <span class="text-slate-400 text-xs font-bold uppercase tracking-widest">
             {{ getCategoryLabel(category) }}
           </span>
         </div>
 
         @for (row of getRowsByCategory(category); track row.feature) {
-          <div class="grid grid-cols-12 px-6 py-4 border-b border-slate-800/50 hover:bg-slate-800/20 transition-colors items-center">
+          <div class="fm-grid grid grid-cols-12 px-6 py-4 border-b border-slate-800/50 hover:bg-slate-800/20 transition-colors items-center">
             <div class="col-span-4 text-slate-300 text-sm font-medium">{{ row.feature }}</div>
 
             <!-- PWA rating -->
@@ -93,6 +101,7 @@ interface MatrixRow {
           </div>
         }
       }
+      </div>
 
       <!-- Legend -->
       <div class="px-6 py-4 bg-slate-800/20 flex flex-wrap gap-4">
@@ -118,7 +127,7 @@ export class FeatureMatrixComponent {
 
   categories = [
     { id: 'comercio', label: 'Comercio', icon: '🛒' },
-    { id: 'pagos', label: 'Pagos', icon: '�' },
+    { id: 'pagos', label: 'Pagos', icon: '💳' },
     { id: 'videos', label: 'Videos', icon: '🎥' },
     { id: 'ux', label: 'UX Productores', icon: '🎨' },
   ];

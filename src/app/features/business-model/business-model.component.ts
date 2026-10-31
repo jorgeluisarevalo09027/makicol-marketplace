@@ -55,7 +55,7 @@ import { Component } from '@angular/core';
           <h3 style="font-family:var(--font-brand); font-weight:800; color:var(--mk-ink); font-size:1.1rem; margin:0 0 1rem;">
             Cómo se financia la plataforma
           </h3>
-          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;" class="bm-grid">
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;" class="bm-grid bm-grid-4">
             @for (f of fuentes; track f.nombre) {
               <div style="text-align:left;">
                 <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.3rem;">
@@ -73,7 +73,12 @@ import { Component } from '@angular/core';
     </section>
   `,
   styles: [`
+    /* La comparativa A/B (2 columnas) colapsa a 1 en tablet. */
     @media (max-width: 820px) { .bm-grid { grid-template-columns: 1fr !important; } }
+    /* La fila de 4 fuentes pasa por un escalón de 2 columnas en tablet antes de colapsar.
+       Se declara después de .bm-grid para ganar por orden de origen a igual especificidad. */
+    @media (max-width: 900px) { .bm-grid-4 { grid-template-columns: repeat(2, 1fr) !important; } }
+    @media (max-width: 560px) { .bm-grid-4 { grid-template-columns: 1fr !important; } }
   `]
 })
 export class BusinessModelComponent {

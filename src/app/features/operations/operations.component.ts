@@ -48,7 +48,8 @@ import { Component } from '@angular/core';
     </section>
   `,
   styles: [`
-    @media (max-width: 900px) { .ops-grid { grid-template-columns: 1fr !important; } }
+    @media (max-width: 900px) { .ops-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+    @media (max-width: 560px) { .ops-grid { grid-template-columns: 1fr !important; } }
   `]
 })
 export class OperationsComponent {

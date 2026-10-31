@@ -23,7 +23,7 @@ import { RouterLink } from '@angular/router';
 
       <section style="padding:48px 20px 32px; text-align:center; background:linear-gradient(180deg,var(--mk-paper-alt),var(--mk-paper));">
         <div style="max-width:760px; margin:0 auto;">
-          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:2.1rem; line-height:1.2; margin:0 0 14px;">
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:clamp(1.6rem, 5vw, 2.1rem); line-height:1.2; margin:0 0 14px;">
             Contrato de API<br><span style="color:var(--mk-green-deep);">del demo</span>
           </h1>
           <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:680px; margin:0 auto;">
