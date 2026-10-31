@@ -53,6 +53,7 @@
 | Evaluación back-office (separar storefront/back-office) | backoffice-evaluation | §13 Apéndice arquitectura | borrador | estado objetivo |
 | Valoración del trabajo (COP $50–95 M) | `valoracion-trabajo-realizado.md` | §12 Plan financiero | verificado (con disclaimers) | no aplica |
 | Costos de infraestructura Azure (simulador) | financial (prototipo) | §12 Plan financiero | verificado y corregido (ver `03`) | espejo del backend hoy (Static Web Apps + App Service + SQL + Blob) |
+| Descubrimiento del catálogo (3 endpoints + rating materializado) | BR-15, BR-16; feature 007; `03-verificacion-tecnica-backend.md` §5 | §7 Producto, §13 Apéndice base de datos | borrador | estado objetivo |
 
 ## Lo que la web ya tiene vs. la estructura objetivo
 
@@ -91,6 +92,10 @@ Completadas el 26-oct-2026 (detalle en `03-verificacion-tecnica-backend.md`):
    ficha de la web omite "Cancelado": corregir en el paso 3.
 4. **Costos de infraestructura** — reales: Static Web Apps (front), App Service (back), Azure SQL y Blob.
    Se corrigió Front Door (no usado) por Static Web Apps.
+5. **Descubrimiento del catálogo** (`estado objetivo`, feature 007 / BR-15 y BR-16) — tres endpoints
+   `/api/discovery` y rating materializado + índices. Editado y compilado en una rama de feature del
+   backend; **sin migrar ni desplegar**. Detalle en `03-verificacion-tecnica-backend.md` §5. Al desplegar
+   y verificar pasa a `espejo del backend hoy` y el ER sube a v8.
 
 Correcciones de la web derivadas de la verificación (para el paso 3):
 - Fichas de `database-design`: renombrar a los nombres reales del backend y retirar/rotular el relato de Feria.

@@ -87,5 +87,6 @@ export class ApiContractComponent {
     'Estados devueltos como objeto con id y nombre, desde tablas de catálogo.',
     'Listados paginados.',
     'Roles: buyer, artisan, support y auditor.',
+    'Propuesta (feature 007, no desplegada): endpoints publicos con degradacion en /api/discovery — vista personalizada con token de comprador, vista por defecto sin token, nunca 401.',
   ];
 }
