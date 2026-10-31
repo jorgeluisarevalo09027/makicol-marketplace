@@ -26,7 +26,7 @@ import { RouterLink } from '@angular/router';
 
       <section style="padding:56px 20px 40px; text-align:center; background:var(--mk-paper-alt);">
         <div style="max-width:760px; margin:0 auto;">
-          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:2.1rem; line-height:1.2; margin:0 0 14px;">
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:clamp(1.6rem, 5vw, 2.1rem); line-height:1.2; margin:0 0 14px;">
             Storefront y back-office:<br><span style="color:var(--mk-green-deep);">el demo ya separa por rol</span>
           </h1>
           <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">

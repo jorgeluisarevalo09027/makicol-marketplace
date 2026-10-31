@@ -122,7 +122,7 @@ import { ShippingFlowDiagramComponent } from './shipping-flow-diagram/shipping-f
             </div>
           </div>
 
-          <div style="overflow-x-auto: auto; overflow-x:auto;">
+          <div style="overflow-x:auto;">
             <table class="is-table">
               <thead>
                 <tr>

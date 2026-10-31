@@ -51,7 +51,7 @@
 | Diagrama ER — fichas interactivas | `database-design` (prototipo) | §13 Apéndice base de datos | **contradicción** (ver `03`) | corregir a espejo del backend hoy |
 | Contrato de API | api-contract (prototipo), Swagger | §13 Apéndice contrato API | verificado (ver `03`) | espejo del backend hoy |
 | Evaluación back-office (separar storefront/back-office) | backoffice-evaluation | §13 Apéndice arquitectura | borrador | estado objetivo |
-| Valoración del trabajo (COP $50–95 M) | `valoracion-trabajo-realizado.md` | §12 Plan financiero | verificado (con disclaimers) | no aplica |
+| Valoración del trabajo (COP $50–95 M) | `valoracion-trabajo-realizado.md` | §12 Plan financiero | verificado (con disclaimers); **incorporada en la web** en la sección financiera (`financial`): rango recomendado, triangulación de los 3 métodos, inventario medido y disclaimer | no aplica |
 | Costos de infraestructura Azure (simulador) | financial (prototipo) | §12 Plan financiero | verificado y corregido (ver `03`) | espejo del backend hoy (Static Web Apps + App Service + SQL + Blob) |
 | Descubrimiento del catálogo (3 endpoints + rating materializado) | BR-15, BR-16; feature 007; `03-verificacion-tecnica-backend.md` §5 | §7 Producto, §13 Apéndice base de datos | borrador | estado objetivo |
 

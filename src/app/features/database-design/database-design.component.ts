@@ -22,6 +22,38 @@ interface Entidad {
     .db-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
     @media (max-width:900px) { .db-grid { grid-template-columns:repeat(2,1fr); } }
     @media (max-width:600px) { .db-grid { grid-template-columns:1fr; } }
+
+    /* Barra de controles del modal del diagrama ER. */
+    .modal-controls {
+      position:fixed; top:14px; right:14px; left:14px; z-index:110;
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .modal-hint {
+      color:#fff; font-size:0.82rem; font-weight:700; background:rgba(0,0,0,0.35);
+      padding:8px 14px; border-radius:8px; backdrop-filter:blur(6px);
+    }
+    .modal-hint--full { display:none; }
+    .modal-hint--touch { font-size:0.75rem; }
+    .modal-zoom { display:flex; gap:8px; }
+    .modal-btn {
+      border:none; background:#fff; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .modal-btn--round { width:44px; height:44px; border-radius:50%; font-size:1.1rem; }
+    .modal-btn--pct { height:44px; border-radius:22px; padding:0 16px; font-size:0.78rem; font-weight:800; }
+    .modal-btn--close { background:#C8102E; color:#fff; }
+
+    /* En m√≥vil: ocultar el texto largo, mostrar la pista t√°ctil breve, y dejar los botones
+       de zoom en su propia fila separada del borde. En md+ vuelve el texto completo. */
+    @media (max-width:767px) {
+      .modal-controls { justify-content:flex-end; }
+      .modal-hint--touch { order:2; width:100%; text-align:center; }
+      .modal-zoom { order:1; width:100%; justify-content:flex-end; }
+    }
+    @media (min-width:768px) {
+      .modal-hint--full { display:block; }
+      .modal-hint--touch { display:none; }
+    }
   `],
   template: `
     <div style="min-height:100vh; background:var(--mk-paper);">
@@ -30,11 +62,11 @@ interface Entidad {
         <div style="max-width:1100px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
           <a routerLink="/propuesta" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
             <img src="/assets/makicol-icono-base.svg" alt="Makicol" style="width:32px; height:32px; object-fit:contain;">
-            <span style="color:var(--mk-green-deep); font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.9rem;">Makicol ∑ Propuesta Ejecutiva</span>
+            <span style="color:var(--mk-green-deep); font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.9rem;">Makicol ¬∑ Propuesta Ejecutiva</span>
           </a>
           <div style="display:flex; gap:16px;">
-            <a routerLink="/evaluacion-backoffice" style="color:var(--mk-ink-soft); font-size:0.82rem; text-decoration:none; font-weight:600;">? EvaluaciÛn de arquitectura</a>
-            <a routerLink="/propuesta" style="color:var(--mk-green-deep); font-size:0.82rem; text-decoration:none; font-weight:700;">Propuesta ?</a>
+            <a routerLink="/evaluacion-backoffice" style="color:var(--mk-ink-soft); font-size:0.82rem; text-decoration:none; font-weight:600;">‚Üê Evaluaci√≥n de arquitectura</a>
+            <a routerLink="/propuesta" style="color:var(--mk-green-deep); font-size:0.82rem; text-decoration:none; font-weight:700;">Propuesta ‚Üí</a>
           </div>
         </div>
       </header>
@@ -42,19 +74,19 @@ interface Entidad {
       <section style="padding:48px 20px 32px; text-align:center; background:linear-gradient(180deg,var(--mk-paper-alt),var(--mk-paper));">
         <div style="max-width:760px; margin:0 auto;">
           <div style="display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:20px; background:#FDF3D6; margin-bottom:18px;">
-            <span style="font-size:0.9rem;">??</span>
-            <span style="color:#856404; font-size:0.82rem; font-weight:800;">Trabajo en progreso ó se corrige y actualiza en cada iteraciÛn</span>
+            <span style="font-size:0.9rem;">‚ö†Ô∏è</span>
+            <span style="color:#856404; font-size:0.82rem; font-weight:800;">Trabajo en progreso ¬∑ se corrige y actualiza en cada iteraci√≥n</span>
           </div>
           <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:2.1rem; line-height:1.2; margin:0 0 14px;">
-            DiseÒo de base de datos<br><span style="color:var(--mk-green-deep);">para los 4 roles de Makicol</span>
+            Dise√±o de base de datos<br><span style="color:var(--mk-green-deep);">para los 4 roles de Makicol</span>
           </h1>
           <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
-            Modelo entidad-relaciÛn que cubre lo que necesita Comprador, Artesano, Soporte y Auditor ó
-            base para construir la persistencia real cuando el prototipo pase a producciÛn.
+            Modelo entidad-relaci√≥n que cubre lo que necesita Comprador, Artesano, Soporte y Auditor ¬ó
+            base para construir la persistencia real cuando el prototipo pase a producci√≥n.
           </p>
           <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.5; max-width:640px; margin:14px auto 0;">
-            <strong>ConvenciÛn:</strong> los nombres de entidades, tablas y campos est·n en inglÈs para que el esquema sea directamente usable por el equipo de desarrollo y por herramientas de ORM.
-            Las notas, descripciones y explicaciones se mantienen en espaÒol para la presentaciÛn.
+            <strong>Convenci√≥n:</strong> los nombres de entidades, tablas y campos est√°n en ingl√©s para que el esquema sea directamente usable por el equipo de desarrollo y por herramientas de ORM.
+            Las notas, descripciones y explicaciones se mantienen en espa√±ol para la presentaci√≥n.
           </p>
         </div>
       </section>
@@ -64,42 +96,42 @@ interface Entidad {
         <!-- Changelog / enfoque -->
         <section>
           <div style="background:#fff; border-left:4px solid #003893; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-bottom:14px;">
-            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">?? Enfoque hÌbrido de esta vista</h4>
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">üß© Enfoque h√≠brido de esta vista</h4>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0;">
               El diagrama se mantiene como fuente formal en <strong>PlantUML</strong> (<code style="background:var(--mk-paper-alt); padding:2px 6px; border-radius:4px; font-size:0.8rem;">docs/database/er-diagram-v7.puml</code>),
-              versionable y f·cil de comparar entre iteraciones. Esta p·gina muestra el render m·s reciente y un desglose interactivo
-              pensado para revisar y corregir en vivo durante la presentaciÛn, sin depender de regenerar im·genes en cada ajuste menor.
+              versionable y f√°cil de comparar entre iteraciones. Esta p√°gina muestra el render m√°s reciente y un desglose interactivo
+              pensado para revisar y corregir en vivo durante la presentaci√≥n, sin depender de regenerar im√°genes en cada ajuste menor.
             </p>
           </div>
 
           <div style="background:#fff; border-left:4px solid #C8102E; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-bottom:14px;">
-            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">??? v2: auditorÌa / trazabilidad</h4>
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">üóÇÔ∏è v2: auditor√≠a / trazabilidad</h4>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0 0 8px;">
-              Se agregaron campos de auditorÌa (<code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">created_at</code>,
+              Se agregaron campos de auditor√≠a (<code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">created_at</code>,
               <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">updated_at</code>,
               <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">updated_by</code>) a las entidades que cambian de estado.
             </p>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0;">
-              Eso no basta para un historial completo, por eso se agregÛ tambiÈn <strong>ActivityLog</strong>: un log
-              transversal, de solo escritura (append-only), que registra <strong>cada</strong> creaciÛn/modificaciÛn/eliminaciÛn.
+              Eso no basta para un historial completo, por eso se agreg√≥ tambi√©n <strong>ActivityLog</strong>: un log
+              transversal, de solo escritura (append-only), que registra <strong>cada</strong> creaci√≥n/modificaci√≥n/eliminaci√≥n.
             </p>
           </div>
 
           <div style="background:#fff; border-left:4px solid #003893; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-bottom:14px;">
-            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">?? v3: m·quina de estados con tablas semilla</h4>
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">üîÑ v3: m√°quina de estados con tablas semilla</h4>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0 0 8px;">
               Los campos <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">status</code> de tipo enum
-              en <strong>Order</strong>, <strong>SupportCase</strong> y <strong>ArtisanProfile</strong> (verificaciÛn) se reemplazaron por una
-              <strong>tabla de estados sembrada</strong> m·s una <strong>tabla de transiciones v·lidas</strong> por entidad.
+              en <strong>Order</strong>, <strong>SupportCase</strong> y <strong>ArtisanProfile</strong> (verificaci√≥n) se reemplazaron por una
+              <strong>tabla de estados sembrada</strong> m√°s una <strong>tabla de transiciones v√°lidas</strong> por entidad.
               Cada cambio de estado se registra en <strong>ActivityLog</strong>, sin necesidad de una tabla de historial aparte.
             </p>
           </div>
 
           <div style="background:#fff; border-left:4px solid #1EA03B; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-bottom:14px;">
-            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">?? v4: tiempos multi-regiÛn</h4>
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">üåé v4: tiempos multi-regi√≥n</h4>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0 0 8px;">
-              Makicol se desplegar· en <strong>Azure</strong> con usuarios de EE. UU., Europa y otras regiones. Para evitar errores de
-              fechas/horas en compras, soporte y auditorÌa, todos los instantes se guardan como <strong>datetimeoffset</strong> en
+              Makicol se desplegar√° en <strong>Azure</strong> con usuarios de EE. UU., Europa y otras regiones. Para evitar errores de
+              fechas/horas en compras, soporte y auditor√≠a, todos los instantes se guardan como <strong>datetimeoffset</strong> en
               Azure SQL: se mantiene el mismo punto en el tiempo (UTC) y, a la vez, el offset original del usuario.
             </p>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0;">
@@ -110,35 +142,35 @@ interface Entidad {
           </div>
 
           <div style="background:#fff; border-left:4px solid #B08900; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08);">
-            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">??? v5: nombres de esquema en inglÈs</h4>
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">üè∑Ô∏è v5: nombres de esquema en ingl√©s</h4>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0;">
-              Todas las entidades, tablas y campos del modelo se renombraron a inglÈs siguiendo convenciÛn de desarrollo
+              Todas las entidades, tablas y campos del modelo se renombraron a ingl√©s siguiendo convenci√≥n de desarrollo
               (<code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">User</code>,
               <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">Order</code>,
               <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">BuyerProfile</code>,
               <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">created_at</code>, etc.).
-              Las descripciones, notas y la interfaz de esta p·gina se mantienen en espaÒol para el contexto de la propuesta.
+              Las descripciones, notas y la interfaz de esta p√°gina se mantienen en espa√±ol para el contexto de la propuesta.
             </p>
           </div>
 
           <div style="background:#fff; border-left:4px solid #1EA03B; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-top:14px;">
-            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">? v7 (oct-2026): el diagrama y las fichas reflejan el backend real</h4>
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">‚úÖ v7 (oct-2026): el diagrama y las fichas reflejan el backend real</h4>
             <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0 0 10px;">
               El diagrama y las fichas de abajo se derivaron de las entidades reales del servicio
               (<code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">Makicol.Domain/Entities</code> +
               <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">AppDbContext</code>). El backend usa tablas
               sin prefijo y en el esquema <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">dbo</code>
               (<code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">User</code>,
-              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">Order</code>, Ö). Cada ficha indica si
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">Order</code>, ¬Ö). Cada ficha indica si
               <strong>existe en el demo hoy</strong> o es una <strong>propuesta</strong> para el piloto.
             </p>
             <p style="color:#856404; background:#FDF3D6; border-radius:8px; padding:8px 12px; font-size:0.8rem; line-height:1.5; margin:0 0 10px;">
-              <strong>Nota histÛrica:</strong> una versiÛn anterior del diseÒo (v6) planteaba un prefijo <code>Mk</code>, un esquema
-              <code>makicol</code> y coexistencia aislada con el proyecto "Feria Artesanal". <strong>El backend no adoptÛ ese diseÒo</strong>;
+              <strong>Nota hist√≥rica:</strong> una versi√≥n anterior del dise√±o (v6) planteaba un prefijo <code>Mk</code>, un esquema
+              <code>makicol</code> y coexistencia aislada con el proyecto "Feria Artesanal". <strong>El backend no adopt√≥ ese dise√±o</strong>;
               se documenta solo como antecedente.
             </p>
             <a routerLink="/contrato-api" style="display:inline-flex; align-items:center; gap:6px; color:var(--mk-green-deep); font-size:0.85rem; font-weight:800; text-decoration:none;">
-              Ver contrato de API que expone el servicio ?
+              Ver contrato de API que expone el servicio ‚Üí
             </a>
           </div>
         
@@ -169,7 +201,7 @@ interface Entidad {
         <!-- Diagrama -->
         <section>
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-            <span style="color:var(--mk-green-deep); font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">?? Diagrama entidad-relaciÛn (v7: demo hoy y propuesta del piloto)</span>
+            <span style="color:var(--mk-green-deep); font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">üìä Diagrama entidad-relaci√≥n (v7: demo hoy y propuesta del piloto)</span>
             <button (click)="abrirModal()"
                     style="display:inline-flex; align-items:center; gap:6px; background:var(--mk-green-deep); color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:0.8rem; font-weight:700; cursor:pointer;">
               <span class="material-symbols-outlined" style="font-size:1.1rem;">fullscreen</span>
@@ -177,19 +209,19 @@ interface Entidad {
             </button>
           </div>
           <div style="background:#fff; border-radius:14px; padding:16px; box-shadow:0 2px 16px rgba(41,84,64,0.08); overflow-x:auto; text-align:center;">
-            <img src="/assets/makicol-er-diagram-v7.svg" alt="Diagrama entidad-relaciÛn Makicol v7: 29 tablas del demo y propuesta de envÌos y medios de pago" style="max-width:100%; height:auto;">
+            <img src="/assets/makicol-er-diagram-v7.svg" alt="Diagrama entidad-relaci√≥n Makicol v7: 29 tablas del demo y propuesta de env√≠os y medios de pago" style="max-width:100%; height:auto;">
           </div>
         </section>
 
         <!-- Desglose por entidad -->
         <section>
           <div style="margin-bottom:16px;">
-            <span style="color:#6d3fae; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">?? Entidades por rol</span>
+            <span style="color:#6d3fae; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">üß± Entidades por rol</span>
             <h2 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:800; font-size:1.3rem; margin:6px 0 4px;">
               Haz clic en cada entidad para ver sus campos
             </h2>
             <p style="color:var(--mk-ink-soft); font-size:0.8rem; margin:0;">
-              Los nombres y campos est·n en inglÈs; las descripciones en espaÒol explican quÈ representa cada tabla en el negocio.
+              Los nombres y campos est√°n en ingl√©s; las descripciones en espa√±ol explican qu√© representa cada tabla en el negocio.
             </p>
           </div>
 
@@ -215,7 +247,7 @@ interface Entidad {
                   <span style="font-size:1.3rem;">{{ e.icono }}</span>
                   <span style="color:var(--mk-ink); font-weight:800; font-size:0.88rem;">{{ e.nombre }}</span>
                   @if (e.sincronia === 'objetivo') {
-                    <span style="font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:10px; background:#FDF3D6; color:#856404;">PROPUESTA ∑ no existe hoy</span>
+                    <span style="font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:10px; background:#FDF3D6; color:#856404;">PROPUESTA ¬∑ no existe hoy</span>
                   } @else {
                     <span style="font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:10px; background:#E4EFE6; color:var(--mk-green-deep);">en el demo hoy</span>
                   }
@@ -229,7 +261,7 @@ interface Entidad {
                 @if (seleccionada() === e.nombre) {
                   <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(0,0,0,0.08);">
                     @for (campo of e.campos; track campo) {
-                      <p style="color:#3d4a41; font-size:0.75rem; margin:0 0 4px; font-family:monospace;">∑ {{ campo }}</p>
+                      <p style="color:#3d4a41; font-size:0.75rem; margin:0 0 4px; font-family:monospace;">¬∑ {{ campo }}</p>
                     }
                   </div>
                 }
@@ -245,12 +277,12 @@ interface Entidad {
           <a routerLink="/evaluacion-backoffice"
              style="padding:12px 24px; border-radius:10px; font-weight:700; font-size:0.88rem; text-decoration:none;
                     background:var(--mk-paper-alt); border:1.5px solid var(--mk-sand); color:var(--mk-green-deep);">
-            ? EvaluaciÛn de arquitectura
+            ‚Üê Evaluaci√≥n de arquitectura
           </a>
           <a routerLink="/propuesta"
              style="padding:12px 24px; border-radius:10px; font-weight:800; font-size:0.88rem; text-decoration:none;
                     background:var(--mk-green); color:#fff;">
-            Volver a la propuesta ejecutiva ?
+            Volver a la propuesta ejecutiva ‚Üí
           </a>
         </div>
       </footer>
@@ -262,20 +294,23 @@ interface Entidad {
            style="position:fixed; inset:0; z-index:100; background:rgba(31,42,34,0.92); display:flex; flex-direction:column;">
 
         <!-- Barra de controles -->
-        <div (click)="$event.stopPropagation()"
-             style="position:fixed; top:14px; right:14px; left:14px; z-index:110; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-          <div style="color:#fff; font-size:0.82rem; font-weight:700; background:rgba(0,0,0,0.35); padding:8px 14px; border-radius:8px; backdrop-filter:blur(6px);">
-            Usa la rueda del ratÛn para hacer zoom ∑ Arrastra para desplazarte ∑ Doble clic para resetear
+        <div (click)="$event.stopPropagation()" class="modal-controls">
+          <!-- Pista breve en m√≥vil; texto completo (con rueda del rat√≥n) desde md hacia arriba. -->
+          <div class="modal-hint modal-hint--full">
+            Usa la rueda del rat√≥n para hacer zoom ¬∑ Arrastra para desplazarte ¬∑ Doble clic para resetear
           </div>
-          <div style="display:flex; gap:8px;">
-            <button (click)="zoomOut()" style="width:38px; height:38px; border:none; border-radius:50%; background:#fff; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;">-</button>
-            <button (click)="zoomReset()" style="height:38px; border:none; border-radius:20px; background:#fff; cursor:pointer; padding:0 16px; font-size:0.78rem; font-weight:800;">{{ zoom() * 100 | number:'1.0-0' }}%</button>
-            <button (click)="zoomIn()" style="width:38px; height:38px; border:none; border-radius:50%; background:#fff; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;">+</button>
-            <button (click)="modalAbierto.set(false)" style="width:38px; height:38px; border:none; border-radius:50%; background:#C8102E; color:#fff; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;">?</button>
+          <div class="modal-hint modal-hint--touch">
+            Pellizca o usa los botones para el zoom ¬∑ arrastra para mover
+          </div>
+          <div class="modal-zoom">
+            <button (click)="zoomOut()" class="modal-btn modal-btn--round">-</button>
+            <button (click)="zoomReset()" class="modal-btn modal-btn--pct">{{ zoom() * 100 | number:'1.0-0' }}%</button>
+            <button (click)="zoomIn()" class="modal-btn modal-btn--round">+</button>
+            <button (click)="modalAbierto.set(false)" class="modal-btn modal-btn--round modal-btn--close">‚úï</button>
           </div>
         </div>
 
-        <!-- ¡rea de pan/zoom -->
+        <!-- √Årea de pan/zoom -->
         <div #modalArea
              (wheel)="onWheel($event)"
              (mousedown)="empezarArrastre($event)"
@@ -287,7 +322,7 @@ interface Entidad {
              style="flex:1; overflow:hidden; display:flex; align-items:center; justify-content:center; cursor:grab;"
              [style.cursor]="arrastrando() ? 'grabbing' : 'grab'">
           <img src="/assets/makicol-er-diagram-v7.svg"
-               alt="Diagrama entidad-relaciÛn Makicol v7 ampliado"
+               alt="Diagrama entidad-relaci√≥n Makicol v7 ampliado"
                (dblclick)="zoomReset()"
                style="max-width:none; user-select:none; -webkit-user-drag:none;"
                [style.transform]="'translate(' + panX() + 'px, ' + panY() + 'px) scale(' + zoom() + ')'"
@@ -401,97 +436,97 @@ export class DatabaseDesignComponent {
   // Fichas derivadas de las entidades reales del backend (Makicol.Domain/Entities + AppDbContext, oct-2026).
   // Nombres de tabla reales: sin prefijo Mk, esquema dbo. sincronia:'hoy' = existe en el backend.
   entidades: Entidad[] = [
-    { nombre: 'User', icono: '??', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'], sincronia: 'hoy',
+    { nombre: 'User', icono: 'üë§', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'Name : text', 'Email : text (unique)', 'PasswordHash : text', 'Role : buyer | artisan | support | auditor', 'Language : text (es, en...)', 'RegistrationDate : date', 'CreatedAt / UpdatedAt / UpdatedBy : audit'],
-      descripcion: 'Cuenta base compartida por los 4 roles; el rol determina quÈ perfil extendido tiene (BuyerProfile, ArtisanProfile o SupportAgent).' },
-    { nombre: 'RefreshToken', icono: '??', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Cuenta base compartida por los 4 roles; el rol determina qu√© perfil extendido tiene (BuyerProfile, ArtisanProfile o SupportAgent).' },
+    { nombre: 'RefreshToken', icono: 'üîë', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'UserId : FK -> User', 'Token : text (unique)', 'ExpiresAt : datetimeoffset', 'IsRevoked : boolean', 'CreatedAt : datetimeoffset'],
-      descripcion: 'AutenticaciÛn propia del demo (JWT de 30 min + refresh de 7 dÌas que rota en cada uso).' },
-    { nombre: 'BuyerProfile', icono: '???', color: '#003893', bg: '#EAF1FC', roles: ['Comprador'], sincronia: 'hoy',
+      descripcion: 'Autenticaci√≥n propia del demo (JWT de 30 min + refresh de 7 d√≠as que rota en cada uso).' },
+    { nombre: 'BuyerProfile', icono: 'üõçÔ∏è', color: '#003893', bg: '#EAF1FC', roles: ['Comprador'], sincronia: 'hoy',
       campos: ['UserId : UUID (PK, FK)', 'City : text', 'ShippingAddress : text', 'Timezone : text (IANA)'],
-      descripcion: 'Datos de envÌo del comprador y zona horaria (America/Bogota por defecto).' },
-    { nombre: 'ArtisanProfile', icono: '??', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano'], sincronia: 'hoy',
+      descripcion: 'Datos de env√≠o del comprador y zona horaria (America/Bogota por defecto).' },
+    { nombre: 'ArtisanProfile', icono: 'üé®', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano'], sincronia: 'hoy',
       campos: ['UserId : UUID (PK, FK)', 'Region / City / CraftType : text', 'Bio : text', 'StartYear : int?', 'Materials : json', 'PaymentMethod : text (UNO solo, def. nequi)', 'Timezone : text (IANA)', 'AvatarUrl / CoverUrl : text', 'VerificationStatusId : FK'],
-      descripcion: 'Perfil de vendedor: oficio, historia, materiales y estado de verificaciÛn. Hoy guarda un solo mÈtodo de pago; el modelo B con varios medios es propuesta (no existe).' },
-    { nombre: 'Product', icono: '??', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Comprador', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Perfil de vendedor: oficio, historia, materiales y estado de verificaci√≥n. Hoy guarda un solo m√©todo de pago; el modelo B con varios medios es propuesta (no existe).' },
+    { nombre: 'Product', icono: 'üì¶', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Comprador', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'ArtisanId : FK', 'Name / Category / Region : text', 'Price : numeric(18,2)', 'Description / ImageUrl : text', 'SoldCount : int', 'Stock : int? (null = bajo pedido)', 'IsActive : boolean (def. true)', 'CreatedAt / CreatedBy / UpdatedAt / UpdatedBy : audit'],
-      descripcion: 'Cat·logo publicado por los artesanos. "IsActive" es un booleano simple (activo/pausado), excepciÛn intencional al patrÛn de tablas de estado.' },
-    { nombre: 'ProductImage', icono: '???', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano'], sincronia: 'hoy',
+      descripcion: 'Cat√°logo publicado por los artesanos. "IsActive" es un booleano simple (activo/pausado), excepci√≥n intencional al patr√≥n de tablas de estado.' },
+    { nombre: 'ProductImage', icono: 'üñºÔ∏è', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'ProductId : FK', 'Url : text', 'SortOrder : int (0 = portada)', 'CreatedAt : datetimeoffset'],
-      descripcion: 'GalerÌa de im·genes del producto. La imagen con SortOrder 0 es la portada (coincide con Product.ImageUrl).' },
-    { nombre: 'Order', icono: '??', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Galer√≠a de im√°genes del producto. La imagen con SortOrder 0 es la portada (coincide con Product.ImageUrl).' },
+    { nombre: 'Order', icono: 'üõí', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'BuyerId : FK', 'ArtisanId : FK (un artesano por pedido)', 'PlacedAt : datetimeoffset', 'Total : numeric(18,2)', 'StatusId : FK -> OrderStatus', 'OriginTimezone : text (IANA)', 'PaymentMethodPreference : text (informativa)', 'CheckoutGroupId : UUID? (agrupa el carrito)', 'CreatedAt / UpdatedAt / UpdatedBy : audit'],
       descripcion: 'Compra de un comprador a un solo artesano; base del GMV. La preferencia de pago es informativa: el cobro se coordina fuera de la plataforma.' },
-    { nombre: 'OrderStatus', icono: '???', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'], sincronia: 'hoy',
+    { nombre: 'OrderStatus', icono: 'üè∑Ô∏è', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : int (PK)', 'Name : text', 'DisplayOrder : int', 'IsTerminal : boolean'],
-      descripcion: 'Tabla semilla: Recibido, En preparaciÛn, Enviado, Entregado (terminal) y Cancelado (terminal).' },
-    { nombre: 'OrderStatusTransition', icono: '??', color: '#003893', bg: '#EAF1FC', roles: ['Auditor'], sincronia: 'hoy',
+      descripcion: 'Tabla semilla: Recibido, En preparaci√≥n, Enviado, Entregado (terminal) y Cancelado (terminal).' },
+    { nombre: 'OrderStatusTransition', icono: 'üîÄ', color: '#003893', bg: '#EAF1FC', roles: ['Auditor'], sincronia: 'hoy',
       campos: ['FromStatusId : FK (PK)', 'ToStatusId : FK (PK)', 'AllowedRole : buyer | artisan | system'],
-      descripcion: 'Saltos v·lidos entre estados del pedido: el artesano avanza Recibido?PreparaciÛn?Enviado; el comprador confirma Entregado o cancela desde Recibido.' },
-    { nombre: 'OrderItem', icono: '??', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano'], sincronia: 'hoy',
+      descripcion: 'Saltos v√°lidos entre estados del pedido: el artesano avanza Recibido‚ÜíPreparaci√≥n‚ÜíEnviado; el comprador confirma Entregado o cancela desde Recibido.' },
+    { nombre: 'OrderItem', icono: 'üßæ', color: '#003893', bg: '#EAF1FC', roles: ['Comprador', 'Artesano'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'OrderId : FK', 'ProductId : FK', 'Quantity : int', 'UnitPrice : numeric(18,2)'],
-      descripcion: 'LÌnea de producto de un pedido. El backend divide el carrito y crea un pedido por artesano, asÌ que cada pedido lleva productos de un solo artesano.' },
-    { nombre: 'Review', icono: '?', color: '#B08900', bg: '#FDF6E3', roles: ['Comprador', 'Artesano', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'L√≠nea de producto de un pedido. El backend divide el carrito y crea un pedido por artesano, as√≠ que cada pedido lleva productos de un solo artesano.' },
+    { nombre: 'Review', icono: '‚≠ê', color: '#B08900', bg: '#FDF6E3', roles: ['Comprador', 'Artesano', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'AuthorId : FK', 'ProductId : FK', 'Rating : int', 'Comment : text', 'PostedOn : date', '(AuthorId, ProductId) unique'],
-      descripcion: 'CalificaciÛn de un comprador sobre un producto; una reseÒa por autor y producto.' },
-    { nombre: 'WishlistItem', icono: '??', color: '#C8102E', bg: '#FBE9EC', roles: ['Comprador'], sincronia: 'hoy',
+      descripcion: 'Calificaci√≥n de un comprador sobre un producto; una rese√±a por autor y producto.' },
+    { nombre: 'WishlistItem', icono: '‚ù§Ô∏è', color: '#C8102E', bg: '#FBE9EC', roles: ['Comprador'], sincronia: 'hoy',
       campos: ['BuyerId : FK (PK)', 'ProductId : FK (PK)', 'AddedOn : date'],
-      descripcion: 'RelaciÛn muchos-a-muchos entre comprador y producto: la lista de deseos.' },
-    { nombre: 'SupportCase', icono: '??', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Relaci√≥n muchos-a-muchos entre comprador y producto: la lista de deseos.' },
+    { nombre: 'SupportCase', icono: 'üé´', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'RequesterId : FK', 'RequesterRole : text', 'Category / Subject : text', 'StatusId : FK -> SupportCaseStatus', 'Priority : text', 'RelatedOrderId : FK?', 'AssignedAgentId : FK? -> SupportAgent', 'CreatedAt / UpdatedAt / UpdatedBy : audit'],
       descripcion: 'Caso de soporte abierto por comprador o artesano; puede ligarse a un pedido y asignarse a un agente.' },
-    { nombre: 'SupportMessage', icono: '??', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte'], sincronia: 'hoy',
+    { nombre: 'SupportMessage', icono: 'üí¨', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'CaseId : FK', 'AuthorId : FK', 'AuthorRole : text', 'Body : text', 'SentAt : datetimeoffset'],
-      descripcion: 'Hilo de conversaciÛn dentro de un caso de soporte.' },
-    { nombre: 'SupportCaseStatus', icono: '???', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Hilo de conversaci√≥n dentro de un caso de soporte.' },
+    { nombre: 'SupportCaseStatus', icono: 'üè∑Ô∏è', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : int (PK)', 'Name : text', 'DisplayOrder : int', 'IsTerminal : boolean'],
       descripcion: 'Tabla semilla: Abierto, En proceso, Resuelto, Cerrado (terminal).' },
-    { nombre: 'SupportCaseStatusTransition', icono: '??', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'], sincronia: 'hoy',
+    { nombre: 'SupportCaseStatusTransition', icono: 'üîÄ', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte', 'Auditor'], sincronia: 'hoy',
       campos: ['FromStatusId : FK (PK)', 'ToStatusId : FK (PK)', 'AllowedRole : support | system'],
-      descripcion: 'Saltos v·lidos entre estados del caso, incluye reapertura (Cerrado ? Abierto).' },
-    { nombre: 'SupportAgent', icono: '?????', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte'], sincronia: 'hoy',
+      descripcion: 'Saltos v√°lidos entre estados del caso, incluye reapertura (Cerrado ‚Üí Abierto).' },
+    { nombre: 'SupportAgent', icono: 'üßë‚Äçüíº', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Soporte'], sincronia: 'hoy',
       campos: ['UserId : UUID (PK, FK)', 'Level : text (L1...)'],
-      descripcion: 'Perfil del agente de soporte; nivel de atenciÛn. Es el rol que atiende los casos.' },
-    { nombre: 'FaqItem', icono: '?', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte'], sincronia: 'hoy',
+      descripcion: 'Perfil del agente de soporte; nivel de atenci√≥n. Es el rol que atiende los casos.' },
+    { nombre: 'FaqItem', icono: '‚ùì', color: 'var(--mk-ink-soft)', bg: '#F4F5F6', roles: ['Comprador', 'Artesano', 'Soporte'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'Question / Answer / Category : text', 'TargetRole : text'],
       descripcion: 'Preguntas frecuentes del centro de ayuda de cada rol.' },
-    { nombre: 'ArtisanVerificationStatus', icono: '???', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Soporte'], sincronia: 'hoy',
+    { nombre: 'ArtisanVerificationStatus', icono: 'üõ°Ô∏è', color: '#8a6040', bg: '#FBF3E9', roles: ['Artesano', 'Soporte'], sincronia: 'hoy',
       campos: ['Id : int (PK)', 'Name : text', 'DisplayOrder : int', 'IsTerminal : boolean', 'AllowsPublishing : boolean'],
       descripcion: 'Tabla semilla: Pendiente, Verificado, Rechazado. Solo "Verificado" tiene AllowsPublishing=true (la regla de publicar es dato, no nombre).' },
-    { nombre: 'ArtisanVerificationStatusTransition', icono: '??', color: '#8a6040', bg: '#FBF3E9', roles: ['Soporte'], sincronia: 'hoy',
+    { nombre: 'ArtisanVerificationStatusTransition', icono: 'üîÄ', color: '#8a6040', bg: '#FBF3E9', roles: ['Soporte'], sincronia: 'hoy',
       campos: ['FromStatusId : FK (PK)', 'ToStatusId : FK (PK)', 'AllowedRole : support | system'],
-      descripcion: 'Saltos v·lidos entre estados de verificaciÛn del artesano (Pendiente ? Verificado / Rechazado).' },
-    { nombre: 'Story', icono: '??', color: '#6d3fae', bg: '#F1EAFB', roles: ['Soporte', 'Comprador'], sincronia: 'hoy',
-      campos: ['Id : UUID (PK)', 'Title / Region / Summary : text', 'CoverImageId : UUID?', 'Content : json (·rbol de bloques, nunca HTML)', 'SchemaVersion : int', 'AuthorId : UUID?', 'CreatedAt / UpdatedAt'],
-      descripcion: 'Historia editorial gestionada por soporte. Da identidad y relato al artesano/regiÛn; el contenido es un ·rbol de bloques en JSON.' },
-    { nombre: 'StoryImage', icono: '???', color: '#6d3fae', bg: '#F1EAFB', roles: ['Soporte'], sincronia: 'hoy',
+      descripcion: 'Saltos v√°lidos entre estados de verificaci√≥n del artesano (Pendiente ‚Üí Verificado / Rechazado).' },
+    { nombre: 'Story', icono: 'üìñ', color: '#6d3fae', bg: '#F1EAFB', roles: ['Soporte', 'Comprador'], sincronia: 'hoy',
+      campos: ['Id : UUID (PK)', 'Title / Region / Summary : text', 'CoverImageId : UUID?', 'Content : json (√°rbol de bloques, nunca HTML)', 'SchemaVersion : int', 'AuthorId : UUID?', 'CreatedAt / UpdatedAt'],
+      descripcion: 'Historia editorial gestionada por soporte. Da identidad y relato al artesano/regi√≥n; el contenido es un √°rbol de bloques en JSON.' },
+    { nombre: 'StoryImage', icono: 'üñºÔ∏è', color: '#6d3fae', bg: '#F1EAFB', roles: ['Soporte'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'StoryId : FK', 'Url : text', 'Width / Height : int', 'ContentType : text', 'SizeBytes : bigint', 'CreatedAt : datetimeoffset'],
-      descripcion: 'Imagen de una historia. El tamaÒo y la alineaciÛn se definen en el bloque dentro del JSON, no aquÌ.' },
-    { nombre: 'InternationalShipment', icono: '??', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Imagen de una historia. El tama√±o y la alineaci√≥n se definen en el bloque dentro del JSON, no aqu√≠.' },
+    { nombre: 'InternationalShipment', icono: '‚úàÔ∏è', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'OrderId : FK (unique)', 'StatusId : FK -> InternationalShipmentStatus', 'Courier / TrackingNumber / CertificateOfOriginRef : text', 'CreatedAt / UpdatedAt / UpdatedBy : audit'],
-      descripcion: 'Entidad de SOLO LECTURA: existe en el modelo pero no hay endpoints para crearla ni avanzarla. El envÌo internacional es fase futura (no ejecutada).' },
-    { nombre: 'InternationalShipmentStatus', icono: '???', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'], sincronia: 'hoy',
+      descripcion: 'Entidad de SOLO LECTURA: existe en el modelo pero no hay endpoints para crearla ni avanzarla. El env√≠o internacional es fase futura (no ejecutada).' },
+    { nombre: 'InternationalShipmentStatus', icono: 'üè∑Ô∏è', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : int (PK)', 'Name : text', 'DisplayOrder : int', 'IsTerminal : boolean'],
-      descripcion: 'Tabla semilla: PreparaciÛn, Tr·mites de exportaciÛn, En tr·nsito, Aduana EE.UU., Entregado. Cat·logo presente aunque el flujo no se usa.' },
-    { nombre: 'InternationalShipmentStatusTransition', icono: '??', color: '#B08900', bg: '#FDF6E3', roles: ['Auditor'], sincronia: 'hoy',
+      descripcion: 'Tabla semilla: Preparaci√≥n, Tr√°mites de exportaci√≥n, En tr√°nsito, Aduana EE.UU., Entregado. Cat√°logo presente aunque el flujo no se usa.' },
+    { nombre: 'InternationalShipmentStatusTransition', icono: 'üîÄ', color: '#B08900', bg: '#FDF6E3', roles: ['Auditor'], sincronia: 'hoy',
       campos: ['FromStatusId : FK (PK)', 'ToStatusId : FK (PK)', 'AllowedRole : artisan | support | system'],
-      descripcion: 'Saltos v·lidos entre etapas del envÌo internacional. Dato de referencia.' },
-    { nombre: 'ActivityLog', icono: '???', color: '#C8102E', bg: '#FBE9EC', roles: ['Soporte', 'Auditor'], sincronia: 'hoy',
-      campos: ['Id : UUID (PK)', 'EntityType : text', 'EntityId : UUID (ref. polimÛrfica, sin FK)', 'Action : create | update | delete', 'UserId : UUID?', 'OccurredAt : datetimeoffset', 'Changes : json (diff, incluye cambios de estado)'],
-      descripcion: 'Log de auditorÌa transversal, append-only: registra cada cambio, incluidas las transiciones de estado. Base de la trazabilidad del Auditor.' },
-    { nombre: 'MonthlyMetric', icono: '??', color: '#6d3fae', bg: '#F1EAFB', roles: ['Auditor'], sincronia: 'hoy',
+      descripcion: 'Saltos v√°lidos entre etapas del env√≠o internacional. Dato de referencia.' },
+    { nombre: 'ActivityLog', icono: 'üßæ', color: '#C8102E', bg: '#FBE9EC', roles: ['Soporte', 'Auditor'], sincronia: 'hoy',
+      campos: ['Id : UUID (PK)', 'EntityType : text', 'EntityId : UUID (ref. polim√≥rfica, sin FK)', 'Action : create | update | delete', 'UserId : UUID?', 'OccurredAt : datetimeoffset', 'Changes : json (diff, incluye cambios de estado)'],
+      descripcion: 'Log de auditor√≠a transversal, append-only: registra cada cambio, incluidas las transiciones de estado. Base de la trazabilidad del Auditor.' },
+    { nombre: 'MonthlyMetric', icono: 'üìà', color: '#6d3fae', bg: '#F1EAFB', roles: ['Auditor'], sincronia: 'hoy',
       campos: ['Month : date (PK)', 'Gmv : numeric(18,2)', 'CompletedOrders : int', 'TotalCases : int'],
       descripcion: 'Agregado mensual para el Auditor; se recalcula sobre Order y SupportCase, no es transaccional.' },
-    // --- Propuesta para el piloto (NO existe en el backend hoy; requiere BR + autorizaciÛn) ---
-    { nombre: 'ArtisanPaymentMethod', icono: '??', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Artesano'], sincronia: 'objetivo',
+    // --- Propuesta para el piloto (NO existe en el backend hoy; requiere BR + autorizaci√≥n) ---
+    { nombre: 'ArtisanPaymentMethod', icono: 'üí≥', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Artesano'], sincronia: 'objetivo',
       campos: ['Id : UUID (PK)', 'ArtisanId : FK', 'Kind : directo (modelo B) | plataforma (modelo A)', 'Detail : text'],
       descripcion: 'PROPUESTA: lista de medios aceptados por artesano y su modelo (B directo / A por la plataforma). Hoy el perfil guarda un solo PaymentMethod; esto no existe.' },
-    { nombre: 'Shipment (nacional)', icono: '??', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Artesano', 'Soporte', 'Auditor'], sincronia: 'objetivo',
+    { nombre: 'Shipment (nacional)', icono: 'üöö', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Artesano', 'Soporte', 'Auditor'], sincronia: 'objetivo',
       campos: ['Id : UUID (PK)', 'OrderId : FK', 'Carrier : Servientrega', 'GuideNumber / LabelUrl : text', 'CodAmount : numeric (valor a recaudar)', 'StatusId : FK -> ShipmentStatus'],
-      descripcion: 'PROPUESTA para el piloto: guÌa nacional con contra entrega (Servientrega). No existe en el backend; requiere BR y autorizaciÛn.' },
-    { nombre: 'ShipmentStatus', icono: '???', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Soporte', 'Auditor'], sincronia: 'objetivo',
-      campos: ['Id : int (PK)', 'Name : GuiaGenerada | Novedad | Recaudado | DevoluciÛn | Devuelto | Liquidado', 'IsTerminal : boolean'],
-      descripcion: 'PROPUESTA: estados nuevos del envÌo nacional contra entrega (O12). No existen hoy; solo el recaudo cierra la venta.' },
+      descripcion: 'PROPUESTA para el piloto: gu√≠a nacional con contra entrega (Servientrega). No existe en el backend; requiere BR y autorizaci√≥n.' },
+    { nombre: 'ShipmentStatus', icono: 'üè∑Ô∏è', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Soporte', 'Auditor'], sincronia: 'objetivo',
+      campos: ['Id : int (PK)', 'Name : GuiaGenerada | Novedad | Recaudado | Devoluci√≥n | Devuelto | Liquidado', 'IsTerminal : boolean'],
+      descripcion: 'PROPUESTA: estados nuevos del env√≠o nacional contra entrega (O12). No existen hoy; solo el recaudo cierra la venta.' },
   ];
 
   entidadesFiltradas() {

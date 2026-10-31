@@ -48,7 +48,7 @@ interface ApproachData {
           <!-- Performance metrics -->
           <div class="px-6 pt-5 pb-3">
             <h4 class="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-3">Métricas Clave</h4>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
               @for (metric of approach.metrics; track metric.label) {
                 <div class="rounded-lg p-3 text-center"
                      [class]="metric.good ? 'bg-emerald-500/8 border border-emerald-500/20' : 'bg-amber-500/8 border border-amber-500/20'">
@@ -56,14 +56,14 @@ interface ApproachData {
                        [class]="metric.good ? 'text-emerald-400' : 'text-amber-400'">
                     {{ metric.value }}
                   </div>
-                  <div class="text-slate-500 text-[10px]">{{ metric.label }}</div>
+                  <div class="text-slate-500 text-xs sm:text-[10px]">{{ metric.label }}</div>
                 </div>
               }
             </div>
           </div>
 
           <!-- Pros & Cons -->
-          <div class="px-6 py-4 grid grid-cols-2 gap-4">
+          <div class="px-6 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <h4 class="text-emerald-400 text-xs uppercase tracking-wider font-semibold mb-3 flex items-center gap-1.5">
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">

@@ -13,6 +13,11 @@ interface AzureService {
 @Component({
   selector: 'app-cost-table',
   standalone: true,
+  styles: [`
+    /* Patrón de international-shipping: scroll horizontal con ancho mínimo en móvil. */
+    .ct-scroll { overflow-x: auto; }
+    @media (max-width: 640px) { .ct-grid { min-width: 640px; } }
+  `],
   template: `
     <div class="glass-card rounded-2xl overflow-hidden">
       <div class="px-6 py-5 border-b border-slate-700/50 flex items-center justify-between">
@@ -26,8 +31,11 @@ interface AzureService {
         </div>
       </div>
 
+      <!-- Scroll horizontal en móvil: la rejilla de 12 columnas conserva un ancho mínimo
+           legible en vez de aplastarse dentro del overflow-hidden del card. -->
+      <div class="ct-scroll">
       <!-- Table header -->
-      <div class="grid grid-cols-12 px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-800/80">
+      <div class="ct-grid grid grid-cols-12 px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-800/80">
         <div class="col-span-5">Servicio</div>
         <div class="col-span-3">Tier</div>
         <div class="col-span-2 text-right">Base</div>
@@ -36,7 +44,7 @@ interface AzureService {
 
       <!-- Rows -->
       @for (service of services(); track service.name) {
-        <div class="grid grid-cols-12 px-6 py-4 border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors duration-150 items-center">
+        <div class="ct-grid grid grid-cols-12 px-6 py-4 border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors duration-150 items-center">
           <div class="col-span-5 flex items-center gap-3">
             <span class="text-xl">{{ service.icon }}</span>
             <div>
@@ -58,6 +66,7 @@ interface AzureService {
           </div>
         </div>
       }
+      </div>
 
       <!-- Total row -->
       <div class="px-6 py-5 bg-gradient-to-r from-sky-500/8 to-indigo-500/8 border-t border-sky-500/20">

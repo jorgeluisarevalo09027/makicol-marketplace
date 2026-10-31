@@ -46,9 +46,9 @@ import { isPlatformBrowser } from '@angular/common';
         </div>
 
         @if (menuOpen()) {
-          <div class="md:hidden animate-fade-in" style="border-top:1px solid var(--mk-sand); padding:0.75rem 0; display:flex; flex-direction:column; gap:0.25rem;">
+          <div class="md:hidden animate-fade-in mk-nav-panel" style="border-top:1px solid var(--mk-sand); padding:0.75rem 0; display:flex; flex-direction:column; gap:0.5rem;">
             @for (link of navLinks; track link.href) {
-              <button class="mk-navlink" style="text-align:left; width:100%;" (click)="scrollTo(link.href)">{{ link.label }}</button>
+              <button class="mk-navlink mk-navlink--mobile" style="text-align:left; width:100%;" (click)="scrollTo(link.href)">{{ link.label }}</button>
             }
           </div>
         }
@@ -62,6 +62,8 @@ import { isPlatformBrowser } from '@angular/common';
       font-family: var(--font-body); transition: color 0.2s, background 0.2s;
     }
     .mk-navlink:hover { color: var(--mk-green-deep); background: var(--mk-green-tint); }
+    /* Solo el menú móvil: alto táctil cómodo (>=44px) sin afectar la barra de escritorio. */
+    .mk-navlink--mobile { padding-top: 0.75rem; padding-bottom: 0.75rem; min-height: 44px; }
   `]
 })
 export class NavbarComponent {
