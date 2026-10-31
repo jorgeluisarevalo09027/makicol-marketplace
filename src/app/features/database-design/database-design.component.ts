@@ -141,6 +141,29 @@ interface Entidad {
               Ver contrato de API que expone el servicio ?
             </a>
           </div>
+        
+          <div style="background:#fff; border-left:4px solid #B08900; border-radius:14px; padding:20px; box-shadow:0 2px 16px rgba(41,84,64,0.08); margin-top:14px;">
+            <h4 style="color:var(--mk-ink); font-weight:800; font-size:0.9rem; margin:0 0 8px;">v8 (propuesta, no existe hoy): descubrimiento del catalogo</h4>
+            <p style="color:#856404; background:#FDF3D6; border-radius:8px; padding:8px 12px; font-size:0.8rem; line-height:1.5; margin:0 0 10px;">
+              <strong>Estado objetivo.</strong> Propuesta registrada como BR-15 y BR-16 (feature 007). Editada y compilada en una rama del backend,
+              <strong>sin migrar la base de datos ni desplegar</strong>. Cuando se despliegue y verifique, estos campos se incorporan al diagrama (v8) y pasan a "en el demo hoy".
+            </p>
+            <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0 0 8px;">
+              Para dar intencion de negocio a las tres secciones de la home del comprador (artesanos destacados, piezas destacadas e inspirado en favoritos)
+              se proponen tres endpoints <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">/api/discovery</code>
+              publicos con degradacion (vista personalizada con token de comprador, vista por defecto sin token; nunca 401).
+            </p>
+            <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.6; margin:0;">
+              Para que esas consultas sean rapidas se materializa el rating:
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">Product.RatingAverage / RatingCount</code> y
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">ArtisanProfile.RatingEffective / RatingCount</code>
+              (el artesano arranca en 5.0 hasta tener 3 resenas; luego usa el promedio real), mas indices compuestos en
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">Product</code> por
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">(IsActive, SoldCount)</code>,
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">(IsActive, CreatedAt)</code> y
+              <code style="background:var(--mk-paper-alt); padding:1px 5px; border-radius:4px; font-size:0.78rem;">(IsActive, Category, SoldCount)</code>.
+            </p>
+          </div>
         </section>
 
         <!-- Diagrama -->

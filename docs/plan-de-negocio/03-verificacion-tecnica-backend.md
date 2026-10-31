@@ -150,3 +150,43 @@ se decida la migración de autenticación (A8), su costo entra aquí como rubro 
 - La fila "Contrato de API" pasa de `por verificar` a `verificado` / `espejo del backend hoy`.
 - La fila "Costos de infraestructura Azure" pasa a `verificado`: App Service (back), Static Web Apps (front),
   Azure SQL y Blob. Se corrigió Front Door (no usado) por Static Web Apps.
+
+## 5. Descubrimiento del catalogo (`estado objetivo`)
+
+> Feature 007-descubrimiento-catalogo del front. Propuesta de backend registrada como BR-15 y BR-16 en
+> `specs/contract/backend-change-requests.md` del front. **No existe en el servicio desplegado todavia**:
+> a la fecha esta editado y compilado en una rama de feature, sin migrar la base de datos ni desplegar.
+> Mientras no se despliegue y verifique, todo lo de esta seccion es `estado objetivo`.
+
+### 5.1 Endpoints nuevos (BR-15)
+
+Tres endpoints publicos bajo `/api/discovery`, cada uno con intencion de negocio propia, que alimentan las
+tres secciones de la home del comprador (hoy esa home exprime el listado generico sin logica por seccion):
+
+| Endpoint | Que devuelve | Personaliza |
+|---|---|---|
+| `GET /api/discovery/featured` | Curaduria global de piezas (mas vendidas + mejor valoradas) | No |
+| `GET /api/discovery/artisans` | Artesanos por rating efectivo (umbral de confianza de 3 resenas) | No |
+| `GET /api/discovery/for-you` | Piezas afines al comprador (wishlist + compras) o vista default | Si, con token |
+
+Patron de diseno nuevo: **endpoints publicos con degradacion**. Con token de comprador valido, `for-you`
+responde una vista personalizada; sin token o sin senal de afinidad, devuelve una vista default. Nunca
+responden `401`. Hoy es `estado objetivo`; el estado final sera `espejo del backend hoy` cuando el
+servicio los exponga y se verifiquen contra el Swagger.
+
+### 5.2 Rating materializado e indices (BR-16)
+
+Para que esas consultas sean rapidas e indexables, la propuesta materializa el rating y anade indices:
+
+- `Product` gana `RatingAverage` y `RatingCount` (hoy el rating se calcula al vuelo en cada peticion).
+- `ArtisanProfile` gana `RatingEffective` y `RatingCount`. Regla de cold-start (DISC-004): el artesano
+  vale `5.0` mientras acumula menos de 3 resenas verificadas; al alcanzar 3, pasa al promedio real de las
+  resenas de sus productos. Se apoya en el invariante ya existente de que una resena implica un pedido
+  `Entregado` (`CreateReviewHandler`).
+- Indices compuestos nuevos en `Product`: `(IsActive, SoldCount)`, `(IsActive, CreatedAt)` y
+  `(IsActive, Category, SoldCount)`.
+- Los valores materializados se recalculan al crear una resena, y la migracion incluye un backfill para los
+  datos existentes. El seeder demo tambien recalcula tras sembrar resenas (quedan consistentes tras el deploy).
+
+Hoy es `estado objetivo`. Al desplegar y verificar, el diagrama ER sube de version (v8) con los campos nuevos
+y esta seccion pasa a `espejo del backend hoy`.
