@@ -33,6 +33,19 @@ import { Component } from '@angular/core';
           }
         </div>
 
+        <!-- Quinto rol (estado objetivo) -->
+        <div class="mk-card mk-card--accent" style="margin-bottom:2.5rem; border-left-color:var(--mk-green-deep);">
+          <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+            <span class="mk-badge mk-badge--target" style="flex-shrink:0;">estado objetivo</span>
+            <p style="color:var(--mk-ink-soft); font-size:0.88rem; line-height:1.6; margin:0;">
+              <strong>Contenido</strong> es un quinto rol de back-office: administra las historias (hoy a cargo de
+              Soporte) y un nuevo módulo de anuncios (imagen más enlace) que se muestra al comprador en la home.
+              El backend que lo soporta todavía es propuesta, por eso el demo desplegado sigue con cuatro roles y
+              Contenido se presenta como estado objetivo.
+            </p>
+          </div>
+        </div>
+
         <!-- Qué hace el demo -->
         <div class="mk-card">
           <h3 style="font-family:var(--font-brand); font-weight:800; color:var(--mk-green-deep); font-size:1.1rem; margin:0 0 1rem;">
@@ -72,7 +85,7 @@ export class ProductComponent {
   roles = [
     { icon: '🛍️', nombre: 'Comprador', desc: 'Explora el catálogo sin cuenta, compra, sigue sus pedidos, reseña y guarda favoritos.' },
     { icon: '🧶', nombre: 'Artesano', desc: 'Publica productos con galería, gestiona su perfil e historia y avanza el estado de sus pedidos.' },
-    { icon: '🎧', nombre: 'Soporte', desc: 'Atiende casos, verifica artesanos y gestiona el contenido editorial (historias).' },
+    { icon: '🎧', nombre: 'Soporte', desc: 'Atiende casos y verifica artesanos. En el estado objetivo deja de gestionar las historias: ese contenido editorial pasa al nuevo rol Contenido.' },
     { icon: '🕵️', nombre: 'Auditor', desc: 'Consulta métricas mensuales (GMV, pedidos, casos) y la trazabilidad de cada cambio.' },
   ];
 
@@ -85,7 +98,7 @@ export class ProductComponent {
     'Casos de soporte ligados a pedidos y asignados a agentes',
     'Verificación de artesanos (solo "Verificado" puede publicar)',
     'Auditoría append-only de cada cambio de estado',
-    'Historias editoriales con imágenes para dar identidad',
+    'Historias editoriales con imágenes para dar identidad (su administración pasa a Contenido en el estado objetivo)',
     'Autenticación propia (JWT + refresh) con cuatro roles',
   ];
 }

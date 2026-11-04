@@ -30,7 +30,7 @@ import { RouterLink } from '@angular/router';
             Storefront y back-office:<br><span style="color:var(--mk-green-deep);">el demo ya separa por rol</span>
           </h1>
           <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
-            Resumen de la evaluación sobre separar los roles internos (soporte y auditor) de los públicos (comprador y artesano).
+            Resumen de la evaluación sobre separar los roles internos (soporte, auditor y contenido) de los públicos (comprador y artesano). El rol de contenido es estado objetivo mientras su backend sea propuesta.
           </p>
         </div>
       </section>
@@ -72,8 +72,8 @@ import { RouterLink } from '@angular/router';
 export class BackofficeEvaluationComponent {
   hoy = [
     'Un monorepo Nx con 43 proyectos y límites por capa y por rol aplicados con lint.',
-    'Una sola aplicación web con rutas por rol: /comprador, /artesano, /soporte y /auditor.',
-    'Carga diferida por rol: el código de soporte y auditor no se descarga en la primera carga pública.',
+    'Una sola aplicación web con rutas por rol: /comprador, /artesano, /soporte y /auditor; el estado objetivo suma /contenido (backend en propuesta).',
+    'Carga diferida por rol: el código de soporte y auditor (y de contenido, en el estado objetivo) no se descarga en la primera carga pública.',
     'Autenticación propia con JWT; la migración a un proveedor externo con MFA para soporte y auditor se propone antes del piloto.',
     'Una base de datos y un servicio de API compartidos por los cuatro roles.',
   ];

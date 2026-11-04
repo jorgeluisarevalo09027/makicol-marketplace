@@ -78,11 +78,14 @@ interface Entidad {
             <span style="color:#856404; font-size:0.82rem; font-weight:800;">Trabajo en progreso · se corrige y actualiza en cada iteración</span>
           </div>
           <h1 style="font-family:'Plus Jakarta Sans',sans-serif; color:var(--mk-ink); font-weight:900; font-size:2.1rem; line-height:1.2; margin:0 0 14px;">
-            Diseño de base de datos<br><span style="color:var(--mk-green-deep);">para los 4 roles de Makicol</span>
+            Diseño de base de datos<br><span style="color:var(--mk-green-deep);">para los 5 roles de Makicol</span>
           </h1>
           <p style="color:var(--mk-ink-soft); font-size:1rem; line-height:1.6; max-width:640px; margin:0 auto;">
-            Modelo entidad-relación que cubre lo que necesita Comprador, Artesano, Soporte y Auditor 
+            Modelo entidad-relación que cubre lo que necesita Comprador, Artesano, Soporte, Auditor y Contenido 
             base para construir la persistencia real cuando el prototipo pase a producción.
+          </p>
+          <p style="color:#856404; font-size:0.85rem; line-height:1.55; max-width:640px; margin:14px auto 0; padding:10px 14px; background:#FDF3D6; border-radius:10px;">
+            <strong>Estado objetivo:</strong> el rol <strong>Contenido</strong> administra las historias (antes a cargo de Soporte) y un nuevo módulo de anuncios. El backend que lo soporta todavía es propuesta, por eso sus entidades aparecen como objetivo y no como espejo del backend de hoy.
           </p>
           <p style="color:var(--mk-ink-soft); font-size:0.85rem; line-height:1.5; max-width:640px; margin:14px auto 0;">
             <strong>Convención:</strong> los nombres de entidades, tablas y campos están en inglés para que el esquema sea directamente usable por el equipo de desarrollo y por herramientas de ORM.
@@ -345,7 +348,7 @@ export class DatabaseDesignComponent {
   ultimoX = 0;
   ultimoY = 0;
 
-  filtros = ['Todos', 'Comprador', 'Artesano', 'Soporte', 'Auditor'];
+  filtros = ['Todos', 'Comprador', 'Artesano', 'Soporte', 'Auditor', 'Contenido'];
 
   @HostListener('document:keydown.escape')
   cerrarConEscape() {
@@ -496,12 +499,12 @@ export class DatabaseDesignComponent {
     { nombre: 'ArtisanVerificationStatusTransition', icono: '🔀', color: '#8a6040', bg: '#FBF3E9', roles: ['Soporte'], sincronia: 'hoy',
       campos: ['FromStatusId : FK (PK)', 'ToStatusId : FK (PK)', 'AllowedRole : support | system'],
       descripcion: 'Saltos válidos entre estados de verificación del artesano (Pendiente → Verificado / Rechazado).' },
-    { nombre: 'Story', icono: '📖', color: '#6d3fae', bg: '#F1EAFB', roles: ['Soporte', 'Comprador'], sincronia: 'hoy',
+    { nombre: 'Story', icono: '📖', color: '#6d3fae', bg: '#F1EAFB', roles: ['Contenido', 'Comprador'], sincronia: 'objetivo',
       campos: ['Id : UUID (PK)', 'Title / Region / Summary : text', 'CoverImageId : UUID?', 'Content : json (árbol de bloques, nunca HTML)', 'SchemaVersion : int', 'AuthorId : UUID?', 'CreatedAt / UpdatedAt'],
-      descripcion: 'Historia editorial gestionada por soporte. Da identidad y relato al artesano/región; el contenido es un árbol de bloques en JSON.' },
-    { nombre: 'StoryImage', icono: '🖼️', color: '#6d3fae', bg: '#F1EAFB', roles: ['Soporte'], sincronia: 'hoy',
+      descripcion: 'ESTADO OBJETIVO: historia editorial. La entidad ya existe en el backend de hoy, pero su administracion pasa de Soporte al nuevo rol Contenido; ese cambio de autorizacion todavia es propuesta (no desplegado). Gestionada ahora por Contenido. Da identidad y relato al artesano/región; el contenido es un árbol de bloques en JSON.' },
+    { nombre: 'StoryImage', icono: '🖼️', color: '#6d3fae', bg: '#F1EAFB', roles: ['Contenido'], sincronia: 'objetivo',
       campos: ['Id : UUID (PK)', 'StoryId : FK', 'Url : text', 'Width / Height : int', 'ContentType : text', 'SizeBytes : bigint', 'CreatedAt : datetimeoffset'],
-      descripcion: 'Imagen de una historia. El tamaño y la alineación se definen en el bloque dentro del JSON, no aquí.' },
+      descripcion: 'ESTADO OBJETIVO: imagen de una historia, ahora bajo el rol Contenido (antes Soporte). El tamaño y la alineación se definen en el bloque dentro del JSON, no aquí.' },
     { nombre: 'InternationalShipment', icono: '✈️', color: '#B08900', bg: '#FDF6E3', roles: ['Artesano', 'Auditor'], sincronia: 'hoy',
       campos: ['Id : UUID (PK)', 'OrderId : FK (unique)', 'StatusId : FK -> InternationalShipmentStatus', 'Courier / TrackingNumber / CertificateOfOriginRef : text', 'CreatedAt / UpdatedAt / UpdatedBy : audit'],
       descripcion: 'Entidad de SOLO LECTURA: existe en el modelo pero no hay endpoints para crearla ni avanzarla. El envío internacional es fase futura (no ejecutada).' },
@@ -517,6 +520,10 @@ export class DatabaseDesignComponent {
     { nombre: 'MonthlyMetric', icono: '📈', color: '#6d3fae', bg: '#F1EAFB', roles: ['Auditor'], sincronia: 'hoy',
       campos: ['Month : date (PK)', 'Gmv : numeric(18,2)', 'CompletedOrders : int', 'TotalCases : int'],
       descripcion: 'Agregado mensual para el Auditor; se recalcula sobre Order y SupportCase, no es transaccional.' },
+    // --- Rol Contenido: anuncios publicitarios (ESTADO OBJETIVO; backend en propuesta) ---
+    { nombre: 'Ad', icono: '📣', color: '#6d3fae', bg: '#F1EAFB', roles: ['Contenido', 'Comprador'], sincronia: 'objetivo',
+      campos: ['Id : UUID (PK)', 'Title : text', 'ImageUrl : text', 'LinkUrl : text', 'IsActive : boolean', 'StartsAt / EndsAt : datetimeoffset? (vigencia)', 'FrequencyRule : text (p. ej. una vez por sesión)', 'CreatedAt / UpdatedAt / UpdatedBy : audit'],
+      descripcion: 'ESTADO OBJETIVO: anuncio publicitario (imagen + enlace) que administra el rol Contenido y se muestra al comprador en un modal al aterrizar en la home, respetando vigencia y frecuencia. El recurso de backend (endpoint + almacenamiento de imagen) todavia es propuesta; no existe desplegado.' },
     // --- Propuesta para el piloto (NO existe en el backend hoy; requiere BR + autorización) ---
     { nombre: 'ArtisanPaymentMethod', icono: '💳', color: 'var(--mk-green-deep)', bg: '#E4EFE6', roles: ['Artesano'], sincronia: 'objetivo',
       campos: ['Id : UUID (PK)', 'ArtisanId : FK', 'Kind : directo (modelo B) | plataforma (modelo A)', 'Detail : text'],
